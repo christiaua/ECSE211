@@ -14,8 +14,6 @@ public class UltrasonicPoller extends Thread {
   private float[] usData;
   public int distance;
   public int[] lastDistance = new int[2];
-  public boolean readUS = false;
-  public boolean readLS = false;
 
   public UltrasonicPoller(SampleProvider us, float[] usData) {
     this.us = us;

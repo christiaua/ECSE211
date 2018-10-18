@@ -1,5 +1,7 @@
 package ca.mcgill.ecse211.lab5;
 
+import ca.mcgill.ecse211.lab5.LightLocalizer;
+import ca.mcgill.ecse211.lab5.UltrasonicLocalizer;
 import ca.mcgill.ecse211.lab5.Display;
 import ca.mcgill.ecse211.odometer.*;
 import lejos.hardware.Button;
@@ -26,6 +28,8 @@ public class Lab5 {
   public static final double WHEEL_RAD = 2.1;//2.2 OG
   public static final double TRACK = 12.1;//17 OG
   public static String mode = " ";
+  
+
 
   //initialize us sensor
   private static final Port usPort = LocalEV3.get().getPort("S4");
@@ -34,10 +38,17 @@ public class Lab5 {
                                                             // this instance
   static float[] usData = new float[usDistance.sampleSize()]; // usData is the buffer in which data are returned
   
-  private static final Port lsPort = LocalEV3.get().getPort("S1");
+  //initialize color sensor
+  private static final Port colorSensorPort = LocalEV3.get().getPort("S1");
+  static SensorModes colorSensor = new EV3ColorSensor(colorSensorPort); // usSensor is the instance
+  static SampleProvider colorS = colorSensor.getMode("RGB"); // usDistance provides samples from
+  static float[] rgbData = new float[colorS.sampleSize()];  
+  
+  //initialize line detecting sensor
+  private static final Port lsPort = LocalEV3.get().getPort("S2");
   static SensorModes lightSensor = new EV3ColorSensor(lsPort); // usSensor is the instance
-  static SampleProvider ls = lightSensor.getMode("RGB"); // usDistance provides samples from
-  static float[] lsData = new float[ls.sampleSize()];  
+  static SampleProvider ls = lightSensor.getMode("Red"); // usDistance provides samples from
+  static float[] redData = new float[ls.sampleSize()];  
   
   public static void main(String[] args) throws OdometerExceptions {
 	
@@ -49,15 +60,21 @@ public class Lab5 {
     
     UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData);
     
-    ColPoller lightPoller = new ColPoller(ls, lsData);
+    ColPoller lightPoller = new ColPoller(colorS, rgbData, ls, redData);
     
     Display display = new Display(lcd);
 
     lightPoller.start();
     usPoller.start();
     
+    UltrasonicLocalizer usLocalizer = new UltrasonicLocalizer(usPoller);
+    LightLocalizer lsLocalizer = new LightLocalizer(lightPoller);
+    
+    
     Thread displayThread = new Thread(display);
     displayThread.start();
+    Thread odoThread = new Thread(odometer);
+    odoThread.start();
     
     do{
     	buttonChoice = Button.waitForAnyPress();
@@ -66,6 +83,18 @@ public class Lab5 {
           } catch (Exception e) {
           } 
     } while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+    
+    usLocalizer.fallingEdge();
+    
+    do{
+    	buttonChoice = Button.waitForAnyPress();
+    	try {
+            Thread.sleep(20);
+          } catch (Exception e) {
+          } 
+    } while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+    
+    lsLocalizer.moveToOrigin();
     
     while (Button.waitForAnyPress() != Button.ID_ESCAPE);
     		System.exit(0);
