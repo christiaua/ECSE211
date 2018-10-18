@@ -47,21 +47,19 @@ public class Lab5 {
     
     Navigation navigator = new Navigation(leftMotor, rightMotor, WHEEL_RAD, TRACK);
     
-    LightLocalizer llocalizer = new LightLocalizer(ls, lsData, navigator);
+    UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData);
     
     ColPoller lightPoller = new ColPoller(ls, lsData);
     
     Display display = new Display(lcd);
 
     lightPoller.start();
+    usPoller.start();
     
     Thread displayThread = new Thread(display);
     displayThread.start();
     
     do{
-    	lcd.refresh();
-    	lcd.drawString("R:" + lightPoller.getColorReading()[0], 0, 0);
-    	lcd.drawString("R:" + lsData[0], 0, 0);
     	buttonChoice = Button.waitForAnyPress();
     	try {
             Thread.sleep(20);
