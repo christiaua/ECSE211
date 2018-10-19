@@ -34,11 +34,11 @@ public class RingDetector {
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Yellow", 0, 5);
 		}
-		else if(dB < 0.032986+0.021538*2){
+		else if(dB < 0.1){
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Blue  ", 0, 5);
 		}
-		else if(dO < 0.011160+0.006943*2){
+		else if(dO < 0.1){
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Orange", 0, 5);
 		}

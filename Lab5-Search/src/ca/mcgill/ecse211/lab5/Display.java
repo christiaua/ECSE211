@@ -59,7 +59,7 @@ public class Display implements Runnable {
 			lcd.drawString("B: " + Lab5.rgbData[2], 0, 2);*/
 			lcd.drawString("L: " + Lab5.redData[0], 0, 0);
 			lcd.drawString("Distance: " + (int)(Lab5.usData[0] * 100.0) + "         ", 0, 6);
-
+			lcd.drawString("Theta: " + odo.getXYT()[2] + "  ", 0, 1);
 			// this ensures that the data is updated only once every period
 			updateEnd = System.currentTimeMillis();
 			if (updateEnd - updateStart < DISPLAY_PERIOD) {

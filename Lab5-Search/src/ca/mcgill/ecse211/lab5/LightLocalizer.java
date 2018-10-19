@@ -45,7 +45,7 @@ public class LightLocalizer {
 		
 		while(true){
 			//checks if robot crosses a line while moving
-			if(leftMotor.isMoving() && leftMotor.isMoving() && Math.abs(lightPoller.getLastRedReading() - lightPoller.getCurrentRedReading()) > 0.1){
+			if(leftMotor.isMoving() && leftMotor.isMoving() && lightPoller.getCurrentRedReading() < 0.33){
 				leftMotor.startSynchronization();
 				leftMotor.stop();
 				rightMotor.stop();
@@ -63,12 +63,8 @@ public class LightLocalizer {
 			}
 		}
 		
-		leftMotor.rotate(-convertDistance(RAD, 5), true);
-		rightMotor.rotate(-convertDistance(RAD, 5) , false);
-		
-		//turn to face corner
-		
-		turnTo(225);
+		leftMotor.rotate(-convertDistance(RAD, 18), true);
+		rightMotor.rotate(-convertDistance(RAD, 18) , false);
 		
 		//perform a 360
 		
@@ -85,9 +81,8 @@ public class LightLocalizer {
 			}
 		}
 			
-		//thetaY = angleDiff(theta[1],theta[3]);
-		thetaY = angleDiff(theta[3],theta[1]);
-		thetaX = angleDiff(theta[2],theta[0]);
+		thetaY = angleDiff(theta[1],theta[3]);
+		thetaX = angleDiff(theta[0],theta[2]);
 		
 		//calculate and set new odometer values
 		
@@ -105,7 +100,7 @@ public class LightLocalizer {
 		
 		//dthetaX = thetaX/2 - theta[2];
 		//dthetaY = thetaY - theta[3];
-		dthetaY = 90 - theta[3] + thetaY/2;
+		dthetaY = -90 - theta[3] + thetaY/2;
 		
 		//odo.update(0,0,(dthetaX + dthetaY)/2);
 		odo.update(0,0,(dthetaY + 5));
