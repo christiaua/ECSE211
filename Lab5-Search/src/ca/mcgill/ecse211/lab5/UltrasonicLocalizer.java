@@ -1,6 +1,5 @@
 package ca.mcgill.ecse211.lab5;
 
-import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import ca.mcgill.ecse211.odometer.*;
 import lejos.hardware.Sound;
 
@@ -8,19 +7,23 @@ import lejos.hardware.Sound;
 public class UltrasonicLocalizer {
 	
 	private Odometer odo;
-	private static final int ROTATE_SPEED = 50;
-	private static EV3LargeRegulatedMotor leftMotor = Lab5.leftMotor;
-	private static EV3LargeRegulatedMotor rightMotor = Lab5.rightMotor;
-	private static double TRACK = Lab5.TRACK;
-	private static double RAD = Lab5.WHEEL_RAD;
+	private Navigation navigation;
 	public static final double D = 25;
 	public static final double THRESHOLD = 1;
 	private UltrasonicPoller usPoller;
 	private static int angleCorrection = 0;
 	
-	public UltrasonicLocalizer(UltrasonicPoller usPoller) throws OdometerExceptions{
+	
+	/**
+	 * Constructor
+	 * @param usPoller
+	 * @param nav
+	 * @throws OdometerExceptions
+	 */
+	public UltrasonicLocalizer(UltrasonicPoller usPoller, Navigation nav) throws OdometerExceptions{
 		this.odo = Odometer.getOdometer();
 		this.usPoller = usPoller;
+		this.navigation = nav;
 	}
 	/**
 	 * This method is used to find the angle of the robot assuming 
@@ -37,11 +40,7 @@ public class UltrasonicLocalizer {
 		double actualHeading;
 		double dtheta;
 		
-		leftMotor.setSpeed(ROTATE_SPEED);
-		rightMotor.setSpeed(ROTATE_SPEED);
-		
-		leftMotor.rotate(convertAngle(RAD, TRACK, 360), true);
-		rightMotor.rotate(-convertAngle(RAD, TRACK, 360), true);
+		navigation.rotate(360, true);
 		
 		for(int i = 0; i < 2; i++){
 			while(true){
@@ -61,13 +60,9 @@ public class UltrasonicLocalizer {
 					    } 
 					}
 					fallingEdgeAngle[i] = (temp1 + temp2) / 2;
-					leftMotor.startSynchronization();
-					leftMotor.stop();
-					rightMotor.stop();
-					leftMotor.endSynchronization();
+					navigation.stop();
 					if(i == 0){
-						leftMotor.rotate(-convertAngle(RAD, TRACK, 360), true);
-						rightMotor.rotate(convertAngle(RAD, TRACK, 360), true);
+						navigation.rotate(-360, true);
 					}
 					break;
 				}
@@ -105,11 +100,7 @@ public class UltrasonicLocalizer {
 		double actualHeading;
 		double dtheta;
 		
-		leftMotor.setSpeed(ROTATE_SPEED);
-		rightMotor.setSpeed(ROTATE_SPEED);
-		
-		leftMotor.rotate(convertAngle(RAD, TRACK, 360), true);
-		rightMotor.rotate(-convertAngle(RAD, TRACK, 360), true);
+		navigation.rotate(360, true);
 		
 		for(int i = 0; i < 2; i++){
 			while(true){
@@ -129,13 +120,9 @@ public class UltrasonicLocalizer {
 					    } 
 					}
 					risingEdgeAngle[i] = (temp1 + temp2) / 2;
-					leftMotor.startSynchronization();
-					leftMotor.stop();
-					rightMotor.stop();
-					leftMotor.endSynchronization();
+					navigation.stop();
 					if(i == 0){
-						leftMotor.rotate(-convertAngle(RAD, TRACK, 360), true);
-						rightMotor.rotate(convertAngle(RAD, TRACK, 360), true);
+						navigation.rotate(-360, true);
 					}
 					break;
 				}
@@ -158,13 +145,6 @@ public class UltrasonicLocalizer {
 		turnTo(0);
 	}
 	
-	private static int convertAngle(double radius, double width, double angle) {
-	    return convertDistance(radius, Math.PI * width * angle / 360.0);
-	}
-	
-	private static int convertDistance(double radius, double distance) {
-	    return (int) ((180.0 * distance) / (Math.PI * radius));
-	}
 	
 	/**
 	   * This method turns the robot in place to the absolute angle theta.
@@ -186,11 +166,6 @@ public class UltrasonicLocalizer {
 			minAngle = dtheta;
 		  
 		 	//set motor speed
-		 	leftMotor.setSpeed(ROTATE_SPEED);
-		 	rightMotor.setSpeed(ROTATE_SPEED);
-		  
-		 	//turn by minimum angle
-		 	leftMotor.rotate(convertAngle(RAD, TRACK, minAngle), true);
-		 	rightMotor.rotate(-convertAngle(RAD, TRACK, minAngle), false);
+		 	navigation.rotate(minAngle, false);
 	}
 }
