@@ -10,9 +10,12 @@ public class RingDetector {
 	private static final double[] O_RGB_MEAN = {0.967, 0.237, 0.092};
 	private static final double[] G_RGB_MEAN = {0.443, 0.874, 0.202};
 	
-	public static void processRGBData(float R, float B, float G){
+	private static boolean[] foundRings = {false, false, false, false};
+	
+	public static void processRGBData(float R, float B, float G, int target){
 		float dY, dB, dO, dG;
 		float[] data = normalizeRGBData(R, B, G);
+		target--;
 		
 		dY = (float) Math.sqrt( (data[0] - Y_RGB_MEAN[0]) * (data[0] - Y_RGB_MEAN[0])
 				+ (data[1] - Y_RGB_MEAN[1]) * (data[1] - Y_RGB_MEAN[1])
@@ -33,18 +36,62 @@ public class RingDetector {
 		if(dY < 0.020744+0.010672*2){
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Yellow", 0, 5);
+			if(!foundRings[2]) {
+				foundRings[2] = true;
+				if(target == 2) {
+					Sound.beep();
+				}
+				else {
+					Sound.beep();
+					Sound.beep();
+				}
+				
+			}
 		}
 		else if(dB < 0.1){
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Blue  ", 0, 5);
+			if(!foundRings[0]) {
+				foundRings[0] = true;
+				if(target == 0) {
+					Sound.beep();
+				}
+				else {
+					Sound.beep();
+					Sound.beep();
+				}
+				
+			}
 		}
 		else if(dO < 0.1){
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Orange", 0, 5);
+			if(!foundRings[3]) {
+				foundRings[3] = true;
+				if(target == 3) {
+					Sound.beep();
+				}
+				else {
+					Sound.beep();
+					Sound.beep();
+				}
+				
+			}
 		}
 		else if(dG < 0.023811+0.013883*2){
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Green ", 0, 5);
+			if(!foundRings[1]) {
+				foundRings[1] = true;
+				if(target == 1) {
+					Sound.beep();
+				}
+				else {
+					Sound.beep();
+					Sound.beep();
+				}
+				
+			}
 		}
 		else{
 			Lab5.lcd.drawString("No object detected", 0, 4);
