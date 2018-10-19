@@ -2,6 +2,7 @@ package ca.mcgill.ecse211.lab5;
 
 import ca.mcgill.ecse211.lab5.LightLocalizer;
 import ca.mcgill.ecse211.lab5.UltrasonicLocalizer;
+import ca.mcgill.ecse211.lab5.BangBangController;
 import ca.mcgill.ecse211.lab5.Display;
 import ca.mcgill.ecse211.odometer.*;
 import lejos.hardware.Button;
@@ -24,10 +25,17 @@ public class Lab5 {
       new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
   public static final EV3LargeRegulatedMotor rightMotor =
       new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+  public static final EV3MediumRegulatedMotor sensorMotor = new EV3MediumRegulatedMotor(LocalEV3.get().getPort("C"));
   public static final TextLCD lcd = LocalEV3.get().getTextLCD();
   public static final double WHEEL_RAD = 2.1;//2.2 OG
   public static final double TRACK = 12.1;//17 OG
   public static String mode = " ";
+  private static final int wallFollowingHighSpeed = 100;
+  private static final int wallFollowingLowSpeed = 33;
+  public static final int wallFollowingBandCenter = 15;
+  private static final int wallFollowingBandWidth = 1;
+  public static BangBangController bangbangcontroller = new BangBangController(wallFollowingBandCenter, wallFollowingBandWidth, wallFollowingLowSpeed
+  		, wallFollowingHighSpeed, leftMotor, rightMotor);
   
 
 
@@ -56,7 +64,7 @@ public class Lab5 {
     
     Odometer odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD);
     
-    Navigation navigator = new Navigation(leftMotor, rightMotor, WHEEL_RAD, TRACK);
+    Navigation navigator = new Navigation(leftMotor, rightMotor, sensorMotor, WHEEL_RAD, TRACK, bangbangcontroller);
     
     UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData);
     
@@ -95,6 +103,16 @@ public class Lab5 {
     } while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
     
     lsLocalizer.moveToOrigin();
+    
+    do{
+    	buttonChoice = Button.waitForAnyPress();
+    	try {
+            Thread.sleep(20);
+          } catch (Exception e) {
+          } 
+    } while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+    
+    navigator.travelTo(0, 2);
     
     while (Button.waitForAnyPress() != Button.ID_ESCAPE);
     		System.exit(0);
