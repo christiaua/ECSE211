@@ -82,8 +82,8 @@ public class Lab5 {
 		lightPoller.start();
 		usPoller.start();
 
-		UltrasonicLocalizer usLocalizer = new UltrasonicLocalizer(usPoller);
-		LightLocalizer lsLocalizer = new LightLocalizer(lightPoller);
+		UltrasonicLocalizer usLocalizer = new UltrasonicLocalizer(usPoller, navigator);
+		LightLocalizer lsLocalizer = new LightLocalizer(lightPoller, navigator);
 
 
 		Thread displayThread = new Thread(display);
