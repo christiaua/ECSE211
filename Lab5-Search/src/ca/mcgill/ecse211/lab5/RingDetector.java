@@ -1,7 +1,6 @@
 package ca.mcgill.ecse211.lab5;
 
 import lejos.hardware.Sound;
-import lejos.hardware.lcd.LCD;
 
 public class RingDetector {
 	
@@ -10,8 +9,13 @@ public class RingDetector {
 	private static final double[] O_RGB_MEAN = {0.967, 0.237, 0.092};
 	private static final double[] G_RGB_MEAN = {0.443, 0.874, 0.202};
 	
+	private static boolean ringDetected = false;
+	
 	private static boolean[] foundRings = {false, false, false, false};
 	
+	public static boolean ringDetected() {
+		return ringDetected;
+	}
 	public static void processRGBData(float R, float B, float G, int target){
 		float dY, dB, dO, dG;
 		float[] data = normalizeRGBData(R, B, G);
@@ -34,6 +38,7 @@ public class RingDetector {
 				+ (data[2] - G_RGB_MEAN[2]) * (data[2] - G_RGB_MEAN[2]) );
 
 		if(dY < 0.020744+0.010672*2){
+			ringDetected = true;
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Yellow", 0, 5);
 			if(!foundRings[2]) {
@@ -49,6 +54,7 @@ public class RingDetector {
 			}
 		}
 		else if(dB < 0.1){
+			ringDetected = true;
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Blue  ", 0, 5);
 			if(!foundRings[0]) {
@@ -64,6 +70,7 @@ public class RingDetector {
 			}
 		}
 		else if(dO < 0.1){
+			ringDetected = true;
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Orange", 0, 5);
 			if(!foundRings[3]) {
@@ -79,6 +86,7 @@ public class RingDetector {
 			}
 		}
 		else if(dG < 0.023811+0.013883*2){
+			ringDetected = true;
 			Lab5.lcd.drawString("Object detected", 0, 4);
 			Lab5.lcd.drawString("Green ", 0, 5);
 			if(!foundRings[1]) {
@@ -94,6 +102,7 @@ public class RingDetector {
 			}
 		}
 		else{
+			ringDetected = false;
 			Lab5.lcd.drawString("No object detected", 0, 4);
 			Lab5.lcd.drawString("None  ", 0, 5);
 		}

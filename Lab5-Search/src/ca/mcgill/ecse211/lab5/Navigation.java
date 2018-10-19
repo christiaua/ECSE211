@@ -26,6 +26,7 @@ public class Navigation {
 	public int[] currentDest = {0,0};
 	private EV3MediumRegulatedMotor sensorMotor;
 	private UltrasonicController cont;
+	public boolean isNavigating = false;
 
 	/**
 	 * This method is meant to drive the robot in a square of size 2x2 Tiles. It is to run in parallel
@@ -80,6 +81,8 @@ public class Navigation {
 		double angleToTurnTo;
 		double currentDistance;
 		double[] currentPosition = odo.getXYT();
+		
+		isNavigating = true;
 
 		//Save current destination
 		currentDest[0] = x;
@@ -103,10 +106,11 @@ public class Navigation {
 			currentPosition = odo.getXYT();
 			currentDistance = calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
 
-			if((int)(Lab5.usData[0] * 100) < Lab5.wallFollowingBandCenter){
+			if(RingDetector.ringDetected()){
 				//exit navigating mode
 				stop();
-
+				isNavigating = false;
+				
 				//save the angle at which the ultrasonic sensor detected an obstacle
 				angleAtDetection = this.sensorMotor.getTachoCount();
 
@@ -118,11 +122,8 @@ public class Navigation {
 					Thread.sleep(1000);
 				} catch (Exception e) {
 				}
-
-				//rotate the robot by 90 degrees + angle of the sensor at obstacle detection
-				leftMotor.rotate(-Navigation.convertAngle(Lab5.WHEEL_RAD, Lab5.TRACK, 90 + angleAtDetection), true);
-				rightMotor.rotate(Navigation.convertAngle(Lab5.WHEEL_RAD, Lab5.TRACK, 90 + angleAtDetection), false);
-
+				rotate(90 + angleAtDetection, false);
+				
 				try {
 					Thread.sleep(1000);
 				} catch (Exception e) {
@@ -151,23 +152,28 @@ public class Navigation {
 				stop();
 				sensorMotor.rotateTo(0, false);
 				sensorMotor.setSpeed(75);
+				isNavigating = true;
 			}
 
 			//if in navigating mode, motors arent moving and not close enough to the
-			//current destination, turn in the correct direction to get to destination
-			//and move forward
-			if(isNavigating() && currentDistance > 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
-				angleToTurnTo = calculateAngle(x, y, odo);
-				turnTo(angleToTurnTo);
-				this.leftMotor.rotate(convertDistance(leftRadius, currentDistance), true);
-				this.rightMotor.rotate(convertDistance(rightRadius, currentDistance), true);
-			}
-
-			try{
-				Thread.sleep(25);
-			} catch (InterruptedException e){
-
-			}
+			  //current destination, turn in the correct direction to get to destination
+			  //and move forward
+			  if(isNavigating && currentDistance > 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
+				  angleToTurnTo = calculateAngle(x, y, odo);
+				  turnTo(angleToTurnTo);
+				  moveForward(currentDistance, true);
+			  }
+			  //if in navigating mode, motors arent moving and near the destination,
+			  //exit navigating mode
+			  else if(isNavigating && currentDistance < 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
+				  isNavigating = false;
+				  break;
+			  }
+			  
+			  try{
+				  Thread.sleep(25);
+			  } catch (InterruptedException e){
+			  }
 		}
 	}
 
