@@ -45,5 +45,4 @@ public class UltrasonicPoller extends Thread {
 			} // Poor man's timed sampling
 		}
 	}
-
 }
