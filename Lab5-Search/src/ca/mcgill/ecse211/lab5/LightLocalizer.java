@@ -3,6 +3,12 @@ package ca.mcgill.ecse211.lab5;
 import lejos.hardware.Sound;
 import ca.mcgill.ecse211.odometer.*;
 
+/**
+ * This class does the light localization
+ * 
+ * @author Edward Huang
+ * @author Hugo Parent-Pothier
+ */
 public class LightLocalizer {
 	private Odometer odo;
 
@@ -11,19 +17,25 @@ public class LightLocalizer {
 	private double x;
 	private double y;
 	private static final double D = 12.5;
-	//private double dthetaX;
 	private double dthetaY;
 	private Navigation navigation;
+	private static final double TILE_SIZE = 30.48;
 	
-	
-	
-	
+	/**
+	 * constructor
+	 * @param lightPoller
+	 * @param nav
+	 * @throws OdometerExceptions
+	 */
 	public LightLocalizer(ColPoller lightPoller, Navigation nav) throws OdometerExceptions{
 		this.lightPoller = lightPoller;
 		this.odo = Odometer.getOdometer();
 		this.navigation = nav;
 	}
 	
+	/**
+	 * makes the robot turn to 45 and goes until it finds the first intersection AKA (1,1)
+	 */
 	public void moveToOrigin(){
 		int lineCount = 0;
 		double[] theta = new double[4];
@@ -74,6 +86,7 @@ public class LightLocalizer {
 		odo.update(0,0,(dthetaY + 5));
 		navigation.travelTo(0,0);
 		navigation.turnTo(0);
+		odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
 	}
 	
 	

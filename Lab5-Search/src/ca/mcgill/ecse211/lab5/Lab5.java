@@ -18,6 +18,12 @@ import lejos.robotics.RegulatedMotor;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.SensorMode;
 
+/**
+ * This class runs the lab 5
+ * 
+ * @author Sophie Deng
+ * @author Edward Huang
+ */
 public class Lab5 {
 	
 	//CUSTOM VARIABLES
@@ -41,7 +47,7 @@ public class Lab5 {
 	public static String mode = " ";
 	private static final int wallFollowingHighSpeed = 100;
 	private static final int wallFollowingLowSpeed = 33;
-	public static final int wallFollowingBandCenter = 15;
+	public static final int wallFollowingBandCenter = 20;
 	private static final int wallFollowingBandWidth = 1;
 	public static BangBangController bangbangcontroller = new BangBangController(wallFollowingBandCenter, wallFollowingBandWidth, wallFollowingLowSpeed
 			, wallFollowingHighSpeed, leftMotor, rightMotor);
@@ -68,6 +74,7 @@ public class Lab5 {
 	public static void main(String[] args) throws OdometerExceptions {
 
 		int buttonChoice;
+		buttonChoice = Button.waitForAnyPress(); //wait for button before starting
 
 		Odometer odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD);
 
@@ -91,14 +98,15 @@ public class Lab5 {
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();
 
-		/*do{
+		do{
 			buttonChoice = Button.waitForAnyPress();
 			try {
 				Thread.sleep(20);
 			} catch (Exception e) {
 			} 
 		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-
+		
+		//wait for button and starts ultrasonic localizer
 		usLocalizer.fallingEdge();
 
 		do{
@@ -109,7 +117,8 @@ public class Lab5 {
 			} 
 		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 
-		lsLocalizer.moveToOrigin(); */
+		//wait for button and moves to (1,1) and does light localization
+		lsLocalizer.moveToOrigin(); 
 
 		do{
 			buttonChoice = Button.waitForAnyPress();
@@ -118,8 +127,29 @@ public class Lab5 {
 			} catch (Exception e) {
 			} 
 		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-
-		navigator.travelTo(0, 2);
+		//wait for button and goes to (LLX, LLY)
+		navigator.travelTo(LLx, LLy);
+		
+		//zigzags through all the lines
+		int diffX = URx - LLx;
+		int diffY = URy - LLy;
+		boolean isLowerLine = true;
+		
+		for(int i = LLy+1; i < URy; i++) {
+			if(isLowerLine) {
+				navigator.travelTo(LLx, i);
+				navigator.travelTo(URx, i);
+				isLowerLine = false;
+			}
+			else {
+				navigator.travelTo(URx, i);
+				navigator.travelTo(LLx, i);
+				isLowerLine = true;
+			}
+		}
+			
+		//if target found, go to upper right corner
+		navigator.travelTo(URx, URy);
 
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);

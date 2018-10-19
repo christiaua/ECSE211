@@ -2,6 +2,12 @@ package ca.mcgill.ecse211.lab5;
 
 import lejos.robotics.SampleProvider;
 
+/**
+ * This class gets the samples for the light sensors
+ * 
+ * @author Edward Huang
+ * @author Hugo Parent-Pothier
+ */
 public class ColPoller extends Thread {
 	private SampleProvider rgbSample;
 	private float[] rgbData;
@@ -26,6 +32,9 @@ public class ColPoller extends Thread {
 		this.target = TR;
 	}
 
+	/**
+	 * Get the sample from both light sensors and processes the data
+	 */
 	public void run() {
 		while (true) {
 			redSample.fetchSample(redData, 0);
@@ -42,14 +51,26 @@ public class ColPoller extends Thread {
 		}
 	}
 
+	/**
+	 * Get R, G and B values
+	 * @return
+	 */
 	public float[] getRGBReading(){
 		return this.rgbData;
 	}
 
+	/**
+	 * Get the Red value
+	 * @return
+	 */
 	public float getCurrentRedReading(){
 		return this.currentRedReading;
 	}
 
+	/**
+	 * Get previous Red value
+	 * @return
+	 */
 	public float getLastRedReading(){
 		return this.lastRedReading;
 	}

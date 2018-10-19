@@ -2,6 +2,13 @@ package ca.mcgill.ecse211.lab5;
 
 import lejos.hardware.Sound;
 
+/**
+ * This class detects the rings
+ * 
+ * @author Edward Huang
+ * @author Hugo Parent-Pothier
+ * @author Sophie Deng
+ */
 public class RingDetector {
 	
 	private static final double[] Y_RGB_MEAN = {0.849, 0.503, 0.160};
@@ -10,12 +17,33 @@ public class RingDetector {
 	private static final double[] G_RGB_MEAN = {0.443, 0.874, 0.202};
 	
 	private static boolean ringDetected = false;
+	private static boolean targetFound = false;
 	
 	private static boolean[] foundRings = {false, false, false, false};
 	
+	/**
+	 * Checks if a ring is detected
+	 * @return
+	 */
 	public static boolean ringDetected() {
 		return ringDetected;
 	}
+	
+	/**
+	 * Checks if the target ring was found
+	 * @return
+	 */
+	public static boolean targetDetected() {
+		return targetFound;
+	}
+	
+	/**
+	 * Processes the data and checks ring colour
+	 * @param R
+	 * @param B
+	 * @param G
+	 * @param target
+	 */
 	public static void processRGBData(float R, float B, float G, int target){
 		float dY, dB, dO, dG;
 		float[] data = normalizeRGBData(R, B, G);
@@ -45,6 +73,7 @@ public class RingDetector {
 				foundRings[2] = true;
 				if(target == 2) {
 					Sound.beep();
+					targetFound = true;
 				}
 				else {
 					Sound.beep();
@@ -61,6 +90,7 @@ public class RingDetector {
 				foundRings[0] = true;
 				if(target == 0) {
 					Sound.beep();
+					targetFound = true;
 				}
 				else {
 					Sound.beep();
@@ -77,6 +107,7 @@ public class RingDetector {
 				foundRings[3] = true;
 				if(target == 3) {
 					Sound.beep();
+					targetFound = true;
 				}
 				else {
 					Sound.beep();
@@ -93,6 +124,7 @@ public class RingDetector {
 				foundRings[1] = true;
 				if(target == 1) {
 					Sound.beep();
+					targetFound = true;
 				}
 				else {
 					Sound.beep();
@@ -108,6 +140,13 @@ public class RingDetector {
 		}
 	}
 	
+	/**
+	 * Normalizes the data
+	 * @param R
+	 * @param B
+	 * @param G
+	 * @return
+	 */
 	private static float[] normalizeRGBData(float R, float B, float G){
 		float[] result = new float[3];
 		result[0] = R / (float)Math.sqrt(R*R + B*B + G*G);

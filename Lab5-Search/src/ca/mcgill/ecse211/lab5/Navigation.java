@@ -11,7 +11,11 @@ import ca.mcgill.ecse211.odometer.*;
 import lejos.hardware.Sound;
 
 /**
- * This class is used to drive the robot on the demo floor.
+ * This class controls the robot motors
+ * 
+ * @author Edward Huang
+ * @author Hugo Parent-Pothier
+ * @author Sophie Deng
  */
 public class Navigation {
 	private static final int FORWARD_SPEED = 100;
@@ -50,10 +54,14 @@ public class Navigation {
 		this.sensorMotor = sensorMotor;
 	}
 	
+	/**
+	 * Moves the robot forwards a distance. A negative distance implies going backwards
+	 * @param distance
+	 * @param immediateReturn
+	 */
 	public void moveForward(double distance, boolean immediateReturn){
 		stop();
-		leftMotor.setSpeed(FORWARD_SPEED);
-		rightMotor.setSpeed(FORWARD_SPEED);
+		setSpeed(FORWARD_SPEED);
 		if(distance < 0) {
 			leftMotor.rotate(-convertDistance(leftRadius, Math.abs(distance)), true);
 			rightMotor.rotate(-convertDistance(rightRadius, Math.abs(distance)), immediateReturn);
@@ -61,14 +69,22 @@ public class Navigation {
 		}
 		leftMotor.rotate(convertDistance(leftRadius, distance), true);
 		rightMotor.rotate(convertDistance(rightRadius, distance), immediateReturn);
-
 	}
 	
+	/**
+	 * Rotates the robot by certain angle. Positive angle is clockwise
+	 * @param angle
+	 * @param immediateReturn
+	 */
 	public void rotate(double angle, boolean immediateReturn) {
-		leftMotor.setSpeed(ROTATE_SPEED);
-		rightMotor.setSpeed(ROTATE_SPEED);
-		leftMotor.rotate(convertAngle(leftRadius, track, angle), true);
-		rightMotor.rotate(-convertAngle(rightRadius, track, angle), immediateReturn);
+		setSpeed(ROTATE_SPEED);
+		if(angle < 0) {
+			leftMotor.rotate(-convertAngle(leftRadius, track, Math.abs(angle)), true);
+			rightMotor.rotate(convertAngle(rightRadius, track, Math.abs(angle)), immediateReturn);
+			return;
+		}
+		leftMotor.rotate(convertAngle(leftRadius, track, Math.abs(angle)), true);
+		rightMotor.rotate(-convertAngle(rightRadius, track, Math.abs(angle)), immediateReturn);
 	}
 
 	/**
@@ -77,6 +93,7 @@ public class Navigation {
 	 * @param y
 	 */
 	public void travelTo(int x, int y){
+		sensorMotor.rotateTo(0, false);
 		int angleAtDetection;
 		double angleToTurnTo;
 		double currentDistance;
@@ -116,7 +133,7 @@ public class Navigation {
 
 				//rotate sensor towards obstacle
 				sensorMotor.setSpeed(75);
-				sensorMotor.rotateTo(-90, true);
+				sensorMotor.rotateTo(-75, true);
 
 				try {
 					Thread.sleep(1000);
@@ -197,8 +214,7 @@ public class Navigation {
 			minAngle = dtheta;
 
 		//set motor speed
-		this.leftMotor.setSpeed(ROTATE_SPEED);
-		this.rightMotor.setSpeed(ROTATE_SPEED);
+		setSpeed(ROTATE_SPEED);
 
 		//turn by minimum angle
 		this.leftMotor.rotate(convertAngle(leftRadius, track, minAngle), true);
@@ -255,7 +271,14 @@ public class Navigation {
 	private static int convertDistance(double radius, double distance) {
 		return (int) ((180.0 * distance) / (Math.PI * radius));
 	}
-
+	
+	/**
+	 * This method computes how much the wheels should turn to get to an angle
+	 * 
+	 * @param radius
+	 * @param distance
+	 * @return
+	 */
 	public static int convertAngle(double radius, double width, double angle) {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
 	}
@@ -317,6 +340,7 @@ public class Navigation {
 	 * 
 	 */
 	public void backwards() {
+		setSpeed(FORWARD_SPEED);
 		leftMotor.backward();
 		rightMotor.backward();
 	}

@@ -3,7 +3,12 @@ package ca.mcgill.ecse211.lab5;
 import ca.mcgill.ecse211.odometer.*;
 import lejos.hardware.Sound;
 
-
+/**
+ * This class does the ultrasonic localization
+ * 
+ * @author Edward Huang
+ * @author Hugo Parent-Pothier
+ */
 public class UltrasonicLocalizer {
 	
 	private Odometer odo;

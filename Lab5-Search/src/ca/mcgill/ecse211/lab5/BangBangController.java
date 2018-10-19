@@ -3,6 +3,12 @@ package ca.mcgill.ecse211.lab5;
 import ca.mcgill.ecse211.lab5.UltrasonicController;
 import lejos.hardware.motor.*;
 
+/**
+ * This class follows an obstacle with the bang bang controller
+ * 
+ * @author Edward Huang
+ * @author Hugo Parent-Pothier
+ */
 public class BangBangController implements UltrasonicController {
 
 	int minDistance;
