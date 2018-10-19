@@ -122,7 +122,7 @@ public class Navigation {
 					Thread.sleep(1000);
 				} catch (Exception e) {
 				}
-				rotate(90 + angleAtDetection, false);
+				rotate(-(90 + angleAtDetection), false);
 				
 				try {
 					Thread.sleep(1000);

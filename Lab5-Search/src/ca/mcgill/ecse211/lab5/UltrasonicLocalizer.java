@@ -62,7 +62,7 @@ public class UltrasonicLocalizer {
 					fallingEdgeAngle[i] = (temp1 + temp2) / 2;
 					navigation.stop();
 					if(i == 0){
-						navigation.rotate(360, true);
+						navigation.rotate(-360, true);
 					}
 					break;
 				}
@@ -122,7 +122,7 @@ public class UltrasonicLocalizer {
 					risingEdgeAngle[i] = (temp1 + temp2) / 2;
 					navigation.stop();
 					if(i == 0){
-						navigation.rotate(360, true);
+						navigation.rotate(-360, true);
 					}
 					break;
 				}
