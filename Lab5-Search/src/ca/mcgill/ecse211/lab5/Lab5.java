@@ -14,9 +14,8 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
-import lejos.robotics.RegulatedMotor;
 import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.hardware.sensor.SensorMode;
+
 
 /**
  * This class runs the lab 5
@@ -49,6 +48,7 @@ public class Lab5 {
 	private static final int wallFollowingLowSpeed = 33;
 	public static final int wallFollowingBandCenter = 20;
 	private static final int wallFollowingBandWidth = 1;
+	private static final double TILE_SIZE = 30.48;
 	public static BangBangController bangbangcontroller = new BangBangController(wallFollowingBandCenter, wallFollowingBandWidth, wallFollowingLowSpeed
 			, wallFollowingHighSpeed, leftMotor, rightMotor);
 
@@ -119,6 +119,27 @@ public class Lab5 {
 
 		//wait for button and moves to (1,1) and does light localization
 		lsLocalizer.moveToOrigin(); 
+		
+		switch(SC) {
+		case 0:
+			odometer.setX(TILE_SIZE);
+			odometer.setY(TILE_SIZE);
+			break;
+		case 1:
+			odometer.setX(6*TILE_SIZE);
+			odometer.setY(TILE_SIZE);
+			break;
+		case 2:
+			odometer.setX(6*TILE_SIZE);
+			odometer.setY(6*TILE_SIZE);
+			break;
+		case 3:
+			odometer.setX(TILE_SIZE);
+			odometer.setY(6*TILE_SIZE);			
+			break;
+		default:
+			break;
+		}
 
 		do{
 			buttonChoice = Button.waitForAnyPress();
@@ -128,24 +149,28 @@ public class Lab5 {
 			} 
 		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 		//wait for button and goes to (LLX, LLY)
+		
+		/*if(SC == 2) {
+			navigator.travelTo(7, 1);
+		}*/
+		
 		navigator.travelTo(LLx, LLy);
 		
 		//zigzags through all the lines
-		int diffX = URx - LLx;
-		int diffY = URy - LLy;
-		boolean isLowerLine = true;
+		boolean isLeftLine = true;
 		
 		for(int i = LLy+1; i < URy; i++) {
-			if(isLowerLine) {
+			if(isLeftLine) {
 				navigator.travelTo(LLx, i);
 				navigator.travelTo(URx, i);
-				isLowerLine = false;
+				isLeftLine = false;
 			}
 			else {
 				navigator.travelTo(URx, i);
 				navigator.travelTo(LLx, i);
-				isLowerLine = true;
+				isLeftLine = true;
 			}
+			if(RingDetector.targetDetected()) break;
 		}
 			
 		//if target found, go to upper right corner
