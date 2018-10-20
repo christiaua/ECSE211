@@ -84,8 +84,10 @@ public class LightLocalizer {
 		odo.setY(y);
 		dthetaY = -90 - theta[3] + thetaY/2;
 		odo.update(0,0,(dthetaY + 5));
-		navigation.travelTo(0,0);
+		navigation.travelToWhileSearching(0,0);
 		navigation.turnTo(0);
+
+		odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
 	}
 	
 	

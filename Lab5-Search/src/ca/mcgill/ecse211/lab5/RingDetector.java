@@ -140,6 +140,10 @@ public class RingDetector {
 		}
 	}
 	
+	public static void resetStatus(){
+		targetFound = false;
+	}
+	
 	/**
 	 * Normalizes the data
 	 * @param R
