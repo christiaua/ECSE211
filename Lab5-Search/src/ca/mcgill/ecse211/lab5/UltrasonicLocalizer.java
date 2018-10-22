@@ -6,19 +6,18 @@ import lejos.hardware.Sound;
 /**
  * This class does the ultrasonic localization
  * 
- * @author Edward Huang
- * @author Hugo Parent-Pothier
+ * @author Sophie Deng
  */
 public class UltrasonicLocalizer {
-	
+
 	private Odometer odo;
 	private Navigation navigation;
-	public static final double D = 25;
-	public static final double THRESHOLD = 1;
 	private UltrasonicPoller usPoller;
-	private static int angleCorrection = 0;
-	
-	
+
+	private static final int ROTATE_SPEED = 50;
+	private static final double WALLDISTANCE = 35;
+	private static final double NOISE = 3;
+
 	/**
 	 * Constructor
 	 * @param usPoller
@@ -30,142 +29,156 @@ public class UltrasonicLocalizer {
 		this.usPoller = usPoller;
 		this.navigation = nav;
 	}
+
 	/**
-	 * This method is used to find the angle of the robot assuming 
-	 * it is located in the bottom left corner of the grid, and make it turn to 0 degrees.
-	 * It does so by using the ultrasonic sensor values and detecting the two relative positions where 
-	 * the sensor values falls under a given constant, and sets the midpoint between these values 
-	 * to be the 45 degree angle.
+	 * Perform localization, robot should be facing north
+	 * @param true for rising edge, false for falling edge
 	 */
-	public void fallingEdge(){
-		double[] fallingEdgeAngle = new double[2]; //angle at which falling edges are detected
-		double temp1; //holds temp angle values of when the ultrasonic sensor
-		double temp2; //when the distance detected falls within the threshold and when it
-					  //falls out of the threshold
-		double actualHeading;
-		double dtheta;
-		
-		navigation.rotate(360, true);
-		
-		for(int i = 0; i < 2; i++){
-			while(true){
-				if(usPoller.lastDistance[0] > (D + THRESHOLD) && usPoller.lastDistance[1] > (D + THRESHOLD) && usPoller.distance < (D + THRESHOLD)){
-					temp1 = odo.getXYT()[2];
-					while(true){
-						if(usPoller.distance < D - THRESHOLD){
-							temp2 = odo.getXYT()[2];
-							Sound.beep(); //falling edge detected;
-							break;
-						}
-						try{
-					        Thread.sleep(25);
-					    }catch (Exception e){
-					    } 
-					}
-					fallingEdgeAngle[i] = (temp1 + temp2) / 2;
-					navigation.stop();
-					if(i == 0){
-						navigation.rotate(-360, true);
-					}
-					break;
-				}
-				try {
-			        Thread.sleep(25);
-			      } catch (Exception e) {
-			      } 
+	public void doLocalization(boolean risingEdge) {
+		double angleA, angleB, angleZero; //angleA is the backwall and angleB is the side wall and angleZero is the offset
+		//get the two angles
+		if(risingEdge) {
+			angleA = getAngleARisingEdge();
+			angleB = getAngleBRisingEdge();
+		}
+		else {
+			angleA = getAngleAFallingEdge();
+			angleB = getAngleBFallingEdge();
+		}
+		//get offset angle
+		angleZero = getAngleZero(angleA, angleB);
+
+		//get real angle
+		double currentAngle = odo.getXYT()[2];
+		double realAngle = (currentAngle + angleZero) % 360;
+		if(realAngle < 0) {
+			realAngle += 360;
+		}
+
+		//set real angle and turn to 0
+		odo.setTheta(realAngle);
+		navigation.turnTo(0);
+	}
+
+	/**
+	 * get angleA for rising edge
+	 * @return
+	 */
+	private double getAngleARisingEdge() {
+		//rotate robot counterclockwise until it sees a wall
+		navigation.rotateWheels(-ROTATE_SPEED, ROTATE_SPEED);
+		while(true) {
+			if(getDistance() <= WALLDISTANCE + NOISE) {
+				Sound.buzz();
+				break;
 			}
 		}
 		
-		if(fallingEdgeAngle[0] < fallingEdgeAngle[1]){
-			dtheta = 225 + angleCorrection - (fallingEdgeAngle[0] + fallingEdgeAngle[1])/2;
+		while(true) {
+			if(getDistance() > WALLDISTANCE) {
+				Sound.buzz();
+				navigation.stop();
+				break;
+			}
 		}
-		else{
-			dtheta = 45 + angleCorrection - (fallingEdgeAngle[0] + fallingEdgeAngle[1])/2;
-		}
-		
-		actualHeading = odo.getXYT()[2] + dtheta;
-		odo.setTheta(actualHeading);
-		turnTo(0);
+		//return back wall angle
+		return odo.getXYT()[2];
 	}
-	
 	/**
-	 * This method is used to find the angle of the robot assuming 
-	 * it is located in the bottom left corner of the grid, and make it turn to 0 degrees.
-	 * It does so by using the ultrasonic sensor values and detecting the two relative positions where 
-	 * the sensor values rises above a given constant, and sets the midpoint between these values 
-	 * to be the 225 degree angle.
+	 * get angleB for rising edge
+	 * @return
 	 */
-	public void risingEdge(){
-		double[] risingEdgeAngle = new double[2]; //angle at which falling edges are detected
-		double temp1; //holds temp angle values of when the ultrasonic sensor
-		double temp2; //when the distance detected falls within the threshold and when it
-					  //falls out of the threshold
-		double actualHeading;
-		double dtheta;
-		
-		navigation.rotate(360, true);
-		
-		for(int i = 0; i < 2; i++){
-			while(true){
-				if(usPoller.lastDistance[0] < (D - THRESHOLD) && usPoller.lastDistance[1] < (D - THRESHOLD) && usPoller.distance > (D - THRESHOLD)){
-					temp1 = odo.getXYT()[2];
-					while(true){
-						if(usPoller.distance > D + THRESHOLD){
-							temp2 = odo.getXYT()[2];				
-							Sound.beep(); //falling edge detected;	
-							break;
-						}
-						try{
-					        Thread.sleep(25);
-					    }catch (Exception e){
-					    } 
-					}
-					risingEdgeAngle[i] = (temp1 + temp2) / 2;
-					navigation.stop();
-					if(i == 0){
-						navigation.rotate(-360, true);
-					}
-					break;
-				}
-				try {
-			        Thread.sleep(25);
-			      } catch (Exception e) {
-			      } 
+	private double getAngleBRisingEdge() {
+		//rotate clockwise until it sees a wall
+		navigation.rotateWheels(ROTATE_SPEED, -ROTATE_SPEED);
+		while(true) {
+			if(getDistance() <= WALLDISTANCE + NOISE) {
+				Sound.buzz();
+				break;
 			}
 		}
 		
-		if(risingEdgeAngle[0] > risingEdgeAngle[1]){
-			dtheta = 225 + angleCorrection - (risingEdgeAngle[0] + risingEdgeAngle[1])/2;
+		while(true) {
+			if(getDistance() > WALLDISTANCE) {
+				Sound.buzz();
+				navigation.stop();
+				break;
+			}
 		}
-		else{
-			dtheta = 45 + angleCorrection - (risingEdgeAngle[0] + risingEdgeAngle[1])/2;
+		//returns side wall angle
+		return odo.getXYT()[2];
+	}
+	/**
+	 * get angleA for falling edge
+	 * @return
+	 */
+	private double getAngleAFallingEdge() {
+		//rotate clockwise until it doesn't sees a wall
+		navigation.rotateWheels(ROTATE_SPEED, -ROTATE_SPEED);
+		while(true) {
+			if(getDistance() > WALLDISTANCE + NOISE) {
+				Sound.buzz();
+				break;
+			}
 		}
 		
-		actualHeading = odo.getXYT()[2] + dtheta;
-		odo.setTheta(actualHeading);
-		turnTo(0);
-	}
-	
-	
-	/**
-	   * This method turns the robot in place to the absolute angle theta.
-	   * @param theta
-	   */
-	private void turnTo(double theta){
-		double currentTheta = odo.getXYT()[2];
-		double dtheta = theta - currentTheta;
-		double minAngle;
-		  
-		//calculate minimum angle needed to turn to get to desired angle
-		if(Math.abs(dtheta) > 180){
-			if(dtheta > 0)
-				minAngle = dtheta - 360;
-			else
-				minAngle = dtheta + 360;
+		while(true) {
+			if(getDistance() <= WALLDISTANCE) {
+				Sound.buzz();
+				navigation.stop();
+				break;
+			}
 		}
-		else
-			minAngle = dtheta;
-		 	//set motor speed
-		 	navigation.rotate(minAngle, false);
+		//returns back wall angle
+		return odo.getXYT()[2];
 	}
+	/**
+	 * get angleB for falling edge
+	 * @return
+	 */
+	private double getAngleBFallingEdge() {
+		//rotate counterclockwise until it doesn't sees a wall
+		navigation.rotateWheels(-ROTATE_SPEED, ROTATE_SPEED);
+		while(true) {
+			if(getDistance() > WALLDISTANCE + NOISE) {
+				Sound.buzz();
+				break;
+			}
+		}
+		
+		while(true) {
+			if(getDistance() <= WALLDISTANCE) {
+				Sound.buzz();
+				navigation.stop();
+				break;
+			}
+		}
+		//returns side wall angle
+		return odo.getXYT()[2];
+	}
+
+	/**
+	 * get distance from the wall with ultrasonic sensor
+	 * @return
+	 */
+	private float getDistance() {
+		return usPoller.distance;
+	}
+
+	/**
+	 * get offset angle
+	 * @param angle of backwall, angle of side wall
+	 * @return
+	 */
+	private double getAngleZero(double angleA, double angleB) {
+		double angleZero = 0;
+		if(angleA < angleB) {
+			angleZero = 255 - (angleA + angleB)/2.0;
+		}
+		else {
+			angleZero = 45 - (angleA + angleB)/2.0;
+		}
+		return angleZero;
+	}
+
 }

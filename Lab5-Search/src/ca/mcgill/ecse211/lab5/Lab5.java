@@ -109,7 +109,7 @@ public class Lab5 {
 		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 		
 		//wait for button and starts ultrasonic localizer
-		usLocalizer.fallingEdge();
+		usLocalizer.doLocalization(false);
 
 		do{
 			buttonChoice = Button.waitForAnyPress();
