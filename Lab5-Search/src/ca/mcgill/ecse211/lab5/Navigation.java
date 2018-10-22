@@ -257,105 +257,105 @@ public class Navigation {
 
 
 			//if distance < 10cm, enter wall following mode
-			if(Lab5.usData[0]*100.0 < 10){
-				//exit navigating mode
-				isNavigating = false;
-				this.leftMotor.stop(true);
-				this.rightMotor.stop(false);
+		      if(Lab5.usData[0]*100.0 < 20){
+		    	  //exit navigating mode
+		    	  isNavigating = false;
+		    	  this.leftMotor.stop(true);
+		    	  this.rightMotor.stop(false);
+		    	  
+		    	  //save the angle at which the ultrasonic sensor detected an obstacle
+		    	  angleAtDetection = this.sensorMotor.getTachoCount();
+		    	  
+		    	  //rotate sensor towards obstacle
+		    	  sensorMotor.setSpeed(75);
+		    	  sensorMotor.rotateTo(-80, true);
+		    	  
+		    	  try {
+		    	        Thread.sleep(1000);
+		    	      } catch (Exception e) {
+		    	      }
 
-				//save the angle at which the ultrasonic sensor detected an obstacle
-				angleAtDetection = this.sensorMotor.getTachoCount();
-
-				//rotate sensor towards obstacle
-				sensorMotor.setSpeed(75);
-				sensorMotor.rotateTo(-80, true);
-
-				try {
-					Thread.sleep(1000);
-				} catch (Exception e) {
-				}
-
-				//rotate the robot by 90 degrees + angle of the sensor at obstacle detection
-				leftMotor.rotate(-Navigation.convertAngle(leftRadius, track, 90 + angleAtDetection), true);
-				rightMotor.rotate(Navigation.convertAngle(rightRadius, track, 90 + angleAtDetection), false);
-
-				try {
-					Thread.sleep(1000);
-				} catch (Exception e) {
-				}   	  
-
-				stopwatch.reset();
-
-				do{
-					//pass distance to bang bang controller and allow it to control the robot
-					cont.processUSData((int)(Lab5.usData[0]*100.0));
-
-					try {
-						Thread.sleep(50);
-					} catch (Exception e) {
-					}
-
-					//if the angle the robot is currently at is within 10 of the angle it has to
-					//be to reach the current destination, exit wall following mode
-					if(Navigation.angleDiff(
-							Navigation.calculateAngle(currentDest[0], currentDest[1], odo), 
-							odo.getXYT()[2]) < 10){
-						Sound.beep();
-						break;
-					}
-				} while(stopwatch.elapsed() < 8000); 
-				//if the robot has been in wall following
-				//mode for more than 20s, force exit
-
-				//after exiting wall following mode, stop motors and rotate
-				//ultrasonic sensor back to 0 degrees
-				this.leftMotor.stop(true);
-				this.rightMotor.stop(false);
-				sensorMotor.rotateTo(0, false);
-				counter = 0;
-				//reenter navigating mode
-				isNavigating = true;
-				sensorMotor.setSpeed(75);
-			}
-			//if navigating, rotate ultrasonic sensor in a 40 degree cone
-			if(isNavigating){
-				//this.sensorMotor.setSpeed(150);
-				if(!this.sensorMotor.isMoving()){
-					if(counter % 2 == 0){
-						this.sensorMotor.rotateTo(7, true);
-						counter++;
-					}
-					else{
-						this.sensorMotor.rotateTo(7, true);
-						counter++;
-					}
-				}
-			}
-
-			//if in navigating mode, motors arent moving and not close enough to the
-			//current destination, turn in the correct direction to get to destination
-			//and move forward
-			if(isNavigating && currentDistance > 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
-				angleToTurnTo = calculateAngle(x, y, odo);
-				turnTo(angleToTurnTo);
-				this.leftMotor.rotate(convertDistance(leftRadius, currentDistance), true);
-				this.rightMotor.rotate(convertDistance(rightRadius, currentDistance), true);
-			}
-			//if in navigating mode, motors arent moving and near the destination,
-			//exit navigating mode
-			else if(isNavigating && currentDistance < 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
-				isNavigating = false;
-				counter = 0;
-				break;
-			}
-
-			try{
-				Thread.sleep(25);
-			} catch (InterruptedException e){
-
-			}
-		}
-	}
+		    	  //rotate the robot by 90 degrees + angle of the sensor at obstacle detection
+		    	  leftMotor.rotate(-Navigation.convertAngle(leftRadius, track, 90 + angleAtDetection), true);
+		    	  rightMotor.rotate(Navigation.convertAngle(rightRadius, track, 90 + angleAtDetection), false);
+		    	  
+		    	  try {
+		  	        Thread.sleep(1000);
+		  	      } catch (Exception e) {
+		  	      }   	  
+			      
+		    	  stopwatch.reset();
+		    	  
+		    	  do{
+		    		  //pass distance to bang bang controller and allow it to control the robot
+			    	  cont.processUSData((int)(Lab5.usData[0]*100.0));
+			          
+			          try {
+			              Thread.sleep(50);
+			          } catch (Exception e) {
+			          }
+			         
+			          //if the angle the robot is currently at is within 10 of the angle it has to
+			          //be to reach the current destination, exit wall following mode
+			          if(Navigation.angleDiff(
+			        	Navigation.calculateAngle(currentDest[0], currentDest[1], odo), 
+			        	odo.getXYT()[2]) < 10){
+			        	  Sound.beep();
+			        	  break;
+			          }
+			      } while(stopwatch.elapsed() < 8000); 
+		    	  //if the robot has been in wall following
+		    	  //mode for more than 20s, force exit
+		    	  
+		    	  //after exiting wall following mode, stop motors and rotate
+		    	  //ultrasonic sensor back to 0 degrees
+		    	  this.leftMotor.stop(true);
+		    	  this.rightMotor.stop(false);
+		    	  sensorMotor.rotateTo(0, false);
+		    	  counter = 0;
+		    	  //reenter navigating mode
+		    	  isNavigating = true;
+		    	  sensorMotor.setSpeed(75);
+		      }
+			  //if navigating, rotate ultrasonic sensor in a 40 degree cone
+			  if(isNavigating){
+				  //this.sensorMotor.setSpeed(150);
+				  if(!this.sensorMotor.isMoving()){
+					  if(counter % 2 == 0){
+						  this.sensorMotor.rotateTo(10, true);
+						  counter++;
+					  }
+					  else{
+						  this.sensorMotor.rotateTo(-10, true);
+						  counter++;
+					  }
+				  }
+			  }
+			  
+			  //if in navigating mode, motors arent moving and not close enough to the
+			  //current destination, turn in the correct direction to get to destination
+			  //and move forward
+			  if(isNavigating && currentDistance > 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
+				  angleToTurnTo = calculateAngle(x, y, odo);
+				  turnTo(angleToTurnTo);
+				  this.leftMotor.rotate(convertDistance(leftRadius, currentDistance), true);
+				  this.rightMotor.rotate(convertDistance(rightRadius, currentDistance), true);
+			  }
+			  //if in navigating mode, motors arent moving and near the destination,
+			  //exit navigating mode
+			  else if(isNavigating && currentDistance < 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
+				  isNavigating = false;
+				  counter = 0;
+				  break;
+			  }
+			  
+			  try{
+				  Thread.sleep(25);
+			  } catch (InterruptedException e){
+			    	 
+			  }
+		  }
+	  }
 
 	/**
 	 * This method turns the robot in place to the absolute angle theta.
