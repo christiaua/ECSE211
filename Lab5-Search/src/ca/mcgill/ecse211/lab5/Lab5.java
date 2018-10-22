@@ -3,7 +3,6 @@ package ca.mcgill.ecse211.lab5;
 import ca.mcgill.ecse211.lab5.LightLocalizer;
 import ca.mcgill.ecse211.lab5.UltrasonicLocalizer;
 import ca.mcgill.ecse211.lab5.BangBangController;
-import ca.mcgill.ecse211.lab5.Display;
 import ca.mcgill.ecse211.odometer.*;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
@@ -32,7 +31,7 @@ public class Lab5 {
 	private static final int URx = 5;
 	private static final int URy = 5;
 	private static final int TR = 1; //1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
-	private static final int SC = 0;
+	private static final int SC = 1;
 	private static final int[][] CORNERS = { {1,1}, {1,7}, {7,7}, {7,1} };
 	
 
@@ -44,11 +43,13 @@ public class Lab5 {
 	public static final EV3MediumRegulatedMotor sensorMotor = new EV3MediumRegulatedMotor(LocalEV3.get().getPort("C"));
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	public static final double WHEEL_RAD = 2.1;//2.2 OG
+
 	public static final double TRACK = 13.3;//17 OG
 	public static String mode = " ";
 	private static final int wallFollowingHighSpeed = 107;
+
 	private static final int wallFollowingLowSpeed = 50;
-	public static final int wallFollowingBandCenter = 12;
+	public static final int wallFollowingBandCenter = 7;
 	private static final int wallFollowingBandWidth = 1;
 	private static final double TILE_SIZE = 30.48;
 	public static BangBangController bangbangcontroller = new BangBangController(wallFollowingBandCenter, wallFollowingBandWidth, wallFollowingLowSpeed
@@ -68,10 +69,11 @@ public class Lab5 {
 	static float[] rgbData = new float[colorS.sampleSize()];  
 
 	//initialize line detecting sensor
-	private static final Port lsPort = LocalEV3.get().getPort("S2");
-	static SensorModes lightSensor = new EV3ColorSensor(lsPort); // usSensor is the instance
-	static SampleProvider ls = lightSensor.getMode("Red"); // usDistance provides samples from
-	static float[] redData = new float[ls.sampleSize()];  
+//	private static final Port lsPort = LocalEV3.get().getPort("S2");
+//	static SensorModes lightSensor = new EV3ColorSensor(lsPort); // usSensor is the instance
+//	static SampleProvider ls = lightSensor.getMode("Red"); // usDistance provides samples from
+//	static float[] redData = new float[ls.sampleSize()];  
+	
 
 	public static void main(String[] args) throws OdometerExceptions {
 		System.out.println("Ready");
@@ -85,9 +87,9 @@ public class Lab5 {
 
 		UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData);
 
-		ColPoller lightPoller = new ColPoller(colorS, rgbData, ls, redData, TR);
+		ColPoller lightPoller = new ColPoller(colorS, rgbData, colorS, rgbData, TR);
 
-		Display display = new Display(lcd);
+		//Display display = new Display(lcd);
 
 		lightPoller.start();
 		usPoller.start();
@@ -95,9 +97,6 @@ public class Lab5 {
 		UltrasonicLocalizer usLocalizer = new UltrasonicLocalizer(usPoller, navigator);
 		LightLocalizer lsLocalizer = new LightLocalizer(lightPoller, navigator);
 
-
-		//Thread displayThread = new Thread(display);
-		//displayThread.start();
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();
 
@@ -121,16 +120,19 @@ public class Lab5 {
 			odometer.setY(TILE_SIZE);
 			break;
 		case 1:
-			odometer.setX(6*TILE_SIZE);
+			odometer.setX(7*TILE_SIZE);
 			odometer.setY(TILE_SIZE);
+			odometer.setTheta(270);
 			break;
 		case 2:
-			odometer.setX(6*TILE_SIZE);
-			odometer.setY(6*TILE_SIZE);
+			odometer.setX(7*TILE_SIZE);
+			odometer.setY(7*TILE_SIZE);
+			odometer.setTheta(180);
 			break;
 		case 3:
 			odometer.setX(TILE_SIZE);
-			odometer.setY(6*TILE_SIZE);			
+			odometer.setY(7*TILE_SIZE);	
+			odometer.setTheta(90);
 			break;
 		default:
 			break;

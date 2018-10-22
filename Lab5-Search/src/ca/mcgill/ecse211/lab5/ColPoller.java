@@ -1,5 +1,6 @@
 package ca.mcgill.ecse211.lab5;
 
+import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import lejos.robotics.SampleProvider;
 
 /**
@@ -43,7 +44,11 @@ public class ColPoller extends Thread {
 			currentRedReading = redData[0];
 
 			rgbSample.fetchSample(rgbData, 0);
-			RingDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2], target);
+			try {
+				RingDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2], target);
+			} catch (OdometerExceptions e1) {
+				e1.printStackTrace();
+			}
 			try {
 				Thread.sleep(20);
 			} catch (Exception e) {
