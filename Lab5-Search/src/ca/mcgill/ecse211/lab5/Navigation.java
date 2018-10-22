@@ -275,7 +275,7 @@ public class Navigation {
 			  
 			  
 			//if distance < 10cm, enter wall following mode
-		      if(Lab5.usData[0]*100.0 < 10){
+		      if(Lab5.usData[0]*100.0 < 20){
 		    	  //exit navigating mode
 		    	  isNavigating = false;
 		    	  this.leftMotor.stop(true);
@@ -340,11 +340,11 @@ public class Navigation {
 				  //this.sensorMotor.setSpeed(150);
 				  if(!this.sensorMotor.isMoving()){
 					  if(counter % 2 == 0){
-						  this.sensorMotor.rotateTo(7, true);
+						  this.sensorMotor.rotateTo(10, true);
 						  counter++;
 					  }
 					  else{
-						  this.sensorMotor.rotateTo(7, true);
+						  this.sensorMotor.rotateTo(-10, true);
 						  counter++;
 					  }
 				  }

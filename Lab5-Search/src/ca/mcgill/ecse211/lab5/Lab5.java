@@ -44,9 +44,9 @@ public class Lab5 {
 	public static final EV3MediumRegulatedMotor sensorMotor = new EV3MediumRegulatedMotor(LocalEV3.get().getPort("C"));
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	public static final double WHEEL_RAD = 2.1;//2.2 OG
-	public static final double TRACK = 12.1;//17 OG
+	public static final double TRACK = 13.3;//17 OG
 	public static String mode = " ";
-	private static final int wallFollowingHighSpeed = 100;
+	private static final int wallFollowingHighSpeed = 107;
 	private static final int wallFollowingLowSpeed = 50;
 	public static final int wallFollowingBandCenter = 12;
 	private static final int wallFollowingBandWidth = 1;
@@ -96,8 +96,8 @@ public class Lab5 {
 		LightLocalizer lsLocalizer = new LightLocalizer(lightPoller, navigator);
 
 
-		Thread displayThread = new Thread(display);
-		displayThread.start();
+		//Thread displayThread = new Thread(display);
+		//displayThread.start();
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();
 
@@ -115,7 +115,7 @@ public class Lab5 {
 //		//wait for button and moves to (1,1) and does light localization
 //		lsLocalizer.moveToOrigin(); 
 		
-		switch(SC) {
+		/*switch(SC) {
 		case 0:
 			odometer.setX(TILE_SIZE);
 			odometer.setY(TILE_SIZE);
@@ -142,7 +142,7 @@ public class Lab5 {
 				break;
 			default:
 				break;
-		}
+		}*/
 		
 		navigator.travelToWhileSearching(LLx, LLy);
 		Sound.beep();
