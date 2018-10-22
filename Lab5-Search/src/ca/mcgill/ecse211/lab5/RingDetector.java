@@ -1,5 +1,7 @@
 package ca.mcgill.ecse211.lab5;
 
+import ca.mcgill.ecse211.odometer.Odometer;
+import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import lejos.hardware.Sound;
 
 /**
@@ -43,8 +45,9 @@ public class RingDetector {
 	 * @param B
 	 * @param G
 	 * @param target
+	 * @throws OdometerExceptions 
 	 */
-	public static void processRGBData(float R, float B, float G, int target){
+	public static void processRGBData(float R, float B, float G, int target) throws OdometerExceptions{
 		float dY, dB, dO, dG;
 		float[] data = normalizeRGBData(R, B, G);
 		target--;
@@ -135,9 +138,14 @@ public class RingDetector {
 		}
 		else{
 			ringDetected = false;
-			Lab5.lcd.drawString("No object detected", 0, 4);
-			Lab5.lcd.drawString("None  ", 0, 5);
+			Lab5.lcd.drawString("No object detected", 0, 5);
+			Lab5.lcd.drawString("None  ", 0, 6);
 		}
+		double[]position = Odometer.getOdometer().getXYT();
+		//Lab5.lcd.drawString("L: " + Lab5.redData[0], 0, 0);
+		Lab5.lcd.drawString("X: " + position[0], 0, 2);
+		Lab5.lcd.drawString("Y: " + position[1], 0, 3);
+		Lab5.lcd.drawString("T: " + position[2], 0, 4);
 	}
 	
 	public static void resetStatus(){
