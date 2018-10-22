@@ -88,6 +88,32 @@ public class Navigation {
 		leftMotor.rotate(convertAngle(leftRadius, track, Math.abs(angle)), true);
 		rightMotor.rotate(-convertAngle(rightRadius, track, Math.abs(angle)), immediateReturn);
 	}
+	
+	/**
+	 * This method rotates the robot. It does not tell it when to stop
+	 * @param left motor speed and right motor speed
+	 */
+	public void rotateWheels(int leftSpeed, int rightSpeed) {
+		stop();
+		leftMotor.setSpeed(leftSpeed);
+		rightMotor.setSpeed(rightSpeed);
+		
+		//rotate left motor
+		if(leftSpeed < 0) {
+			leftMotor.backward();
+		}
+		else {
+			leftMotor.forward();
+		}
+		
+		//rotate right motor
+		if(rightSpeed < 0) {
+			rightMotor.backward();
+		}
+		else {
+			rightMotor.forward();
+		}
+	}
 
 	/**
 	 * This method controls the robot to move towards x, y (tile position) while searching for rings
@@ -131,6 +157,7 @@ public class Navigation {
 				//exit navigating mode
 				stop();
 				isNavigating = false;
+				double xPositionExit = odo.getXYT()[0];
 				
 				if(RingDetector.targetDetected()){
 					Sound.beepSequenceUp();

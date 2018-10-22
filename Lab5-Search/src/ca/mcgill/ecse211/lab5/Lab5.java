@@ -74,6 +74,7 @@ public class Lab5 {
 	static float[] redData = new float[ls.sampleSize()];  
 
 	public static void main(String[] args) throws OdometerExceptions {
+		System.out.println("Ready");
 
 		int buttonChoice;
 		buttonChoice = Button.waitForAnyPress(); //wait for button before starting
@@ -95,8 +96,8 @@ public class Lab5 {
 		LightLocalizer lsLocalizer = new LightLocalizer(lightPoller, navigator);
 
 
-		Thread displayThread = new Thread(display);
-		displayThread.start();
+		//Thread displayThread = new Thread(display);
+		//displayThread.start();
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();
 
@@ -109,15 +110,7 @@ public class Lab5 {
 		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 		
 		//wait for button and starts ultrasonic localizer
-		usLocalizer.fallingEdge();
-
-		do{
-			buttonChoice = Button.waitForAnyPress();
-			try {
-				Thread.sleep(20);
-			} catch (Exception e) {
-			} 
-		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+		usLocalizer.doLocalization(true);
 
 		//wait for button and moves to (1,1) and does light localization
 		lsLocalizer.moveToOrigin(); 
@@ -167,17 +160,20 @@ public class Lab5 {
 		boolean isLeftLine = true;
 		
 		for(int i = LLy+1; i < URy; i++) {
-			if(RingDetector.targetDetected()) break;
-
-			if(isLeftLine) {
-				navigator.travelToWhileSearching(LLx, i);
-				navigator.travelToWhileSearching(URx, i);
-				isLeftLine = false;
+			if(!RingDetector.targetDetected()){
+				if(isLeftLine) {
+					navigator.travelToWhileSearching(LLx, i);
+					navigator.travelToWhileSearching(URx, i);
+					isLeftLine = false;
+				}
+				else {
+					navigator.travelToWhileSearching(URx, i);
+					navigator.travelToWhileSearching(LLx, i);
+					isLeftLine = true;
+				}
 			}
-			else {
-				navigator.travelToWhileSearching(URx, i);
-				navigator.travelToWhileSearching(LLx, i);
-				isLeftLine = true;
+			else{
+				break;
 			}
 		}
 		
