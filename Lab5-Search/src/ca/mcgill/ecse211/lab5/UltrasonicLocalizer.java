@@ -54,9 +54,7 @@ public class UltrasonicLocalizer {
 					while(true){
 						if(usPoller.distance < D - THRESHOLD){
 							temp2 = odo.getXYT()[2];
-							
 							Sound.beep(); //falling edge detected;
-							
 							break;
 						}
 						try{
@@ -113,10 +111,8 @@ public class UltrasonicLocalizer {
 					temp1 = odo.getXYT()[2];
 					while(true){
 						if(usPoller.distance > D + THRESHOLD){
-							temp2 = odo.getXYT()[2];
-							
-							Sound.beep(); //falling edge detected;
-							
+							temp2 = odo.getXYT()[2];				
+							Sound.beep(); //falling edge detected;	
 							break;
 						}
 						try{
@@ -169,7 +165,6 @@ public class UltrasonicLocalizer {
 		}
 		else
 			minAngle = dtheta;
-		  
 		 	//set motor speed
 		 	navigation.rotate(minAngle, false);
 	}

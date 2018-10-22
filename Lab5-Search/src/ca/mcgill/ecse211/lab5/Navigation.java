@@ -90,7 +90,7 @@ public class Navigation {
 	}
 
 	/**
-	 * This method controls the robot to move towards x, y (tile position)
+	 * This method controls the robot to move towards x, y (tile position) while searching for rings
 	 * @param x
 	 * @param y
 	 */
@@ -204,6 +204,11 @@ public class Navigation {
 		}
 	}
 	
+	/**
+	 * This method controls the robot to move towards x, y (tile position) while using the US sensor to avoid obstacles
+	 * @param x
+	 * @param y
+	 */
 	public void travelToAvoidance(int x, int y){
 		  double angleToTurnTo;
 		  double currentDistance;
@@ -369,7 +374,7 @@ public class Navigation {
 	}
 
 	/**
-	 * This method allows access to the isNavigating boolean.
+	 * This method checks if a wheel is turning
 	 * @return
 	 */
 	public boolean isNavigating(){

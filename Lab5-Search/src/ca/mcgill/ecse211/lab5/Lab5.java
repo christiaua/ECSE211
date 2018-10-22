@@ -33,7 +33,7 @@ public class Lab5 {
 	private static final int URy = 5;
 	private static final int TR = 1; //1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
 	private static final int SC = 0;
-	private static final int[][] CORNERS = { {0,0}, {0,8}, {8,8}, {8,0} };
+	private static final int[][] CORNERS = { {1,1}, {1,7}, {7,7}, {7,1} };
 	
 
 	// Motor Objects, and Robot related parameters
@@ -153,15 +153,11 @@ public class Lab5 {
 		//wait for button and goes to (LLX, LLY)
 
 		switch(SC){
-			case 0: 
-				break;
-			case 1:
-				navigator.travelToWhileSearching(CORNERS[0][0], CORNERS[0][1]);
 			case 2:
 				navigator.travelToWhileSearching(CORNERS[1][0], CORNERS[1][1]);
-				navigator.travelToWhileSearching(CORNERS[0][0], CORNERS[0][1]);
-			case 3:
-				navigator.travelToWhileSearching(CORNERS[0][0], CORNERS[0][1]);
+				break;
+			default:
+				break;
 		}
 		
 		navigator.travelToWhileSearching(LLx, LLy);
