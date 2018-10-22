@@ -14,7 +14,7 @@ public class UltrasonicLocalizer {
 	private Navigation navigation;
 	private UltrasonicPoller usPoller;
 	
-	private static final int PADDING = 20;
+	private static final int PADDING = 45;
 
 	private static final int ROTATE_SPEED = 50;
 	private static final double WALLDISTANCE = 35;
