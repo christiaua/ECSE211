@@ -13,6 +13,8 @@ public class UltrasonicLocalizer {
 	private Odometer odo;
 	private Navigation navigation;
 	private UltrasonicPoller usPoller;
+	
+	private static final int PADDING = 20;
 
 	private static final int ROTATE_SPEED = 50;
 	private static final double WALLDISTANCE = 35;
@@ -57,7 +59,8 @@ public class UltrasonicLocalizer {
 
 		//set real angle and turn to 0
 		odo.setTheta(realAngle);
-		navigation.turnTo(0);
+		navigation.turnTo(0 + PADDING);
+		odo.setTheta(0);
 	}
 
 	/**

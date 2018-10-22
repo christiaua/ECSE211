@@ -157,6 +157,7 @@ public class Navigation {
 				//exit navigating mode
 				stop();
 				isNavigating = false;
+				double xPositionExit = odo.getXYT()[0];
 				
 				if(RingDetector.targetDetected()){
 					Sound.beepSequenceUp();
