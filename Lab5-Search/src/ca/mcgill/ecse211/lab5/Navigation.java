@@ -215,6 +215,8 @@ public class Navigation {
 			  if(isNavigating && currentDistance > 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
 				  angleToTurnTo = calculateAngle(x, y, odo);
 				  turnTo(angleToTurnTo);
+				  currentPosition = odo.getXYT();
+				  currentDistance = calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
 				  moveForward(currentDistance, true);
 			  }
 			  //if in navigating mode, motors arent moving and near the destination,

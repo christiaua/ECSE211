@@ -96,24 +96,24 @@ public class Lab5 {
 		LightLocalizer lsLocalizer = new LightLocalizer(lightPoller, navigator);
 
 
-		//Thread displayThread = new Thread(display);
-		//displayThread.start();
+		Thread displayThread = new Thread(display);
+		displayThread.start();
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();
 
-		do{
-			buttonChoice = Button.waitForAnyPress();
-			try {
-				Thread.sleep(20);
-			} catch (Exception e) {
-			} 
-		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-		
-		//wait for button and starts ultrasonic localizer
-		usLocalizer.doLocalization(true);
-
-		//wait for button and moves to (1,1) and does light localization
-		lsLocalizer.moveToOrigin(); 
+//		do{
+//			buttonChoice = Button.waitForAnyPress();
+//			try {
+//				Thread.sleep(20);
+//			} catch (Exception e) {
+//			} 
+//		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+//		
+//		//wait for button and starts ultrasonic localizer
+//		usLocalizer.doLocalization(true);
+//
+//		//wait for button and moves to (1,1) and does light localization
+//		lsLocalizer.moveToOrigin(); 
 		
 		switch(SC) {
 		case 0:
@@ -135,15 +135,6 @@ public class Lab5 {
 		default:
 			break;
 		}
-
-		do{
-			buttonChoice = Button.waitForAnyPress();
-			try {
-				Thread.sleep(20);
-			} catch (Exception e) {
-			} 
-		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-		//wait for button and goes to (LLX, LLY)
 
 		switch(SC){
 			case 2:
