@@ -41,13 +41,13 @@ public class Lab5 {
 	
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	public static final double WHEEL_RAD = 2.1;//2.2 OG
-	public static final double TRACK = 13.3;//17 OG
+	public static final double TRACK = 13.6;//17 OG
 	public static String mode = " ";
 	private static final double TILE_SIZE = 30.48;
 	
-	private static final int wallFollowingHighSpeed = 107;
+	private static final int wallFollowingHighSpeed = 150;
 	private static final int wallFollowingLowSpeed = 50;
-	public static final int wallFollowingBandCenter = 7;
+	public static final int wallFollowingBandCenter = 10;
 	private static final int wallFollowingBandWidth = 1;
 	
 	public static BangBangController bangbangcontroller = new BangBangController(wallFollowingBandCenter, wallFollowingBandWidth, wallFollowingLowSpeed
@@ -74,7 +74,7 @@ public class Lab5 {
 	
 
 	public static void main(String[] args) throws OdometerExceptions {
-		System.out.println("Ready");
+		lcd.drawString("Ready", 0, 0);
 		int buttonChoice;
 		do {
 			// clear the display
@@ -90,6 +90,7 @@ public class Lab5 {
 			buttonChoice = Button.waitForAnyPress(); // Record choice (left or right press)
 		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 		
+		lcd.clear();
 		if (buttonChoice == Button.ID_LEFT) {
 
 			Navigation navigator = new Navigation(leftMotor, rightMotor, sensorMotor, WHEEL_RAD, TRACK, bangbangcontroller);
@@ -134,55 +135,63 @@ public class Lab5 {
 //
 //		//wait for button and moves to (1,1) and does light localization
 //		lsLocalizer.moveToOrigin(); 
-		
-		/*switch(SC) {
-		case 0:
-			odometer.setX(TILE_SIZE);
-			odometer.setY(TILE_SIZE);
-			break;
-		case 1:
-			odometer.setX(7*TILE_SIZE);
-			odometer.setY(TILE_SIZE);
-			odometer.setTheta(270);
-			break;
-		case 2:
-			odometer.setX(7*TILE_SIZE);
-			odometer.setY(7*TILE_SIZE);
-			odometer.setTheta(180);
-			break;
-		case 3:
-			odometer.setX(TILE_SIZE);
-			odometer.setY(7*TILE_SIZE);	
-			odometer.setTheta(90);
-			break;
-		default:
-			break;
-		}
-
-		switch(SC){
-			case 2:
-				navigator.travelToWhileSearching(CORNERS[1][0], CORNERS[1][1]);
-				break;
-			default:
-				break;
-		}*/
+//		
+//		switch(SC) {
+//		case 0:
+//			odometer.setX(TILE_SIZE);
+//			odometer.setY(TILE_SIZE);
+//			break;
+//		case 1:
+//			odometer.setX(7*TILE_SIZE);
+//			odometer.setY(TILE_SIZE);
+//			odometer.setTheta(270);
+//			break;
+//		case 2:
+//			odometer.setX(7*TILE_SIZE);
+//			odometer.setY(7*TILE_SIZE);
+//			odometer.setTheta(180);
+//			break;
+//		case 3:
+//			odometer.setX(TILE_SIZE);
+//			odometer.setY(7*TILE_SIZE);	
+//			odometer.setTheta(90);
+//			break;
+//		default:
+//			break;
+//		}
+//
+//		switch(SC){
+//			case 2:
+//				navigator.travelToWhileSearching(CORNERS[1][0], CORNERS[1][1]);
+//				break;
+//			default:
+//				break;
+//		}
 		
 		navigator.travelToWhileSearching(LLx, LLy);
 		Sound.beep();
 		
 		//zigzags through all the lines
 		boolean isLeftLine = true;
+		boolean firstPass = true;
 		
-		for(int i = LLy+1; i < URy; i++) {
+		for(int i = LLy; i <= URy; i++) {
 			if(!RingDetector.targetDetected()){
 				if(isLeftLine) {
-					navigator.travelToWhileSearching(LLx, i);
-					navigator.travelToWhileSearching(URx, i);
+					if(firstPass) {
+						navigator.travelToWhileSearching(URx+0.5, i);
+						isLeftLine = false;
+						firstPass = false;
+						break;
+						
+					}
+					navigator.travelToWhileSearching(LLx-0.5, i);
+					navigator.travelToWhileSearching(URx+0.5, i);	
 					isLeftLine = false;
 				}
 				else {
-					navigator.travelToWhileSearching(URx, i);
-					navigator.travelToWhileSearching(LLx, i);
+					navigator.travelToWhileSearching(URx+0.5, i);
+					navigator.travelToWhileSearching(LLx-0.5, i);
 					isLeftLine = true;
 				}
 			}

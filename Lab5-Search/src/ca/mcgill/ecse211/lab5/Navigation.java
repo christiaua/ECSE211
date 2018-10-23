@@ -14,8 +14,8 @@ import lejos.utility.Stopwatch;
  * @author Sophie Deng
  */
 public class Navigation {
-	private static final int FORWARD_SPEED = 200;
-	private static final int ROTATE_SPEED = 50;
+	private static final int FORWARD_SPEED = 175;
+	private static final int ROTATE_SPEED = 75;
 	private static final double TILE_SIZE = 30.48;
 	private static final double RING_SIZE = 10;
 	private double leftRadius;
@@ -115,7 +115,7 @@ public class Navigation {
 	 * @param x
 	 * @param y
 	 */
-	public void travelToWhileSearching(int x, int y){
+	public void travelToWhileSearching(double x, double y){
 		sensorMotor.rotateTo(0, false);
 		int angleAtDetection;
 		double angleToTurnTo;
@@ -123,10 +123,6 @@ public class Navigation {
 		double[] currentPosition = odo.getXYT();
 
 		isNavigating = true;
-
-		//Save current destination
-		currentDest[0] = x;
-		currentDest[1] = y;
 
 		//Turn to angle needed to reach waypoint
 		angleToTurnTo = calculateAngle(x, y, odo);
@@ -155,7 +151,7 @@ public class Navigation {
 
 				//rotate sensor
 				sensorMotor.setSpeed(75);
-				sensorMotor.rotateTo(-75, true);
+				sensorMotor.rotateTo(-85, true);
 
 				rotate(-(90 + angleAtDetection), false); 	  
 
@@ -178,14 +174,13 @@ public class Navigation {
 
 				//after exiting wall following mode, stop motors and rotate
 				//ultrasonic sensor back to 0 degrees
+				stop();
+				setSpeed(FORWARD_SPEED);
+				sensorMotor.rotateTo(0, false);
+				sensorMotor.setSpeed(75);
+				isNavigating = true;
+
 			}
-
-			stop();
-			setSpeed(FORWARD_SPEED);
-			sensorMotor.rotateTo(0, false);
-			sensorMotor.setSpeed(75);
-			isNavigating = true;
-
 			//if in navigating mode, motors arent moving and not close enough to the
 			//current destination, turn in the correct direction to get to destination
 			//and move forward
@@ -210,7 +205,7 @@ public class Navigation {
 	 * @param x
 	 * @param y
 	 */
-	public void travelToAvoidance(int x, int y){
+	public void travelToAvoidance(double x, double y){
 		double angleToTurnTo;
 		double currentDistance;
 		double[] currentPosition = odo.getXYT();
@@ -219,10 +214,6 @@ public class Navigation {
 		Stopwatch stopwatch = new Stopwatch();
 
 		isNavigating = true;
-
-		//Save current destination
-		currentDest[0] = x;
-		currentDest[1] = y;
 
 		//Turn to angle needed to reach waypoint
 		angleToTurnTo = calculateAngle(x, y, odo);
@@ -247,7 +238,7 @@ public class Navigation {
 
 				//rotate sensor towards obstacle
 				sensorMotor.setSpeed(75);
-				sensorMotor.rotateTo(-80, true);
+				sensorMotor.rotateTo(-85, true);
 
 				rotate(-(90 + angleAtDetection), false);   	  
 
@@ -268,25 +259,27 @@ public class Navigation {
 				} while(stopwatch.elapsed() < 8000); 
 				//if the robot has been in wall following
 				//mode for more than 20s, force exit
+				
+				//after exiting wall following mode, stop motors and rotate
+				//ultrasonic sensor back to 0 degrees
+				stop();
+				isNavigating = true;
+				sensorMotor.setSpeed(75);
+				sensorMotor.rotateTo(0, false);
+				setSpeed(FORWARD_SPEED);
+				counter = 0;
 			}
-			//after exiting wall following mode, stop motors and rotate
-			//ultrasonic sensor back to 0 degrees
-			stop();
-			isNavigating = true;
-			sensorMotor.setSpeed(75);
-			sensorMotor.rotateTo(0, false);
-			setSpeed(FORWARD_SPEED);
-			counter = 0;
+
 			//if navigating, rotate ultrasonic sensor in a 40 degree cone
 			if(isNavigating){
 				//this.sensorMotor.setSpeed(150);
 				if(!this.sensorMotor.isMoving()){
 					if(counter % 2 == 0){
-						this.sensorMotor.rotateTo(10, true);
+						this.sensorMotor.rotateTo(30, true);
 						counter++;
 					}
 					else{
-						this.sensorMotor.rotateTo(-10, true);
+						this.sensorMotor.rotateTo(-30, true);
 						counter++;
 					}
 				}
@@ -305,6 +298,7 @@ public class Navigation {
 			else if(isNavigating && currentDistance < 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
 				isNavigating = false;
 				counter = 0;
+				sensorMotor.rotateTo(0, false);
 				break;
 			}
 		}
@@ -355,7 +349,7 @@ public class Navigation {
 	 * @param odo
 	 * @return angle
 	 */
-	public static double calculateAngle(int x, int y, Odometer odo){
+	public static double calculateAngle(double x, double y, Odometer odo){
 		double angle, dx, dy, h;
 		double[] currentPosition;
 
