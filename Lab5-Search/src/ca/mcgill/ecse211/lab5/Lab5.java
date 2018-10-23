@@ -28,7 +28,7 @@ public class Lab5 {
 	private static final int URx = 5;
 	private static final int URy = 5;
 	private static final int TR = 1; //1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
-	private static final int SC = 0;
+	private static final int SC = 1;
 	private static final int[][] CORNERS = { {1,1}, {1,7}, {7,7}, {7,1} };
 	
 
@@ -38,15 +38,18 @@ public class Lab5 {
 	public static final EV3LargeRegulatedMotor rightMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	public static final EV3MediumRegulatedMotor sensorMotor = new EV3MediumRegulatedMotor(LocalEV3.get().getPort("C"));
+	
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	public static final double WHEEL_RAD = 2.1;//2.2 OG
 	public static final double TRACK = 13.3;//17 OG
 	public static String mode = " ";
-	private static final int wallFollowingHighSpeed = 100;
-	private static final int wallFollowingLowSpeed = 50;
-	public static final int wallFollowingBandCenter = 12;
-	private static final int wallFollowingBandWidth = 1;
 	private static final double TILE_SIZE = 30.48;
+	
+	private static final int wallFollowingHighSpeed = 107;
+	private static final int wallFollowingLowSpeed = 50;
+	public static final int wallFollowingBandCenter = 7;
+	private static final int wallFollowingBandWidth = 1;
+	
 	public static BangBangController bangbangcontroller = new BangBangController(wallFollowingBandCenter, wallFollowingBandWidth, wallFollowingLowSpeed
 			, wallFollowingHighSpeed, leftMotor, rightMotor);
 
@@ -68,6 +71,7 @@ public class Lab5 {
 	static SensorModes lightSensor = new EV3ColorSensor(lsPort); // usSensor is the instance
 	static SampleProvider ls = lightSensor.getMode("Red"); // usDistance provides samples from
 	static float[] redData = new float[ls.sampleSize()];  
+	
 
 	public static void main(String[] args) throws OdometerExceptions {
 		System.out.println("Ready");
@@ -131,7 +135,7 @@ public class Lab5 {
 //		//wait for button and moves to (1,1) and does light localization
 //		lsLocalizer.moveToOrigin(); 
 		
-		switch(SC) {
+		/*switch(SC) {
 		case 0:
 			odometer.setX(TILE_SIZE);
 			odometer.setY(TILE_SIZE);
@@ -161,7 +165,7 @@ public class Lab5 {
 				break;
 			default:
 				break;
-		}
+		}*/
 		
 		navigator.travelToWhileSearching(LLx, LLy);
 		Sound.beep();

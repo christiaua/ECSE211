@@ -1,6 +1,3 @@
-/*
- * SquareDriver.java
- */
 package ca.mcgill.ecse211.lab5;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
@@ -17,7 +14,7 @@ import lejos.utility.Stopwatch;
  * @author Sophie Deng
  */
 public class Navigation {
-	private static final int FORWARD_SPEED = 100;
+	private static final int FORWARD_SPEED = 200;
 	private static final int ROTATE_SPEED = 50;
 	private static final double TILE_SIZE = 30.48;
 	private static final double RING_SIZE = 10;
@@ -161,6 +158,7 @@ public class Navigation {
 				sensorMotor.rotateTo(-75, true);
 
 				rotate(-(90 + angleAtDetection), false); 	  
+
 				do{
 					//pass distance to bang bang controller and allow it to control the robot
 					cont.processUSData((int)(Lab5.usData[0]*100.0));
@@ -311,6 +309,7 @@ public class Navigation {
 			}
 		}
 	}
+
 
 	/**
 	 * This method turns the robot in place to the absolute angle theta.

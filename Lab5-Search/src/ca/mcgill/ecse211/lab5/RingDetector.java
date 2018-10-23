@@ -44,8 +44,9 @@ public class RingDetector {
 	 * @param B
 	 * @param G
 	 * @param target
+	 * @throws OdometerExceptions 
 	 */
-	public static void processRGBData(float R, float B, float G, int target){
+	public static void processRGBData(float R, float B, float G, int target) throws OdometerExceptions{
 		float dY, dB, dO, dG;
 		float[] data = normalizeRGBData(R, B, G);
 		target--;
@@ -148,8 +149,8 @@ public class RingDetector {
 		}
 		else{
 			ringDetected = false;
-			Lab5.lcd.drawString("No object detected", 0, 4);
-			Lab5.lcd.drawString("None  ", 0, 5);
+			Lab5.lcd.drawString("No object detected", 0, 5);
+			Lab5.lcd.drawString("None  ", 0, 6);
 		}
 	}
 	
