@@ -1,6 +1,5 @@
 package ca.mcgill.ecse211.lab5;
 
-import ca.mcgill.ecse211.lab5.UltrasonicController;
 import lejos.hardware.motor.*;
 
 /**
@@ -54,7 +53,7 @@ public class BangBangController implements UltrasonicController {
 			filterControl = 0;
 			this.distance = distance;
 		}
-		// TODO: process a movement based on the us distance passed in (BANG-BANG style)
+		//process a movement based on the us distance passed in (BANG-BANG style)
 		if(Math.abs(this.distance - bandCenter) <= bandwidth){
 			//check if the difference between distance and bandCenter is within the bandwidth
 			this.leftMotor.setSpeed(motorHigh);

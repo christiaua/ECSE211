@@ -1,9 +1,5 @@
 package ca.mcgill.ecse211.lab5;
 
-import ca.mcgill.ecse211.lab5.LightLocalizer;
-import ca.mcgill.ecse211.lab5.UltrasonicLocalizer;
-import ca.mcgill.ecse211.lab5.BangBangController;
-import ca.mcgill.ecse211.lab5.Display;
 import ca.mcgill.ecse211.odometer.*;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
@@ -44,7 +40,7 @@ public class Lab5 {
 	public static final EV3MediumRegulatedMotor sensorMotor = new EV3MediumRegulatedMotor(LocalEV3.get().getPort("C"));
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	public static final double WHEEL_RAD = 2.1;//2.2 OG
-	public static final double TRACK = 12.1;//17 OG
+	public static final double TRACK = 13.3;//17 OG
 	public static String mode = " ";
 	private static final int wallFollowingHighSpeed = 100;
 	private static final int wallFollowingLowSpeed = 50;
@@ -75,9 +71,33 @@ public class Lab5 {
 
 	public static void main(String[] args) throws OdometerExceptions {
 		System.out.println("Ready");
-
 		int buttonChoice;
-		buttonChoice = Button.waitForAnyPress(); //wait for button before starting
+		do {
+			// clear the display
+			lcd.clear();
+
+			// ask the user whether the motors should do lab 4 or float
+			lcd.drawString("< Left | Right >", 0, 0);
+			lcd.drawString("       |        ", 0, 1);
+			lcd.drawString("  Test | Drive  ", 0, 2);
+			lcd.drawString("motors | and do ", 0, 3);
+			lcd.drawString("       | lab 5  ", 0, 4);
+
+			buttonChoice = Button.waitForAnyPress(); // Record choice (left or right press)
+		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+		
+		if (buttonChoice == Button.ID_LEFT) {
+
+			Navigation navigator = new Navigation(leftMotor, rightMotor, sensorMotor, WHEEL_RAD, TRACK, bangbangcontroller);
+			
+			//test the angles
+			navigator.turnTo(90);
+			leftMotor.forward();
+			leftMotor.flt();
+			rightMotor.forward();
+			rightMotor.flt();
+			System.exit(0);
+		}
 
 		Odometer odometer = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD);
 
@@ -87,8 +107,6 @@ public class Lab5 {
 
 		ColPoller lightPoller = new ColPoller(colorS, rgbData, ls, redData, TR);
 
-		Display display = new Display(lcd);
-
 		lightPoller.start();
 		usPoller.start();
 
@@ -96,8 +114,6 @@ public class Lab5 {
 		LightLocalizer lsLocalizer = new LightLocalizer(lightPoller, navigator);
 
 
-		Thread displayThread = new Thread(display);
-		displayThread.start();
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();
 
@@ -121,16 +137,19 @@ public class Lab5 {
 			odometer.setY(TILE_SIZE);
 			break;
 		case 1:
-			odometer.setX(6*TILE_SIZE);
+			odometer.setX(7*TILE_SIZE);
 			odometer.setY(TILE_SIZE);
+			odometer.setTheta(270);
 			break;
 		case 2:
-			odometer.setX(6*TILE_SIZE);
-			odometer.setY(6*TILE_SIZE);
+			odometer.setX(7*TILE_SIZE);
+			odometer.setY(7*TILE_SIZE);
+			odometer.setTheta(180);
 			break;
 		case 3:
 			odometer.setX(TILE_SIZE);
-			odometer.setY(6*TILE_SIZE);			
+			odometer.setY(7*TILE_SIZE);	
+			odometer.setTheta(90);
 			break;
 		default:
 			break;
@@ -168,7 +187,7 @@ public class Lab5 {
 			}
 		}
 		
-		//if target found, go to upper right corner
+		//go to upper right corner
 		navigator.travelToAvoidance(URx, URy);
 		Sound.beep();
 

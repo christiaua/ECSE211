@@ -1,5 +1,6 @@
 package ca.mcgill.ecse211.lab5;
 
+import ca.mcgill.ecse211.odometer.*;
 import lejos.hardware.Sound;
 
 /**
@@ -64,6 +65,18 @@ public class RingDetector {
 		dG = (float) Math.sqrt( (data[0] - G_RGB_MEAN[0]) * (data[0] - G_RGB_MEAN[0])
 				+ (data[1] - G_RGB_MEAN[1]) * (data[1] - G_RGB_MEAN[1])
 				+ (data[2] - G_RGB_MEAN[2]) * (data[2] - G_RGB_MEAN[2]) );
+		
+		double[] position;
+		try {
+			position = Odometer.getOdometer().getXYT();
+			//Lab5.lcd.drawString("L: " + Lab5.redData[0], 0, 0);
+			Lab5.lcd.drawString("X: " + position[0], 0, 0);
+			Lab5.lcd.drawString("Y: " + position[1], 0, 1);
+			Lab5.lcd.drawString("T: " + position[2], 0, 2);
+		} catch (OdometerExceptions e) {
+			Lab5.lcd.drawString("Couldn't Access Odometer", 0, 0);
+			e.printStackTrace();
+		}
 
 		if(dY < 0.020744+0.010672*2){
 			ringDetected = true;
