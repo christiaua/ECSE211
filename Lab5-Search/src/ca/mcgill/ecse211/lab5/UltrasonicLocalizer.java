@@ -12,7 +12,7 @@ public class UltrasonicLocalizer {
 
 	private Odometer odo;
 	private Navigation navigation;
-	private UltrasonicPoller usPoller;
+	private ColPoller usPoller;
 	
 	private static final int PADDING = 45;
 
@@ -26,7 +26,7 @@ public class UltrasonicLocalizer {
 	 * @param nav
 	 * @throws OdometerExceptions
 	 */
-	public UltrasonicLocalizer(UltrasonicPoller usPoller, Navigation nav) throws OdometerExceptions{
+	public UltrasonicLocalizer(ColPoller usPoller, Navigation nav) throws OdometerExceptions{
 		this.odo = Odometer.getOdometer();
 		this.usPoller = usPoller;
 		this.navigation = nav;

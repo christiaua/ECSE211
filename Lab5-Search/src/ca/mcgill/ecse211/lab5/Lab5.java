@@ -108,65 +108,62 @@ public class Lab5 {
 
 		Navigation navigator = new Navigation(leftMotor, rightMotor, sensorMotor, WHEEL_RAD, TRACK, bangbangcontroller);
 
-		UltrasonicPoller usPoller = new UltrasonicPoller(usDistance, usData);
-
-		ColPoller lightPoller = new ColPoller(colorS, rgbData, ls, redData, TR);
+		ColPoller lightPoller = new ColPoller(colorS, rgbData, ls, redData, TR, usDistance, usData);
 
 		lightPoller.start();
-		usPoller.start();
 
-		UltrasonicLocalizer usLocalizer = new UltrasonicLocalizer(usPoller, navigator);
+		UltrasonicLocalizer usLocalizer = new UltrasonicLocalizer(lightPoller, navigator);
 		LightLocalizer lsLocalizer = new LightLocalizer(lightPoller, navigator);
 
 
 		Thread odoThread = new Thread(odometer);
 		odoThread.start();
 
-//		do{
-//			buttonChoice = Button.waitForAnyPress();
-//			try {
-//				Thread.sleep(20);
-//			} catch (Exception e) {
-//			} 
-//		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-//		
-//		//wait for button and starts ultrasonic localizer
-//		usLocalizer.doLocalization(true);
-//
-//		//wait for button and moves to (1,1) and does light localization
-//		lsLocalizer.moveToOrigin(); 
-//		
-//		switch(SC) {
-//		case 0:
-//			odometer.setX(TILE_SIZE);
-//			odometer.setY(TILE_SIZE);
-//			break;
-//		case 1:
-//			odometer.setX(7*TILE_SIZE);
-//			odometer.setY(TILE_SIZE);
-//			odometer.setTheta(270);
-//			break;
-//		case 2:
-//			odometer.setX(7*TILE_SIZE);
-//			odometer.setY(7*TILE_SIZE);
-//			odometer.setTheta(180);
-//			break;
-//		case 3:
-//			odometer.setX(TILE_SIZE);
-//			odometer.setY(7*TILE_SIZE);	
-//			odometer.setTheta(90);
-//			break;
-//		default:
-//			break;
-//		}
-//
-//		switch(SC){
-//			case 2:
-//				navigator.travelToWhileSearching(CORNERS[1][0], CORNERS[1][1]);
-//				break;
-//			default:
-//				break;
-//		}
+		do{
+			buttonChoice = Button.waitForAnyPress();
+			try {
+				Thread.sleep(20);
+			} catch (Exception e) {
+			} 
+		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+		
+		//wait for button and starts ultrasonic localizer
+		usLocalizer.doLocalization(true);
+
+		//wait for button and moves to (1,1) and does light localization
+		lsLocalizer.moveToOrigin(); 
+		
+		switch(SC) {
+		case 0:
+			odometer.setX(TILE_SIZE);
+			odometer.setY(TILE_SIZE);
+			break;
+		case 1:
+			odometer.setX(7*TILE_SIZE);
+			odometer.setY(TILE_SIZE);
+			odometer.setTheta(270);
+			break;
+		case 2:
+			odometer.setX(7*TILE_SIZE);
+			odometer.setY(7*TILE_SIZE);
+			odometer.setTheta(180);
+			break;
+		case 3:
+			odometer.setX(TILE_SIZE);
+			odometer.setY(7*TILE_SIZE);	
+			odometer.setTheta(90);
+			break;
+		default:
+			break;
+		}
+
+		switch(SC){
+			case 2:
+				navigator.travelToWhileSearching(CORNERS[1][0], CORNERS[1][1]);
+				break;
+			default:
+				break;
+		}
 		
 		navigator.travelToWhileSearching(LLx, LLy);
 		Sound.beep();
@@ -182,7 +179,7 @@ public class Lab5 {
 						navigator.travelToWhileSearching(URx+0.5, i);
 						isLeftLine = false;
 						firstPass = false;
-						break;
+						continue;
 						
 					}
 					navigator.travelToWhileSearching(LLx-0.5, i);
