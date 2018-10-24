@@ -5,7 +5,17 @@ package ca.mcgill.ecse211.lab5;
  */
 public interface UltrasonicController {
 
-	public void processUSData(int distance);
+  /**
+   * Process data
+   * 
+   * @param distance
+   */
+  public void processUSData(int distance);
 
-	public int readUSDistance();
+  /**
+   * Read data
+   * 
+   * @return distance
+   */
+  public int readUSDistance();
 }
