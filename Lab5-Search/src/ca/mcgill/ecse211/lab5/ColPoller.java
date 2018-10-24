@@ -12,6 +12,8 @@ import lejos.robotics.SampleProvider;
 public class ColPoller extends Thread {
 	private SampleProvider rgbSample;
 	private float[] rgbData;
+	private SampleProvider rgbSample2;
+	private float[] rgbData2;
 	private SampleProvider redSample;
 	private float[] redData;
 	private float lastRedReading;
@@ -32,10 +34,13 @@ public class ColPoller extends Thread {
 	 * @param lightData a float array to store the samples.
 	 * @param ll a LightLocalizer to which we will pass the data through a synchronized setter.
 	 */
-	public ColPoller(SampleProvider rgbSample, float[] rgbData, SampleProvider redSample, float[] redData, int TR,
+	public ColPoller(SampleProvider rgbSample, float[] rgbData, 
+			SampleProvider rgbSample2, float[] rgbData2, SampleProvider redSample, float[] redData, int TR,
 			SampleProvider us, float[] usData) {
 		this.rgbSample = rgbSample;
 		this.rgbData = rgbData;
+		this.rgbSample2 = rgbSample2;
+		this.rgbData2 = rgbData2;
 		this.redSample = redSample;
 		this.redData = redData;
 		this.target = TR;
@@ -55,9 +60,10 @@ public class ColPoller extends Thread {
 			currentRedReading = redData[0];
 
 			rgbSample.fetchSample(rgbData, 0);
+			rgbSample2.fetchSample(rgbData2, 0);
 			
 			try {
-				RingDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2], target);
+				RingDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2], rgbData2[0], rgbData2[1], rgbData2[2], target);
 			} catch (OdometerExceptions e1) {
 				e1.printStackTrace();
 			}

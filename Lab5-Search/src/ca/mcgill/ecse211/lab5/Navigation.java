@@ -137,6 +137,7 @@ public class Navigation {
 				//exit navigating mode
 				stop();
 				if(RingDetector.targetDetected()){
+					stop();
 					Sound.beepSequenceUp();
 					moveForward(-5, false);
 					break;

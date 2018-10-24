@@ -64,7 +64,12 @@ public class Lab5 {
 	private static final Port colorSensorPort = LocalEV3.get().getPort("S1");
 	static SensorModes colorSensor = new EV3ColorSensor(colorSensorPort); // usSensor is the instance
 	static SampleProvider colorS = colorSensor.getMode("RGB"); // usDistance provides samples from
-	static float[] rgbData = new float[colorS.sampleSize()];  
+	static float[] rgbData = new float[colorS.sampleSize()]; 
+	
+	private static final Port color2Port = LocalEV3.get().getPort("S3");
+	static SensorModes color2Sensor = new EV3ColorSensor(color2Port); // usSensor is the instance
+	static SampleProvider colorS2 = color2Sensor.getMode("RGB"); // usDistance provides samples from
+	static float[] rgbData2 = new float[colorS2.sampleSize()]; 
 
 	//initialize line detecting sensor
 	private static final Port lsPort = LocalEV3.get().getPort("S2");
@@ -109,7 +114,7 @@ public class Lab5 {
 
 		Navigation navigator = new Navigation(leftMotor, rightMotor, sensorMotor, WHEEL_RAD, TRACK, bangbangcontroller);
 
-		ColPoller lightPoller = new ColPoller(colorS, rgbData, ls, redData, TR, usDistance, usData);
+		ColPoller lightPoller = new ColPoller(colorS, rgbData, colorS2, rgbData2, ls, redData, TR, usDistance, usData);
 
 		lightPoller.start();
 
