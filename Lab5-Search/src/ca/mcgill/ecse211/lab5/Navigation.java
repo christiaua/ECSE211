@@ -117,7 +117,6 @@ public class Navigation {
 	 */
 	public void travelToWhileSearching(double x, double y){
 		sensorMotor.rotateTo(0, false);
-		int angleAtDetection;
 		double angleToTurnTo;
 		double currentDistance;
 		double[] currentPosition = odo.getXYT();
@@ -127,74 +126,42 @@ public class Navigation {
 		//Turn to angle needed to reach waypoint
 		angleToTurnTo = calculateAngle(x, y, odo);
 		turnTo(angleToTurnTo);
-
-		setSpeed(FORWARD_SPEED);
+		currentPosition = odo.getXYT();
+		currentDistance = calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
+		moveForward(currentDistance, true);
 
 		while(true){
-			//update current euclidean distance away from waypoint
-			currentPosition = odo.getXYT();
-			currentDistance = calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
 
 			if(RingDetector.ringDetected()){
+				isNavigating = false;
 				//exit navigating mode
 				stop();
-				isNavigating = false;
-
 				if(RingDetector.targetDetected()){
 					Sound.beepSequenceUp();
 					moveForward(-5, false);
 					break;
 				}
 
-				//save the angle at which the ultrasonic sensor detected an obstacle
-				angleAtDetection = this.sensorMotor.getTachoCount();
-
-				//rotate sensor
-				sensorMotor.setSpeed(75);
-				sensorMotor.rotateTo(-85, true);
-
-				rotate(-(90 + angleAtDetection), false); 	  
-
-				do{
-					//pass distance to bang bang controller and allow it to control the robot
-					cont.processUSData((int)(Lab5.usData[0]*100.0));
-
-					try {
-						Thread.sleep(50);
-					} catch (Exception e) {
-					}
-
-					//if the angle the robot is currently at is within 10 of the angle it has to
-					//be to reach the current destination, exit wall following mode
-					if(Math.abs(odo.getXYT()[1] - currentPosition[1]) < 0.1 && Math.abs(odo.getXYT()[0] - currentPosition[0]) > RING_SIZE / 2){
-						Sound.beep();
-						break;
-					}
-				} while(true);
-
-				//after exiting wall following mode, stop motors and rotate
-				//ultrasonic sensor back to 0 degrees
-				stop();
-				setSpeed(FORWARD_SPEED);
-				sensorMotor.rotateTo(0, false);
-				sensorMotor.setSpeed(75);
-				isNavigating = true;
-
-			}
-			//if in navigating mode, motors arent moving and not close enough to the
-			//current destination, turn in the correct direction to get to destination
-			//and move forward
-			if(isNavigating && currentDistance > 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
+				turn(-90);
+				moveForward(TILE_SIZE / 2, false);
+				turn(90);
+				moveForward(TILE_SIZE, false);
+				turn(90);
+				moveForward(TILE_SIZE / 2, false);
+				
 				angleToTurnTo = calculateAngle(x, y, odo);
 				turnTo(angleToTurnTo);
 				currentPosition = odo.getXYT();
 				currentDistance = calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
 				moveForward(currentDistance, true);
+				
+				isNavigating = false;
 			}
+
+
 			//if in navigating mode, motors arent moving and near the destination,
 			//exit navigating mode
-			else if(isNavigating && currentDistance < 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
-				isNavigating = false;
+			if(!leftMotor.isMoving() && !rightMotor.isMoving()){
 				break;
 			}
 		}
@@ -209,96 +176,39 @@ public class Navigation {
 		double angleToTurnTo;
 		double currentDistance;
 		double[] currentPosition = odo.getXYT();
-		int angleAtDetection;
-		int counter = 0; 		//counter used to rotate ultrasonic sensor
-		Stopwatch stopwatch = new Stopwatch();
 
 		isNavigating = true;
 
-		//Turn to angle needed to reach waypoint
+		setSpeed(FORWARD_SPEED);
+		
 		angleToTurnTo = calculateAngle(x, y, odo);
 		turnTo(angleToTurnTo);
-
-		setSpeed(FORWARD_SPEED);
+		currentPosition = odo.getXYT();
+		currentDistance = calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
+		moveForward(currentDistance, true);
 
 		while(true){
-			//update current euclidean distance away from waypoint
-			currentPosition = odo.getXYT();
-			currentDistance = calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
-
 
 			//if distance < 10cm, enter wall following mode
 			if(Lab5.usData[0]*100.0 < 10){
-				//exit navigating mode
-				isNavigating = false;
 				stop();
-
-				//save the angle at which the ultrasonic sensor detected an obstacle
-				angleAtDetection = this.sensorMotor.getTachoCount();
-
-				//rotate sensor towards obstacle
-				sensorMotor.setSpeed(75);
-				sensorMotor.rotateTo(-85, true);
-
-				rotate(-(90 + angleAtDetection), false);   	  
-
-				stopwatch.reset();
-
-				do{
-					//pass distance to bang bang controller and allow it to control the robot
-					cont.processUSData((int)(Lab5.usData[0]*100.0));
-
-					//if the angle the robot is currently at is within 10 of the angle it has to
-					//be to reach the current destination, exit wall following mode
-					if(Navigation.angleDiff(
-							Navigation.calculateAngle(currentDest[0], currentDest[1], odo), 
-							odo.getXYT()[2]) < 10){
-						Sound.beep();
-						break;
-					}
-				} while(stopwatch.elapsed() < 8000); 
-				//if the robot has been in wall following
-				//mode for more than 20s, force exit
+				turn(-90);
+				moveForward(TILE_SIZE / 2, false);
+				turn(90);
+				moveForward(TILE_SIZE, false);
+				turn(90);
+				moveForward(TILE_SIZE / 2, false);
 				
-				//after exiting wall following mode, stop motors and rotate
-				//ultrasonic sensor back to 0 degrees
-				stop();
-				isNavigating = true;
-				sensorMotor.setSpeed(75);
-				sensorMotor.rotateTo(0, false);
-				setSpeed(FORWARD_SPEED);
-				counter = 0;
-			}
-
-			//if navigating, rotate ultrasonic sensor in a 40 degree cone
-			if(isNavigating){
-				//this.sensorMotor.setSpeed(150);
-				if(!this.sensorMotor.isMoving()){
-					if(counter % 2 == 0){
-						this.sensorMotor.rotateTo(30, true);
-						counter++;
-					}
-					else{
-						this.sensorMotor.rotateTo(-30, true);
-						counter++;
-					}
-				}
-			}
-
-			//if in navigating mode, motors arent moving and not close enough to the
-			//current destination, turn in the correct direction to get to destination
-			//and move forward
-			if(isNavigating && currentDistance > 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
 				angleToTurnTo = calculateAngle(x, y, odo);
 				turnTo(angleToTurnTo);
+				currentPosition = odo.getXYT();
+				currentDistance = calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
 				moveForward(currentDistance, true);
 			}
+			
 			//if in navigating mode, motors arent moving and near the destination,
 			//exit navigating mode
-			else if(isNavigating && currentDistance < 1 && !leftMotor.isMoving() && !rightMotor.isMoving()){
-				isNavigating = false;
-				counter = 0;
-				sensorMotor.rotateTo(0, false);
+			if(!leftMotor.isMoving() && !rightMotor.isMoving()){
 				break;
 			}
 		}
@@ -454,5 +364,10 @@ public class Navigation {
 		setSpeed(FORWARD_SPEED);
 		leftMotor.backward();
 		rightMotor.backward();
+	}
+	
+	public void turn(int angle){
+		this.leftMotor.rotate(convertAngle(leftRadius, track, angle), true);
+		this.rightMotor.rotate(-convertAngle(rightRadius, track, angle), false);
 	}
 }

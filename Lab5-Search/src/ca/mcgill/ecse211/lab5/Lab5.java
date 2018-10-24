@@ -27,8 +27,8 @@ public class Lab5 {
 	private static final int LLy = 2;
 	private static final int URx = 5;
 	private static final int URy = 5;
-	private static final int TR = 1; //1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
-	private static final int SC = 1;
+	private static final int TR = 2; //1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
+	private static final int SC = 0;
 	private static final int[][] CORNERS = { {1,1}, {1,7}, {7,7}, {7,1} };
 	
 
@@ -41,11 +41,11 @@ public class Lab5 {
 	
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	public static final double WHEEL_RAD = 2.1;//2.2 OG
-	public static final double TRACK = 13.6;//17 OG
+	public static final double TRACK = 12.3;//17 OG
 	public static String mode = " ";
 	private static final double TILE_SIZE = 30.48;
 	
-	private static final int wallFollowingHighSpeed = 150;
+	private static final int wallFollowingHighSpeed = 115;
 	private static final int wallFollowingLowSpeed = 50;
 	public static final int wallFollowingBandCenter = 10;
 	private static final int wallFollowingBandWidth = 1;
@@ -96,7 +96,8 @@ public class Lab5 {
 			Navigation navigator = new Navigation(leftMotor, rightMotor, sensorMotor, WHEEL_RAD, TRACK, bangbangcontroller);
 			
 			//test the angles
-			navigator.turnTo(90);
+			//navigator.turnTo(90);
+			navigator.moveForward(120, false);
 			leftMotor.forward();
 			leftMotor.flt();
 			rightMotor.forward();
@@ -112,7 +113,7 @@ public class Lab5 {
 
 		lightPoller.start();
 
-		UltrasonicLocalizer usLocalizer = new UltrasonicLocalizer(lightPoller, navigator);
+		UltrasonicLocalizer usLocalizer = new UltrasonicLocalizer(lightPoller);
 		LightLocalizer lsLocalizer = new LightLocalizer(lightPoller, navigator);
 
 
@@ -128,7 +129,7 @@ public class Lab5 {
 		} while(buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 		
 		//wait for button and starts ultrasonic localizer
-		usLocalizer.doLocalization(true);
+		usLocalizer.fallingEdge();
 
 		//wait for button and moves to (1,1) and does light localization
 		lsLocalizer.moveToOrigin(); 

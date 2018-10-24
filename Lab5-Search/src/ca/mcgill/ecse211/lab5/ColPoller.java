@@ -21,6 +21,9 @@ public class ColPoller extends Thread {
 	private float[] usData;
 	public int distance;
 	public int[] lastDistance = new int[2];
+	public int[] lastDistances = new int[5];
+	
+	
 
 
 	/**
@@ -61,14 +64,19 @@ public class ColPoller extends Thread {
 			
 			us.fetchSample(usData, 0); // acquire data
 
+			//lastDistances[counter] = distance;
+			
+			
 			if(counter % 2 == 0){
 				lastDistance[0] = distance;
 			}
 			else{
 				lastDistance[1] = distance;
 			}
+			
 			distance = (int) (usData[0] * 100.0); // extract from buffer, cast to int
 			counter++;
+			counter = counter % 5;
 			try {
 				Thread.sleep(20);
 			} catch (Exception e) {
