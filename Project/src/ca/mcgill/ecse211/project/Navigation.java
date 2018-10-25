@@ -52,6 +52,9 @@ public class Navigation {
 		poller = Poller.getPoller();
 	}
 	
+	/**
+	 * Floates the wheels
+	 */
 	public void floatWheels() {
 		leftMotor.forward();
 		leftMotor.flt();
@@ -120,8 +123,7 @@ public class Navigation {
 	}
 
 	/**
-	 * This method controls the robot to move towards x, y (tile position) while using the US sensor
-	 * to avoid obstacles
+	 * This method controls the robot to move towards x, y (tile position)
 	 * 
 	 * @param x
 	 * @param y
@@ -172,9 +174,9 @@ public class Navigation {
 	/**
 	 * This method checks if a wheel is turning
 	 * 
-	 * @return if wheel is moving
+	 * @return if a wheel is moving
 	 */
-	public boolean isNavigating() {
+	public boolean isMoving() {
 		return (leftMotor.isMoving() || leftMotor.isMoving());
 	}
 

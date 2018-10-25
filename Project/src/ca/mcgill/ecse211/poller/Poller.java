@@ -18,7 +18,7 @@ import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 public class Poller implements Runnable {
 
 	private static RingDetector ringDetector;
-	private static SensorData sensorData;
+	private static USSensorData sensorData;
 
 	private float lastRedReading;
 	private float currentRedReading;
@@ -52,21 +52,23 @@ public class Poller implements Runnable {
 	/**
 	 * Constructor
 	 * 
-	 * @param sample a SampleProvider from which we fetch the samples.
-	 * @param lightData a float array to store the samples.
-	 * @param ll a LightLocalizer to which we will pass the data through a synchronized setter.
 	 * @throws PollerException 
 	 */
 	public Poller() throws PollerException {
 		ringDetector = RingDetector.getRingDetector();
-		sensorData = SensorData.getSensorData();
+		sensorData = USSensorData.getSensorData();
 	}
 
+	/**
+	 * Gets the one instance of the class
+	 * 
+	 * @return the Poller
+	 * @throws PollerException
+	 */
 	public static Poller getPoller() throws PollerException {
 		if (poller != null) { // Return existing object
 			return poller;
-		} else if (numberOfIntances < MAX_INSTANCES) { // create object and
-			// return it
+		} else if (numberOfIntances < MAX_INSTANCES) { // create object and return it
 			poller = new Poller();
 			numberOfIntances += 1;
 			return poller;
@@ -127,10 +129,18 @@ public class Poller implements Runnable {
 		return lastRedReading;
 	}
 
+	/**
+	 * Get the filtered distance to the wall
+	 * @return distance
+	 */
 	public double getDistance() {
 		return sensorData.getdistance();
 	}
 
+	/**
+	 * Get the colour of the detected ring
+	 * @return colour
+	 */
 	public ColourType getColour() {
 		return ringDetector.getColourType();
 	}

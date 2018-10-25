@@ -5,7 +5,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class SensorData {
+public class USSensorData {
 	//sampling distance
 	private final int SAMPLE_SIZE = 5;
 	private double[] lastDistances = new double[SAMPLE_SIZE];
@@ -15,25 +15,32 @@ public class SensorData {
 	// Class control variables
 	private volatile static int numberOfIntances = 0; 
 	private static final int MAX_INSTANCES = 1; 
+	private static USSensorData senData = null;
 
 	// Thread control tools
 	private static Lock lock = new ReentrantLock(true); // Fair lock for concurrent writing
 	private volatile boolean isUpdating = false; 
 	private Condition doneUpdating = lock.newCondition(); 
 
-	private static SensorData senData = null;
-
-	public SensorData() {
+	/**
+	 * Constructor
+	 */
+	private USSensorData() {
 		distance = 0;
 		counter = 0;
 	}
 
-	public synchronized static SensorData getSensorData() throws PollerException {
+	/**
+	 * get the one instance of the class or creates new if doesn't exist
+	 * @return the one instance of USSensorData
+	 * @throws PollerException
+	 */
+	public synchronized static USSensorData getSensorData() throws PollerException {
 		if (senData != null) { // Return existing object
 			return senData;
 		} else if (numberOfIntances < MAX_INSTANCES) { // create object and
 			// return it
-			senData = new SensorData();
+			senData = new USSensorData();
 			numberOfIntances += 1;
 			return senData;
 		} else {
@@ -42,6 +49,10 @@ public class SensorData {
 	}
 
 
+	/**
+	 * Get the filtered distance to the wall
+	 * @return distance
+	 */
 	public double getdistance() {
 		double d = 0;
 		lock.lock();
@@ -59,6 +70,10 @@ public class SensorData {
 	}
 
 
+	/**
+	 * Updates the wall distance, samples and filters the data
+	 * @param newDistance
+	 */
 	public void updateDistance(double newDistance) {
 		lock.lock();
 		isUpdating = true;

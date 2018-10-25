@@ -15,62 +15,45 @@ import lejos.hardware.Sound;
  */
 public class RingDetector {
 
+	//data from testing sample
 	private static final double[] Y_RGB_MEAN = {0.849, 0.503, 0.160};
 	private static final double[] B_RGB_MEAN = {0.158, 0.706, 0.645};
 	private static final double[] O_RGB_MEAN = {0.967, 0.237, 0.092};
 	private static final double[] G_RGB_MEAN = {0.443, 0.874, 0.202};
 
-	private static boolean ringDetected = false;
-
+	//prevents the robot from beeping continuously
 	private static boolean[] foundRings = {false, false, false, false};
 
+	//colour type
 	public static enum ColourType {BLUE, ORANGE, YELLOW, GREEN, NONE};
 	private static ColourType ringColour = ColourType.NONE;
 
+	//singleton class control
 	private volatile static int numberOfIntances = 0; 
-
 	private static final int MAX_INSTANCES = 1; 
+	private static RingDetector ringDet = null;
 
 	// Thread control tools
 	private static Lock lock = new ReentrantLock(true); // Fair lock for concurrent writing
 	private volatile boolean isReseting = false; // Indicates if a thread is trying to reset any position parameters
 	private Condition doneReseting = lock.newCondition(); // Let other threads know that a reset operation is over.
 
-	private static RingDetector ringDet = null;
-
-	
-	  public synchronized static RingDetector getRingDetector() throws PollerException {
-		    if (ringDet != null) { // Return existing object
-		      return ringDet;
-		    } else if (numberOfIntances < MAX_INSTANCES) { // create object and
-		      // return it
-		    	ringDet = new RingDetector();
-		      numberOfIntances += 1;
-		      return ringDet;
-		    } else {
-		      throw new PollerException("Only one intance of the Odometer can be created.");
-		    }
-		  }
-
 	/**
-	 * Checks if a ring is detected
-	 * 
-	 * @return ring detected
+	 * Get the only instance of the ringDetector
+	 * @return the ringdetector
+	 * @throws PollerException
 	 */
-	public boolean ringDetected() {
-		boolean ring = false;
-		lock.lock();
-		try {
-			while (isReseting) {
-				doneReseting.await();
-			}
-			ring = ringDetected;
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} finally {
-			lock.unlock();
+	public synchronized static RingDetector getRingDetector() throws PollerException {
+		if (ringDet != null) { // Return existing object
+			return ringDet;
+		} else if (numberOfIntances < MAX_INSTANCES) { // create object and
+			// return it
+			ringDet = new RingDetector();
+			numberOfIntances += 1;
+			return ringDet;
+		} else {
+			throw new PollerException("Only one intance of the Odometer can be created.");
 		}
-		return ring;
 	}
 
 	/**
@@ -83,10 +66,10 @@ public class RingDetector {
 	 * @throws OdometerExceptions
 	 */
 	public void processRGBData(float R, float B, float G) {
-	    lock.lock();
-	    isReseting = true;
-	    try {
-	    	float dY, dB, dO, dG;
+		lock.lock();
+		isReseting = true;
+		try {
+			float dY, dB, dO, dG;
 			float[] data = normalizeRGBData(R, B, G);
 
 			dY = (float) Math.sqrt((data[0] - Y_RGB_MEAN[0]) * (data[0] - Y_RGB_MEAN[0])
@@ -107,7 +90,6 @@ public class RingDetector {
 
 			//if is yellow
 			if (dY < 0.020744 + 0.010672 * 2) {
-				ringDetected = true;
 				ringColour = ColourType.YELLOW;
 				if (!foundRings[2]) {
 					foundRings[2] = true;
@@ -117,7 +99,6 @@ public class RingDetector {
 			} 
 			//if is blue
 			else if (dB < 0.1) {
-				ringDetected = true;
 				ringColour = ColourType.BLUE;
 				if (!foundRings[0]) {
 					foundRings[0] = true;
@@ -127,7 +108,6 @@ public class RingDetector {
 			} 
 			//if is orange
 			else if (dO < 0.075) {
-				ringDetected = true;
 				ringColour = ColourType.ORANGE;
 				if (!foundRings[3]) {
 					foundRings[3] = true;
@@ -137,7 +117,6 @@ public class RingDetector {
 			} 
 			//if is green
 			else if (dG < 0.023811 + 0.013883 * 2) {
-				ringDetected = true;
 				ringColour = ColourType.GREEN;
 				if (!foundRings[1]) {
 					foundRings[1] = true;
@@ -147,16 +126,15 @@ public class RingDetector {
 			} 
 			//none of the above = nothing detected
 			else {
-				ringDetected = false;
 				ringColour = ColourType.NONE;
 			}
-	      
-	      isReseting = false; // Done reseting
-	      doneReseting.signalAll(); // Let the other threads know that you are
-	      // done reseting
-	    } finally {
-	      lock.unlock();
-	    }
+
+			isReseting = false; // Done reseting
+			doneReseting.signalAll(); // Let the other threads know that you are
+			// done reseting
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -175,6 +153,10 @@ public class RingDetector {
 		return result;
 	}
 
+	/**
+	 * get the colour of the ring detected
+	 * @return the colour
+	 */
 	public ColourType getColourType() {
 		ColourType type = ColourType.NONE;
 		lock.lock();
