@@ -17,24 +17,20 @@ import ca.mcgill.ecse211.poller.RingDetector.ColourType;
  */
 public class Poller implements Runnable {
 
-	private static RingDetector ringDetector;
-	private static USSensorData sensorData;
-
-	private float lastRedReading;
-	private float currentRedReading;
-
-	private double unfilteredDistance;
-
 	// Class control variables
 	private volatile static int numberOfIntances = 0; 
 	private static final int MAX_INSTANCES = 1; 
 	private static Poller poller = null;
+	private static RingDetector ringDetector;
+	private static USSensorData sensorData;
 
 	// initialize us sensor
 	private static final Port usPort = LocalEV3.get().getPort("S4");
 	static SensorModes usSensor = new EV3UltrasonicSensor(usPort);
 	static SampleProvider us = usSensor.getMode("Distance"); 
 	static float[] usData = new float[us.sampleSize()]; 
+	
+	private double unfilteredDistance;
 
 	// initialize color sensors
 	private static final Port colorSensorPort = LocalEV3.get().getPort("S1");
@@ -47,6 +43,9 @@ public class Poller implements Runnable {
 	static SensorModes lightSensor = new EV3ColorSensor(lsPort);
 	static SampleProvider redSample = lightSensor.getMode("Red");
 	static float[] redData = new float[redSample.sampleSize()];
+	
+	private float lastRedReading;
+	private float currentRedReading;
 
 
 	/**

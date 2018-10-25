@@ -7,7 +7,7 @@ import ca.mcgill.ecse211.odometer.*;
 import lejos.hardware.Sound;
 
 /**
- * This class detects the rings
+ * This class processes the colour sensor data
  * 
  * @author Edward Huang
  * @author Hugo Parent-Pothier
@@ -55,6 +55,32 @@ public class RingDetector {
 			throw new PollerException("Only one intance of the Odometer can be created.");
 		}
 	}
+	
+	/**
+	 * beeps after detecting ring
+	 * @param colour
+	 */
+	private void soundAlert(int colour) {
+		if(foundRings[colour]) return;	
+		switch(colour) {
+		case 0:
+			Sound.beep();
+			break;
+		case 1:
+			Sound.twoBeeps();
+			break;
+		case 2:
+			Sound.beep();		
+			Sound.twoBeeps();
+			break;
+		case 4:
+			Sound.twoBeeps();
+			Sound.twoBeeps();
+			break;
+		}
+			
+		foundRings[colour] = true;
+	}
 
 	/**
 	 * Processes the data and checks ring colour
@@ -91,38 +117,22 @@ public class RingDetector {
 			//if is yellow
 			if (dY < 0.020744 + 0.010672 * 2) {
 				ringColour = ColourType.YELLOW;
-				if (!foundRings[2]) {
-					foundRings[2] = true;
-					Sound.beep();
-					Sound.beep();
-				}
+				soundAlert(2);
 			} 
 			//if is blue
 			else if (dB < 0.1) {
 				ringColour = ColourType.BLUE;
-				if (!foundRings[0]) {
-					foundRings[0] = true;
-					Sound.beep();
-					Sound.beep();
-				}
+				soundAlert(0);
 			} 
 			//if is orange
 			else if (dO < 0.075) {
 				ringColour = ColourType.ORANGE;
-				if (!foundRings[3]) {
-					foundRings[3] = true;
-					Sound.beep();
-					Sound.beep(); 
-				}
+				soundAlert(3);
 			} 
 			//if is green
 			else if (dG < 0.023811 + 0.013883 * 2) {
 				ringColour = ColourType.GREEN;
-				if (!foundRings[1]) {
-					foundRings[1] = true;
-					Sound.beep();
-					Sound.beep();
-				}
+				soundAlert(1);
 			} 
 			//none of the above = nothing detected
 			else {

@@ -5,6 +5,13 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * This class processes the ultrasonic sensor data
+ * 
+ * @author Edward Huang
+ * @author Hugo Parent-Pothier
+ * @author Sophie Deng
+ */
 public class USSensorData {
 	//sampling distance
 	private final int SAMPLE_SIZE = 5;
