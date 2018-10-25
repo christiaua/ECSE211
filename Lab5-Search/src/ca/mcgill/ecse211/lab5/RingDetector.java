@@ -104,8 +104,13 @@ public class RingDetector {
     if (Lab5.usData[0] * 100 < 10
         && (dY < 0.020744 + 0.010672 * 2 || dY2 < 0.020744 + 0.010672 * 2)) {
       ringDetected = true;
-      Lab5.lcd.drawString("Object detected" + "           ", 0, 4);
-      Lab5.lcd.drawString("Yellow" + "           ", 0, 5);
+     // Lab5.lcd.drawString("Object detected" + "           ", 0, 4);
+      Lab5.lcd.drawString("Yellow" + "           ", 0, 3);
+      Lab5.lcd.drawString(Lab5.rgbData[0]+"", 0, 4);
+      Lab5.lcd.drawString(Lab5.rgbData[1]+"", 0, 5);
+      Lab5.lcd.drawString(Lab5.rgbData[2]+"", 0, 6);
+      
+     
       if (!foundRings[2]) {
         foundRings[2] = true;
         if (target == 2) {
@@ -120,8 +125,11 @@ public class RingDetector {
     //if is blue
     else if (Lab5.usData[0] * 100 < 10 && (dB < 0.1 || dB2 < 0.1)) {
       ringDetected = true;
-      Lab5.lcd.drawString("Object detected" + "           ", 0, 4);
-      Lab5.lcd.drawString("Blue  " + "           ", 0, 5);
+  //    Lab5.lcd.drawString("Object detected" + "           ", 0, 4);
+      Lab5.lcd.drawString("Blue  " + "           ", 0, 3);
+      Lab5.lcd.drawString(Lab5.rgbData[0]+"", 0, 4);
+      Lab5.lcd.drawString(Lab5.rgbData[1]+"", 0, 5);
+      Lab5.lcd.drawString(Lab5.rgbData[2]+"", 0, 6);
       if (!foundRings[0]) {
         foundRings[0] = true;
         if (target == 0) {
@@ -136,8 +144,11 @@ public class RingDetector {
     //if is orange
     else if (Lab5.usData[0] * 100 < 10 && (dO < 0.075 || dO2 < 0.075)) {
       ringDetected = true;
-      Lab5.lcd.drawString("Object detected" + "           ", 0, 4);
-      Lab5.lcd.drawString("Orange" + "           ", 0, 5);
+     // Lab5.lcd.drawString("Object detected" + "           ", 0, 4);
+      Lab5.lcd.drawString("Orange" + "           ", 0, 3);
+      Lab5.lcd.drawString(Lab5.rgbData[0]+"", 0, 4);
+      Lab5.lcd.drawString(Lab5.rgbData[1]+"", 0, 5);
+      Lab5.lcd.drawString(Lab5.rgbData[2]+"", 0, 6);
       if (!foundRings[3]) {
         foundRings[3] = true;
         if (target == 3) {
@@ -153,8 +164,11 @@ public class RingDetector {
     else if (Lab5.usData[0] * 100 < 10
         && (dG < 0.023811 + 0.013883 * 2 || dG2 < 0.023811 + 0.013883 * 2)) {
       ringDetected = true;
-      Lab5.lcd.drawString("Object detected" + "           ", 0, 4);
-      Lab5.lcd.drawString("Green " + "           ", 0, 5);
+     // Lab5.lcd.drawString("Object detected" + "           ", 0, 4);
+      Lab5.lcd.drawString("Green " + "           ", 0, 3);
+      Lab5.lcd.drawString(Lab5.rgbData[0]+"", 0, 4);
+      Lab5.lcd.drawString(Lab5.rgbData[1]+"", 0, 5);
+      Lab5.lcd.drawString(Lab5.rgbData[2]+"", 0, 6);
       if (!foundRings[1]) {
         foundRings[1] = true;
         if (target == 1) {

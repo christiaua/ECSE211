@@ -27,7 +27,7 @@ public class Lab5 {
   private static final int LLy = 3;
   private static final int URx = 7;
   private static final int URy = 7;
-  private static final int TR = 4; // 1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
+  private static final int TR = 2; // 1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
   private static final int SC = 0;
   private static final int[][] CORNERS = {{1, 1}, {1, 7}, {7, 7}, {7, 1}};
 
@@ -190,8 +190,9 @@ public class Lab5 {
     boolean firstPass = true;
 
     for (int i = LLy; i <= URy; i++) {
-      if (RingDetector.targetDetected())
-        break;
+      if (RingDetector.targetDetected()) {
+    	  break;  
+      }
       if (!RingDetector.targetDetected()) {
         if (isLeftLine) {
           if (firstPass) {
