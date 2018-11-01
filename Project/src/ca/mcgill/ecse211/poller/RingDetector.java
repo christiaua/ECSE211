@@ -1,5 +1,6 @@
 package ca.mcgill.ecse211.poller;
 
+import java.util.Arrays;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -14,6 +15,12 @@ import lejos.hardware.Sound;
  * @author Sophie Deng
  */
 public class RingDetector {
+	//sampling
+	private final int SAMPLE_SIZE = 5;
+	private float[] lastRReadings = new float[SAMPLE_SIZE];
+	private float[] lastBReadings = new float[SAMPLE_SIZE];
+	private float[] lastGReadings = new float[SAMPLE_SIZE];
+	private volatile static int counter = 0;
 
 	//data from testing sample
 	private static final double[] Y_RGB_MEAN = {0.849, 0.503, 0.160};
@@ -77,8 +84,7 @@ public class RingDetector {
 			Sound.twoBeeps();
 			Sound.twoBeeps();
 			break;
-		}
-			
+		}		
 		foundRings[colour] = true;
 	}
 
@@ -95,55 +101,78 @@ public class RingDetector {
 		lock.lock();
 		isReseting = true;
 		try {
-			float dY, dB, dO, dG;
-			float[] data = normalizeRGBData(R, B, G);
-
-			dY = (float) Math.sqrt((data[0] - Y_RGB_MEAN[0]) * (data[0] - Y_RGB_MEAN[0])
-					+ (data[1] - Y_RGB_MEAN[1]) * (data[1] - Y_RGB_MEAN[1])
-					+ (data[2] - Y_RGB_MEAN[2]) * (data[2] - Y_RGB_MEAN[2]));
-
-			dB = (float) Math.sqrt((data[0] - B_RGB_MEAN[0]) * (data[0] - B_RGB_MEAN[0])
-					+ (data[1] - B_RGB_MEAN[1]) * (data[1] - B_RGB_MEAN[1])
-					+ (data[2] - B_RGB_MEAN[2]) * (data[2] - B_RGB_MEAN[2]));
-
-			dO = (float) Math.sqrt((data[0] - O_RGB_MEAN[0]) * (data[0] - O_RGB_MEAN[0])
-					+ (data[1] - O_RGB_MEAN[1]) * (data[1] - O_RGB_MEAN[1])
-					+ (data[2] - O_RGB_MEAN[2]) * (data[2] - O_RGB_MEAN[2]));
-
-			dG = (float) Math.sqrt((data[0] - G_RGB_MEAN[0]) * (data[0] - G_RGB_MEAN[0])
-					+ (data[1] - G_RGB_MEAN[1]) * (data[1] - G_RGB_MEAN[1])
-					+ (data[2] - G_RGB_MEAN[2]) * (data[2] - G_RGB_MEAN[2]));
-
-			//if is yellow
-			if (dY < 0.020744 + 0.010672 * 2) {
-				ringColour = ColourType.YELLOW;
-				soundAlert(2);
-			} 
-			//if is blue
-			else if (dB < 0.1) {
-				ringColour = ColourType.BLUE;
-				soundAlert(0);
-			} 
-			//if is orange
-			else if (dO < 0.075) {
-				ringColour = ColourType.ORANGE;
-				soundAlert(3);
-			} 
-			//if is green
-			else if (dG < 0.023811 + 0.013883 * 2) {
-				ringColour = ColourType.GREEN;
-				soundAlert(1);
-			} 
-			//none of the above = nothing detected
-			else {
-				ringColour = ColourType.NONE;
+			//get median
+			lastRReadings[counter] = R;
+			lastBReadings[counter] = B;
+			lastGReadings[counter] = G;
+			if (counter == SAMPLE_SIZE - 1) {
+				Arrays.sort(lastRReadings);
+				Arrays.sort(lastBReadings);
+				Arrays.sort(lastGReadings);
+				R = lastRReadings[2];
+				B = lastBReadings[2];
+				G = lastGReadings[2];
+				detectColour(R,B,G);
 			}
-
+			counter++;
+			counter = counter % SAMPLE_SIZE;
 			isReseting = false; // Done reseting
 			doneReseting.signalAll(); // Let the other threads know that you are
 			// done reseting
 		} finally {
 			lock.unlock();
+		}
+	}
+	
+	/**
+	 * Detect the correct colour after sampling
+	 * @param R
+	 * @param B
+	 * @param G
+	 */
+	private void detectColour(float R, float B, float G) {
+		float dY, dB, dO, dG;
+		float[] data = normalizeRGBData(R, B, G);
+
+		dY = (float) Math.sqrt((data[0] - Y_RGB_MEAN[0]) * (data[0] - Y_RGB_MEAN[0])
+				+ (data[1] - Y_RGB_MEAN[1]) * (data[1] - Y_RGB_MEAN[1])
+				+ (data[2] - Y_RGB_MEAN[2]) * (data[2] - Y_RGB_MEAN[2]));
+
+		dB = (float) Math.sqrt((data[0] - B_RGB_MEAN[0]) * (data[0] - B_RGB_MEAN[0])
+				+ (data[1] - B_RGB_MEAN[1]) * (data[1] - B_RGB_MEAN[1])
+				+ (data[2] - B_RGB_MEAN[2]) * (data[2] - B_RGB_MEAN[2]));
+
+		dO = (float) Math.sqrt((data[0] - O_RGB_MEAN[0]) * (data[0] - O_RGB_MEAN[0])
+				+ (data[1] - O_RGB_MEAN[1]) * (data[1] - O_RGB_MEAN[1])
+				+ (data[2] - O_RGB_MEAN[2]) * (data[2] - O_RGB_MEAN[2]));
+
+		dG = (float) Math.sqrt((data[0] - G_RGB_MEAN[0]) * (data[0] - G_RGB_MEAN[0])
+				+ (data[1] - G_RGB_MEAN[1]) * (data[1] - G_RGB_MEAN[1])
+				+ (data[2] - G_RGB_MEAN[2]) * (data[2] - G_RGB_MEAN[2]));
+
+		//if is yellow
+		if (dY < 0.020744 + 0.010672 * 2) {
+			ringColour = ColourType.YELLOW;
+			soundAlert(2);
+		} 
+		//if is blue
+		else if (dB < 0.1) {
+			ringColour = ColourType.BLUE;
+			soundAlert(0);
+		} 
+		//if is orange
+		else if (dO < 0.075) {
+			ringColour = ColourType.ORANGE;
+			soundAlert(3);
+		} 
+		//if is green
+		else if (dG < 0.023811 + 0.013883 * 2) {
+			ringColour = ColourType.GREEN;
+			soundAlert(1);
+		} 
+		//none of the above = nothing detected
+		else {
+			ringColour = ColourType.NONE;
 		}
 	}
 

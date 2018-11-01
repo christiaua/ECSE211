@@ -6,6 +6,9 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
+
+import java.util.Arrays;
+
 import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 
 /**
@@ -16,6 +19,11 @@ import ca.mcgill.ecse211.poller.RingDetector.ColourType;
  * @author Sophie Deng
  */
 public class Poller implements Runnable {
+	//sampling red value
+	private final int SAMPLE_SIZE = 5;
+	private float[] lastRedReadings = new float[SAMPLE_SIZE];
+	private volatile static int counter = 0;
+
 
 	// Class control variables
 	private volatile static int numberOfIntances = 0; 
@@ -81,17 +89,25 @@ public class Poller implements Runnable {
 	 */
 	public void run() {
 		while (true) {
+			//get median of red value
 			redSample.fetchSample(redData, 0);
+			lastRedReadings[counter] = redData[0];
+			if (counter == SAMPLE_SIZE - 1) {
+				Arrays.sort(lastRedReadings);
+				lastRedReading = currentRedReading;
+				currentRedReading = lastRedReadings[2];
 
-			lastRedReading = currentRedReading;
-			currentRedReading = redData[0];
+			}
+			counter++;
+			counter = counter % SAMPLE_SIZE;
 
+			//process colour
 			rgbSample.fetchSample(rgbData, 0);
 			ringDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2]);
-
-			us.fetchSample(usData, 0); // acquire data
-			unfilteredDistance = (usData[0] * 100.0); // extract from buffer, cast to int
-
+			
+			//process ultrasonic sensor
+			us.fetchSample(usData, 0); 
+			unfilteredDistance = (usData[0] * 100.0); 
 			sensorData.updateDistance(unfilteredDistance);
 
 			try {
@@ -133,7 +149,15 @@ public class Poller implements Runnable {
 	 * @return distance
 	 */
 	public double getDistance() {
-		return sensorData.getdistance();
+		return sensorData.getDistance();
+	}
+	
+	/**
+	 * Get the previous distance to the wall
+	 * @return distance
+	 */
+	public double getLastDistance() {
+		return sensorData.getDistance();
 	}
 
 	/**

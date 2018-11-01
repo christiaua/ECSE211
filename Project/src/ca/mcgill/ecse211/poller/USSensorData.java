@@ -17,6 +17,7 @@ public class USSensorData {
 	private final int SAMPLE_SIZE = 5;
 	private double[] lastDistances = new double[SAMPLE_SIZE];
 	private volatile static double distance;
+	private double lastDistance;
 	private volatile static int counter = 0;
 
 	// Class control variables
@@ -60,7 +61,7 @@ public class USSensorData {
 	 * Get the filtered distance to the wall
 	 * @return distance
 	 */
-	public double getdistance() {
+	public double getDistance() {
 		double d = 0;
 		lock.lock();
 		try {
@@ -68,6 +69,26 @@ public class USSensorData {
 				doneUpdating.await(); 
 			}
 			d = distance;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			lock.unlock();
+		}
+		return d;
+	}
+	
+	/**
+	 * Get the previous wall distance
+	 * @return distance
+	 */
+	public double getLastDistance() {
+		double d = 0;
+		lock.lock();
+		try {
+			while (isUpdating) { 
+				doneUpdating.await(); 
+			}
+			d = lastDistance;
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
@@ -88,7 +109,8 @@ public class USSensorData {
 			lastDistances[counter] = newDistance;
 			if (counter == SAMPLE_SIZE - 1) {
 				Arrays.sort(lastDistances);
-				distance = lastDistances[2];
+				lastDistance = distance;
+				distance = lastDistances[2];		
 			}
 			counter++;
 			counter = counter % SAMPLE_SIZE;
