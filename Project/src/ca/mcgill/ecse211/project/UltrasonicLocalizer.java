@@ -26,9 +26,9 @@ public class UltrasonicLocalizer {
 	 * @param nav
 	 * @throws OdometerExceptions
 	 */
-	public UltrasonicLocalizer(Poller poller) throws OdometerExceptions, PollerException{
+	public UltrasonicLocalizer() throws OdometerExceptions, PollerException{
 		this.odo = Odometer.getOdometer();
-		this.poller = poller;
+		this.poller = Poller.getPoller();
 		this.navigation = new Navigation();
 	}
 	/**

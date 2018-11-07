@@ -38,14 +38,20 @@ public class Poller implements Runnable {
 	static SampleProvider rgbSample = colorSensor.getMode("RGB");
 	static float[] rgbData = new float[rgbSample.sampleSize()];
 
-	// initialize line detecting sensor
-	private static final Port lsPort = LocalEV3.get().getPort("S2");
-	static SensorModes lightSensor = new EV3ColorSensor(lsPort);
-	static SampleProvider redSample = lightSensor.getMode("Red");
-	static float[] redData = new float[redSample.sampleSize()];
+	// initialize line detecting sensors
+	private static final Port lsPort1 = LocalEV3.get().getPort("S2");
+	static SensorModes lightSensor1 = new EV3ColorSensor(lsPort1);
+	static SampleProvider redSample1 = lightSensor1.getMode("Red");
+	static float[] redData1 = new float[redSample1.sampleSize()];
 	
-	private float lastRedReading;
-	private float currentRedReading;
+	private static final Port lsPort2 = LocalEV3.get().getPort("S3");
+	static SensorModes lightSensor2 = new EV3ColorSensor(lsPort2);
+	static SampleProvider redSample2 = lightSensor2.getMode("Red");
+	static float[] redData2 = new float[redSample2.sampleSize()];
+	
+	
+	private float lastRedReading1, lastRedReading2;
+	private float currentRedReading1, currentRedReading2;
 
 
 	/**
@@ -81,10 +87,14 @@ public class Poller implements Runnable {
 	 */
 	public void run() {
 		while (true) {
-			redSample.fetchSample(redData, 0);
+			redSample1.fetchSample(redData1, 0);
+			redSample2.fetchSample(redData2, 0);
+			
+			lastRedReading1 = currentRedReading1;
+			currentRedReading1 = redData1[0];
 
-			lastRedReading = currentRedReading;
-			currentRedReading = redData[0];
+			lastRedReading2 = currentRedReading2;
+			currentRedReading2 = redData2[0];
 
 			rgbSample.fetchSample(rgbData, 0);
 			ringDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2]);
@@ -111,21 +121,27 @@ public class Poller implements Runnable {
 	}
 
 	/**
-	 * Get the Red value
-	 * 
-	 * @return red value
+	 * Get the red reading of light sensor specified by number
+	 * @param sensor The sensor from which to get reading from (1 or 2)
+	 * @return red reading
 	 */
-	public float getCurrentRedReading() {
-		return currentRedReading;
+	public float getCurrentRedReading(int sensor) {
+		if(sensor == 1)
+			return currentRedReading1;
+		else
+			return currentRedReading2;
 	}
 
 	/**
-	 * Get previous Red value
-	 * 
-	 * @return get previous red value
+	 * Get previous red value of specified sensor
+	 * @param sensor The sensor  from which to get reading from (1 or 2)
+	 * @return previous red reading
 	 */
-	public float getLastRedReading() {
-		return lastRedReading;
+	public float getLastRedReading(int sensor) {
+		if(sensor == 1)
+			return lastRedReading1;
+		else
+			return lastRedReading2;
 	}
 
 	/**
@@ -133,7 +149,15 @@ public class Poller implements Runnable {
 	 * @return distance
 	 */
 	public double getDistance() {
-		return sensorData.getdistance();
+		return sensorData.getDistance();
+	}
+	
+	/**
+	 * Get the filtered distance to the wall
+	 * @return distance
+	 */
+	public double getLastDistance() {
+		return sensorData.getLastDistance();
 	}
 
 	/**

@@ -141,6 +141,8 @@ public class Navigation {
 		currentDistance =
 				calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
 		moveForward(currentDistance, true);
+		
+		isNavigating = false;
 	}
 
 
