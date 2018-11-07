@@ -50,7 +50,7 @@ public class LightLocalizer {
 		
 		while(true){
 			//checks if robot crosses a line while moving
-			if(navigation.isNavigating && poller.getCurrentRedReading(1) < 0.33){
+			if(navigation.isNavigating && poller.getCurrentRedReading("left") < 0.33){
 				navigation.stop();
 				Sound.beep();
 				break;
@@ -68,7 +68,7 @@ public class LightLocalizer {
 		navigation.rotate(360, true);
 		
 		while(navigation.isNavigating) {
-			if(poller.getLastRedReading(1) - poller.getCurrentRedReading(1) > 0.1) {
+			if(poller.getLastRedReading("left") - poller.getCurrentRedReading("left") > 0.1) {
 				Sound.beep();
 				theta[lineCount] = odo.getXYT()[2];
 				lineCount++;

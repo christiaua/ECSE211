@@ -125,11 +125,13 @@ public class Poller implements Runnable {
 	 * @param sensor The sensor from which to get reading from (1 or 2)
 	 * @return red reading
 	 */
-	public float getCurrentRedReading(int sensor) {
-		if(sensor == 1)
+	public float getCurrentRedReading(String sensor) {
+		if(sensor.equals("left"))
 			return currentRedReading1;
-		else
+		else if(sensor.equals("right"))
 			return currentRedReading2;
+		else
+			return -1;
 	}
 
 	/**
@@ -137,11 +139,13 @@ public class Poller implements Runnable {
 	 * @param sensor The sensor  from which to get reading from (1 or 2)
 	 * @return previous red reading
 	 */
-	public float getLastRedReading(int sensor) {
-		if(sensor == 1)
+	public float getLastRedReading(String sensor) {
+		if(sensor.equals("left"))
 			return lastRedReading1;
-		else
+		else if(sensor.equals("right"))
 			return lastRedReading2;
+		else
+			return -1;
 	}
 
 	/**

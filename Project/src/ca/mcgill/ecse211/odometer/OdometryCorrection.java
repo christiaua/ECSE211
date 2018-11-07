@@ -37,29 +37,29 @@ public class OdometryCorrection implements Runnable {
     while (true) {
       correctionStart = System.currentTimeMillis();
 
-      if(poller.getLastRedReading(1) - poller.getCurrentRedReading(1) > 0.1) {
+      if(poller.getLastRedReading("left") - poller.getCurrentRedReading("lefft") > 0.1) {
     	  x_at_first_detection = odometer.getXYT()[0];
     	  y_at_first_detection = odometer.getXYT()[1];
     	  while(true){
-    		  if(poller.getLastRedReading(2) - poller.getCurrentRedReading(2) > 0.1){
+    		  if(poller.getLastRedReading("right") - poller.getCurrentRedReading("right") > 0.1){
     			  x_at_second_detection = odometer.getXYT()[0];
     	    	  y_at_second_detection = odometer.getXYT()[1];
     	    	  break;
     		  }
     	  }
-    	  correctAngle(1);
+    	  correctAngle("left");
       }
-      else if(poller.getLastRedReading(2) - poller.getCurrentRedReading(2) > 0.1) {
+      else if(poller.getLastRedReading("right") - poller.getCurrentRedReading("right") > 0.1) {
     	  x_at_first_detection = odometer.getXYT()[0];
     	  y_at_first_detection = odometer.getXYT()[1];
     	  while(true){
-    		  if(poller.getLastRedReading(1) - poller.getCurrentRedReading(1) > 0.1){
+    		  if(poller.getLastRedReading("left") - poller.getCurrentRedReading("left") > 0.1){
     			  x_at_second_detection = odometer.getXYT()[0];
     	    	  y_at_second_detection = odometer.getXYT()[1];
     	    	  break;
     		  }
     	  }
-    	  correctAngle(2);
+    	  correctAngle("right");
       }
 
       // this ensure the odometry correction occurs only once every period
@@ -74,14 +74,14 @@ public class OdometryCorrection implements Runnable {
     }
   }
   
-  private void correctAngle(int sensor){
+  private void correctAngle(String sensor){
 	  	double angleCorrection;
 		double dx = x_at_second_detection - x_at_first_detection;
 		double dy = y_at_second_detection - y_at_first_detection;
 		double dist_between_detections = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 		double currentAngle = odometer.getXYT()[2];
 		
-		if(sensor == 1){
+		if(sensor.equals("left")){
 			angleCorrection = Math.toDegrees(Math.atan2(dist_between_detections, DIST_BETWEEN_SENSORS));
 		}
 		else{

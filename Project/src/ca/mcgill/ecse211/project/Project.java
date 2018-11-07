@@ -23,6 +23,9 @@ public class Project {
 	private static Display display;
 	private static Odometer odometer;
 	private static Poller poller;
+	private static Navigation navigation;
+	private static UltrasonicLocalizer usLocalizer;
+	private static LightLocalizer lightLocalizer;
 
 	public static void main(String[] args) throws OdometerExceptions, PollerException{
 		do {
@@ -51,21 +54,28 @@ public class Project {
 				navigation.floatWheels();
 				System.exit(0);
 			}
+			
+			else if(buttonChoice == Button.ID_RIGHT){
+				odometer = Odometer.getOdometer();
+				Thread odoThread = new Thread(odometer);
+				odoThread.start();
 
-			odometer = Odometer.getOdometer();
-			Thread odoThread = new Thread(odometer);
-			odoThread.start();
+				poller = Poller.getPoller();
+				Thread pollerThread = new Thread(poller);
+				pollerThread.start();
 
-			poller = Poller.getPoller();
-			Thread pollerThread = new Thread(poller);
-			pollerThread.start();
-
-			display = new Display(lcd);
-			Thread displayThread = new Thread(display);
-			displayThread.start();
+				display = new Display(lcd);
+				Thread displayThread = new Thread(display);
+				displayThread.start();
+				
+				usLocalizer = new UltrasonicLocalizer();
+				lightLocalizer = new LightLocalizer();
+				
+				usLocalizer.fallingEdge();
+				lightLocalizer.moveToOrigin();
+			}
 			
 			buttonChoice = Button.waitForAnyPress();
-
 		} while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
 	}
