@@ -17,7 +17,7 @@ public class LightLocalizer {
 	private Poller poller;
 	private double x;
 	private double y;
-	private static final double D = 12.5;
+	private static final double D = 13.3;
 	private double dthetaY;
 	private Navigation navigation;
 	private static final double TILE_SIZE = 30.48;
@@ -50,13 +50,13 @@ public class LightLocalizer {
 		
 		while(true){
 			//checks if robot crosses a line while moving
-			if(navigation.isNavigating && poller.getCurrentRedReading("left") < 0.33){
+			if(navigation.isNavigating() && poller.getCurrentRedReading("left") < 0.33){
 				navigation.stop();
 				Sound.beep();
 				break;
 			}
 			//checks if robot stopped moving without seeing a line
-			if(!navigation.isNavigating) {
+			if(!navigation.isNavigating()) {
 				//go backwards until seeing a line
 				navigation.backwards();
 			}
@@ -67,7 +67,7 @@ public class LightLocalizer {
 		//perform a 360
 		navigation.rotate(360, true);
 		
-		while(navigation.isNavigating) {
+		while(navigation.isNavigating()) {
 			if(poller.getLastRedReading("left") - poller.getCurrentRedReading("left") > 0.1) {
 				Sound.beep();
 				theta[lineCount] = odo.getXYT()[2];

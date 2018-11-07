@@ -17,14 +17,14 @@ public class Navigation {
 
 	// Motor Objects, and Robot related parameters
 	private static final EV3LargeRegulatedMotor leftMotor =
-			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
-	private static final EV3LargeRegulatedMotor rightMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+	private static final EV3LargeRegulatedMotor rightMotor =
+			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	private static final EV3MediumRegulatedMotor sensorMotor =
 			new EV3MediumRegulatedMotor(LocalEV3.get().getPort("C"));
 
 	private static final double WHEEL_RAD = 2.2;
-	private static final double TRACK = 12.3;
+	private static final double TRACK = 14.725;
 	private static final double TILE_SIZE = 30.48;
 
 	private static final int FORWARD_SPEED = 175;
@@ -33,8 +33,6 @@ public class Navigation {
 	private Odometer odo = null;
 	private Poller poller = null;
 	public int[] currentDest = {0, 0};
-
-	public boolean isNavigating = false;
 
 	/**
 	 * This method is meant to drive the robot in a square of size 2x2 Tiles. It is to run in parallel
@@ -132,17 +130,13 @@ public class Navigation {
 		double angleToTurnTo;
 		double currentDistance;
 		double[] currentPosition = odo.getXYT();
-
-		isNavigating = true;
-
+		
 		angleToTurnTo = calculateAngle(x, y, odo);
 		turnTo(angleToTurnTo);
 		currentPosition = odo.getXYT();
 		currentDistance =
 				calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
 		moveForward(currentDistance, true);
-		
-		isNavigating = false;
 	}
 
 
@@ -295,5 +289,12 @@ public class Navigation {
 		setSpeed(FORWARD_SPEED);
 		leftMotor.backward();
 		rightMotor.backward();
+	}
+	
+	public boolean isNavigating(){
+		if(leftMotor.isMoving() || rightMotor.isMoving())
+			return true;
+		else
+			return false;
 	}
 }
