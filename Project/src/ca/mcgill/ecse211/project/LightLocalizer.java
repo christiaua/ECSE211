@@ -13,11 +13,11 @@ import ca.mcgill.ecse211.poller.*;
 public class LightLocalizer {
 	private Odometer odo;
 
-	private static final int MAX_DISTANCE = 50;
+	private static final int MAX_DISTANCE = 70;
 	private Poller poller;
 	private double x;
 	private double y;
-	private static final double D = 13.3;
+	private static final double D = 15.3;
 	private double dthetaY;
 	private Navigation navigation;
 	private static final double TILE_SIZE = 30.48;
@@ -85,7 +85,7 @@ public class LightLocalizer {
 		odo.setX(x);
 		odo.setY(y);
 		dthetaY = -90 - theta[3] + thetaY/2;
-		odo.update(0,0,(dthetaY + 5));
+		odo.update(0,0,(dthetaY - 15));
 		navigation.travelTo(0,0);
 		navigation.turnTo(0);
 		

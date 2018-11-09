@@ -4,24 +4,31 @@
 package ca.mcgill.ecse211.odometer;
 
 import ca.mcgill.ecse211.poller.*;
+import ca.mcgill.ecse211.project.Navigation;
+import ca.mcgill.ecse211.project.Project;
+import lejos.hardware.Sound;
 
 public class OdometryCorrection implements Runnable {
   private static final long CORRECTION_PERIOD = 10;
-  private static final double DIST_BETWEEN_SENSORS = 10;
+  private static final double DIST_BETWEEN_SENSORS = 12.5;
+  private static final double WHEEL_RAD = 2.2;
   private Odometer odometer;
   private Poller poller;
-  private double x_at_first_detection, y_at_first_detection, x_at_second_detection, y_at_second_detection;
+  private Navigation navigation;
+  private int tacho_at_first_detection, tacho_at_second_detection;
 
   /**
    * This is the default class constructor. An existing instance of the odometer is used. This is to
    * ensure thread safety.
    * 
    * @throws OdometerExceptions
+ * @throws PollerException 
    */
-  public OdometryCorrection(Poller poller) throws OdometerExceptions {
+  public OdometryCorrection() throws OdometerExceptions, PollerException {
 
     this.odometer = Odometer.getOdometer();
-    this.poller = poller;
+    this.poller = Poller.getPoller();
+    this.navigation = new Navigation();
 
   }
 
@@ -37,29 +44,38 @@ public class OdometryCorrection implements Runnable {
     while (true) {
       correctionStart = System.currentTimeMillis();
 
-      if(poller.getLastRedReading("left") - poller.getCurrentRedReading("lefft") > 0.1) {
-    	  x_at_first_detection = odometer.getXYT()[0];
-    	  y_at_first_detection = odometer.getXYT()[1];
+      
+      if(poller.getCurrentRedReading("left") < 0.33 && !navigation.isTurning()) {
+    	  tacho_at_first_detection = navigation.getTacho("left");
+    	  Sound.beep();
     	  while(true){
-    		  if(poller.getLastRedReading("right") - poller.getCurrentRedReading("right") > 0.1){
-    			  x_at_second_detection = odometer.getXYT()[0];
-    	    	  y_at_second_detection = odometer.getXYT()[1];
+    		  if(navigation.isTurning()){
+    			  Sound.beepSequence();
+    			  break;
+    		  }
+    		  if(poller.getCurrentRedReading("right") < 0.33 || poller.getLastRedReading("right") < 0.33){
+    			  tacho_at_second_detection = navigation.getTacho("left");
+    	    	  correctAngle("left");
+    	    	  Sound.beep();
     	    	  break;
     		  }
     	  }
-    	  correctAngle("left");
       }
-      else if(poller.getLastRedReading("right") - poller.getCurrentRedReading("right") > 0.1) {
-    	  x_at_first_detection = odometer.getXYT()[0];
-    	  y_at_first_detection = odometer.getXYT()[1];
+      else if(poller.getCurrentRedReading("right") < 0.33) {
+    	  tacho_at_first_detection = navigation.getTacho("left");
+    	  Sound.beep();
     	  while(true){
-    		  if(poller.getLastRedReading("left") - poller.getCurrentRedReading("left") > 0.1){
-    			  x_at_second_detection = odometer.getXYT()[0];
-    	    	  y_at_second_detection = odometer.getXYT()[1];
+    		  if(navigation.isTurning()){
+    			  Sound.beepSequence();
+    			  break;
+    		  }
+    		  if(poller.getLastRedReading("left") < 0.33 || poller.getCurrentRedReading("left")  < 0.33){
+    			  tacho_at_second_detection = navigation.getTacho("left");
+    			  correctAngle("right");
+    			  Sound.beep();
     	    	  break;
     		  }
     	  }
-    	  correctAngle("right");
       }
 
       // this ensure the odometry correction occurs only once every period
@@ -76,9 +92,8 @@ public class OdometryCorrection implements Runnable {
   
   private void correctAngle(String sensor){
 	  	double angleCorrection;
-		double dx = x_at_second_detection - x_at_first_detection;
-		double dy = y_at_second_detection - y_at_first_detection;
-		double dist_between_detections = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+		double dtacho = tacho_at_second_detection - tacho_at_first_detection;
+		double dist_between_detections = dtacho * WHEEL_RAD * Math.PI / 180;
 		double currentAngle = odometer.getXYT()[2];
 		
 		if(sensor.equals("left")){
@@ -88,18 +103,22 @@ public class OdometryCorrection implements Runnable {
 			angleCorrection = Math.toDegrees(-Math.atan2(dist_between_detections, DIST_BETWEEN_SENSORS));
 		}
 		
+		Project.lcd.drawString(angleCorrection + "    ", 0, 5);
+		
 		//Assume angle is within 45 degree precision
-		if((currentAngle < 45 && currentAngle > 0) || (currentAngle < 360 && currentAngle > 315)){
-			odometer.setTheta(angleCorrection);
-		}
-		else if(currentAngle < 135 && currentAngle > 45){
-			odometer.setTheta(90 + angleCorrection);
-		}
-		else if(currentAngle < 225 && currentAngle > 135){
-			odometer.setTheta(180 + angleCorrection);
-		}
-		else if(currentAngle < 315 && currentAngle > 225){
-			odometer.setTheta(270 + angleCorrection);
+		if(angleCorrection > 3){
+			if((currentAngle < 45 && currentAngle > 0) || (currentAngle < 360 && currentAngle > 315)){
+				odometer.setTheta(angleCorrection);
+			}
+			else if(currentAngle < 135 && currentAngle > 45){
+				odometer.setTheta(90 + angleCorrection);
+			}
+			else if(currentAngle < 225 && currentAngle > 135){
+				odometer.setTheta(180 + angleCorrection);
+			}
+			else if(currentAngle < 315 && currentAngle > 225){
+				odometer.setTheta(270 + angleCorrection);
+			}
 		}
 	}
   

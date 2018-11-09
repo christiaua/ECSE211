@@ -2,6 +2,7 @@ package ca.mcgill.ecse211.project;
 
 import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
+import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import ca.mcgill.ecse211.poller.Poller;
 import ca.mcgill.ecse211.poller.PollerException;
 import lejos.hardware.Button;
@@ -19,13 +20,14 @@ public class Project {
 	private static final int SC = 0;
 	private static final int[][] CORNERS = {{1, 1}, {1, 7}, {7, 7}, {7, 1}};
 
-	private static final TextLCD lcd = LocalEV3.get().getTextLCD();
+	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	private static Display display;
 	private static Odometer odometer;
 	private static Poller poller;
 	private static Navigation navigation;
 	private static UltrasonicLocalizer usLocalizer;
 	private static LightLocalizer lightLocalizer;
+	private static OdometryCorrection odometryCorrector;
 
 	public static void main(String[] args) throws OdometerExceptions, PollerException{
 		do {
@@ -71,8 +73,18 @@ public class Project {
 				usLocalizer = new UltrasonicLocalizer();
 				lightLocalizer = new LightLocalizer();
 				
-				usLocalizer.fallingEdge();
-				lightLocalizer.moveToOrigin();
+				//usLocalizer.fallingEdge();
+				//lightLocalizer.moveToOrigin();
+				
+				odometryCorrector = new OdometryCorrection();
+				Thread correctionThread = new Thread(odometryCorrector);
+				
+				correctionThread.start();
+				
+				navigation.turnTo(7);
+				odometer.setTheta(0);
+				navigation.travelTo(0, 2);
+				navigation.turnTo(0);
 			}
 			
 			buttonChoice = Button.waitForAnyPress();

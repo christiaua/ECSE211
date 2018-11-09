@@ -23,16 +23,15 @@ public class Navigation {
 	private static final EV3MediumRegulatedMotor sensorMotor =
 			new EV3MediumRegulatedMotor(LocalEV3.get().getPort("C"));
 
-	private static final double WHEEL_RAD = 2.2;
+	private static final double WHEEL_RAD = 2.075;
 	private static final double TRACK = 14.725;
 	private static final double TILE_SIZE = 30.48;
 
-	private static final int FORWARD_SPEED = 175;
-	private static final int ROTATE_SPEED = 75;
+	public static final int FORWARD_SPEED = 50;
+	public static final int ROTATE_SPEED = 200;
 
 	private Odometer odo = null;
-	private Poller poller = null;
-	public int[] currentDest = {0, 0};
+	public double[] currentDest = {0, 0};
 
 	/**
 	 * This method is meant to drive the robot in a square of size 2x2 Tiles. It is to run in parallel
@@ -45,9 +44,8 @@ public class Navigation {
 	 * @param width
 	 * @throws PollerException 
 	 */
-	public Navigation() throws OdometerExceptions, PollerException {
+	public Navigation() throws OdometerExceptions{
 		odo = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD);
-		poller = Poller.getPoller();
 	}
 	
 	/**
@@ -130,15 +128,21 @@ public class Navigation {
 		double angleToTurnTo;
 		double currentDistance;
 		double[] currentPosition = odo.getXYT();
+		currentDest[0] = x;
+		currentDest[1] = y;
 		
 		angleToTurnTo = calculateAngle(x, y, odo);
 		turnTo(angleToTurnTo);
 		currentPosition = odo.getXYT();
 		currentDistance =
 				calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
-		moveForward(currentDistance, true);
+		moveForward(currentDistance, false);
 	}
 
+	public void travelToStraight(double x, double y){
+		travelTo(x, odo.getXYT()[1]);
+		travelTo(odo.getXYT()[0], y);
+	}
 
 	/**
 	 * This method turns the robot in place to the absolute angle theta.
@@ -149,7 +153,7 @@ public class Navigation {
 		double currentTheta = odo.getXYT()[2];
 		double dtheta = theta - currentTheta;
 		double minAngle;
-
+		
 		// calculate minimum angle needed to turn to get to desired angle
 		if (Math.abs(dtheta) > 180) {
 			if (dtheta > 0)
@@ -273,6 +277,17 @@ public class Navigation {
 	}
 
 	/**
+	 * Stops specified motor
+	 * @param motor "left" for stopping left motor, "right" for stopping right motor
+	 */
+	public void stop(String motor) {
+		if(motor.equals("left"))
+			leftMotor.stop(true);
+		else if(motor.equals("right"))
+			rightMotor.stop(false);
+	}
+	
+	/**
 	 * Set speed for both motors
 	 * 
 	 */
@@ -293,6 +308,22 @@ public class Navigation {
 	
 	public boolean isNavigating(){
 		if(leftMotor.isMoving() || rightMotor.isMoving())
+			return true;
+		else
+			return false;
+	}
+	
+	public int getTacho(String motor){
+		if(motor.equals("left"))
+			return leftMotor.getTachoCount();
+		else if(motor.equals("right"))
+			return rightMotor.getTachoCount();
+		else
+			return -1;
+	}
+	
+	public boolean isTurning(){
+		if(leftMotor.getSpeed() == ROTATE_SPEED || rightMotor.getSpeed() == ROTATE_SPEED)
 			return true;
 		else
 			return false;
