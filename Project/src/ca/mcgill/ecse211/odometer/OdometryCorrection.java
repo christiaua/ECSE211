@@ -16,6 +16,8 @@ public class OdometryCorrection implements Runnable {
   private Poller poller;
   private Navigation navigation;
   private int tacho_at_first_detection, tacho_at_second_detection;
+  
+  private static boolean enabled = true;
 
   /**
    * This is the default class constructor. An existing instance of the odometer is used. This is to
@@ -31,6 +33,14 @@ public class OdometryCorrection implements Runnable {
     this.navigation = new Navigation();
 
   }
+  
+  public void enable() {
+	  enabled = true;
+  }
+  
+  public void disable() {
+	  enabled = false;
+  }
 
   /**
    * Here is where the odometer correction code should be run.
@@ -41,9 +51,8 @@ public class OdometryCorrection implements Runnable {
   public void run() {
     long correctionStart, correctionEnd;
 
-    while (true) {
+    while (enabled) {
       correctionStart = System.currentTimeMillis();
-
       
       if(poller.getCurrentRedReading("left") < 0.33 && !navigation.isTurning()) {
     	  tacho_at_first_detection = navigation.getTacho("left");

@@ -56,6 +56,13 @@ public class RingDetector {
 		}
 	}
 	
+	public boolean foundRing() {
+		for(int i = 0; i < foundRings.length; i++) {
+			if(foundRings[i]) return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * beeps after detecting ring
 	 * @param colour

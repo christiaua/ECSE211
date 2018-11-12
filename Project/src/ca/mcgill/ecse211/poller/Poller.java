@@ -171,4 +171,8 @@ public class Poller implements Runnable {
 	public ColourType getColour() {
 		return ringDetector.getColourType();
 	}
+	
+	public boolean foundRing() {
+		return ringDetector.foundRing();
+	}
 }
