@@ -1,5 +1,7 @@
 package ca.mcgill.ecse211.project;
 
+import java.util.Map;
+import ca.mcgill.ecse211.WiFiClient.WifiConnection;
 import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.odometer.OdometryCorrection;
@@ -12,21 +14,32 @@ import lejos.hardware.lcd.TextLCD;
 
 public class Project {
 	// CUSTOM VARIABLES
-	private static final int TLLx = 2;
-	private static final int TLLy = 3;
-	private static final int TURx = 3;
-	private static final int TURy = 5;
-	private static final int TGx = 7;
-	private static final int TGy = 7;
-	private static final int URx = 8;
-	private static final int URy = 3;
+	//T tunnel
+	private static int TLLx = 2;
+	private static int TLLy = 3;
+	private static int TURx = 3;
+	private static int TURy = 5;
+	private static int TGx = 7;
+	private static int TGy = 7;
+	//no prefix starting zone
+	private static int URx = 8;
+	private static int URy = 3;
+	private static int LLx = 3;
+	private static int LLy = 3;
+	//I island
+	private static int IURx = 8;
+	private static int IURy = 3;
+	private static int ILLx = 3;
+	private static int ILLy = 3;
+	//starting corner
+	private static int SC = 0;
 	
-	private static final double[] displacementX = {0.5, 0, -0.5};
-	private static final double[] displacementY = {0.5, 1, 0,5};
+	private static final double[] displacementX = { 0.5, 0, -0.5 };
+	private static final double[] displacementY = { 0.5, 1, 0, 5 };
+
+	// private static final int TR = 4; // 1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
 	
-//	private static final int TR = 4; // 1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
-//	private static final int SC = 0;
-//	private static final int[][] CORNERS = {{1, 1}, {1, 7}, {7, 7}, {7, 1}};
+	// private static final int[][] CORNERS = {{1, 1}, {1, 7}, {7, 7}, {7, 1}};
 
 	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	private static Display display;
@@ -37,7 +50,48 @@ public class Project {
 	private static LightLocalizer lightLocalizer;
 	private static OdometryCorrection odometryCorrector;
 
-	public static void main(String[] args) throws OdometerExceptions, PollerException{
+	private static final String SERVER_IP = "192.168.2.1";
+	private static final int TEAM_NUMBER = 7;
+
+	@SuppressWarnings("rawtypes")
+	public static void main(String[] args) throws OdometerExceptions, PollerException {
+
+		WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
+		try {
+			Map data = conn.getData();
+			System.out.println("Map:\n" + data);
+
+			//team specifics
+			int redTeam = ((Long) data.get("GreenTeam")).intValue();
+			System.out.println("Red Team: " + redTeam);
+
+			//ringset location
+			TGx = ((Long) data.get("TG_x")).intValue();
+			System.out.println("X component of the Green ring tree: " + TGx);
+			TGy = ((Long) data.get("TG_y")).intValue();
+
+			//tunnel
+			TLLx = ((Long) data.get("TNG_LL_x")).intValue();
+			TLLy = ((Long) data.get("TNG_LL_y")).intValue();
+			TURx = ((Long) data.get("TNG_UR_x")).intValue();
+			TURy = ((Long) data.get("TNG_UR_y")).intValue();
+			
+			//zone
+			URx = ((Long) data.get("Green_UR_x")).intValue();
+			URy = ((Long) data.get("Green_UR_y")).intValue();
+			LLx = ((Long) data.get("Green_LL_x")).intValue();
+			LLy = ((Long) data.get("Green_LL_y")).intValue();
+			
+			//island
+			IURx = ((Long) data.get("Island_UR_x")).intValue();
+			IURy = ((Long) data.get("Island_UR_y")).intValue();
+			ILLx = ((Long) data.get("Island_LL_x")).intValue();
+			ILLy = ((Long) data.get("Island_LL_y")).intValue();
+
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+		}
+
 		do {
 			int buttonChoice;
 			do {
@@ -53,7 +107,7 @@ public class Project {
 
 				buttonChoice = Button.waitForAnyPress(); // Record choice (left or right press)
 			} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-			
+
 			navigation = new Navigation();
 
 			lcd.clear();
@@ -64,8 +118,8 @@ public class Project {
 				navigation.floatWheels();
 				System.exit(0);
 			}
-			
-			else if(buttonChoice == Button.ID_RIGHT){
+
+			else if (buttonChoice == Button.ID_RIGHT) {
 				odometer = Odometer.getOdometer();
 				Thread odoThread = new Thread(odometer);
 				odoThread.start();
@@ -77,39 +131,39 @@ public class Project {
 				display = new Display(lcd);
 				Thread displayThread = new Thread(display);
 				displayThread.start();
-				
+
 				usLocalizer = new UltrasonicLocalizer();
 				lightLocalizer = new LightLocalizer();
-				
-				//usLocalizer.fallingEdge();
-				//lightLocalizer.moveToOrigin();
-				
+
+				// usLocalizer.fallingEdge();
+				// lightLocalizer.moveToOrigin();
+
 				odometryCorrector = new OdometryCorrection();
 				Thread correctionThread = new Thread(odometryCorrector);
 				correctionThread.start();
-				
+
 				navigation.turnTo(7);
 				odometer.setTheta(0);
 				navigation.travelTo(0, 2);
 				navigation.turnTo(0);
-				
-				//TODO: beta demo algorithm
-				navigation.travelTo(URx-0.5, URy-0.5);
-				navigation.travelTo(TLLx+0.5, TLLy-0.5);
-				odometryCorrector.disable();
-				navigation.travelTo(TURx-0.5, TURy+0.5);
-				odometryCorrector.enable();
-				navigation.travelTo(TGx, TURy+0.5);
-				navigation.travelTo(TGx, TURy-0.5);
 
-				while(!poller.foundRing()) {
-					for(int i = 0; i < 3; i++) {
-						navigation.travelTo(TGx+displacementX[i], TGy+displacementY[i]);
-					}	
+				// TODO: beta demo algorithm
+				navigation.travelTo(URx - 0.5, URy - 0.5);
+				navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
+				odometryCorrector.disable();
+				navigation.travelTo(TURx - 0.5, TURy + 0.5);
+				odometryCorrector.enable();
+				navigation.travelTo(TGx, TURy + 0.5);
+				navigation.travelTo(TGx, TURy - 0.5);
+
+				while (!poller.foundRing()) {
+					for (int i = 0; i < 3; i++) {
+						navigation.travelTo(TGx + displacementX[i], TGy + displacementY[i]);
+					}
 				}
-				//TODO: take ring
+				// TODO: take ring
 			}
-			
+
 			buttonChoice = Button.waitForAnyPress();
 		} while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
