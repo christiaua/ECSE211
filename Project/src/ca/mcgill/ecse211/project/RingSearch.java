@@ -62,7 +62,6 @@ public class RingSearch {
 //				break;
 //			default:
 //				break;
-//				
 //		}		
 		
 		upperMotor.rotate(-75, false);
