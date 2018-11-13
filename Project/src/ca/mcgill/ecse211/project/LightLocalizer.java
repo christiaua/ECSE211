@@ -21,6 +21,8 @@ public class LightLocalizer {
 	private double dthetaY;
 	private Navigation navigation;
 	private static final double TILE_SIZE = 30.48;
+	private static final double FIELD_WIDTH = 8 * TILE_SIZE;
+	private static final double FIELD_HEIGHT = 8 * TILE_SIZE;
 	
 	/**
 	 * constructor
@@ -38,7 +40,7 @@ public class LightLocalizer {
 	/**
 	 * makes the robot turn to 45 and goes until it finds the first intersection AKA (1,1)
 	 */
-	public void moveToOrigin(){
+	public void moveToOrigin(int startCorner){
 		int lineCount = 0;
 		double[] theta = new double[4];
 		double thetaY;
@@ -89,7 +91,23 @@ public class LightLocalizer {
 		navigation.travelTo(0,0);
 		navigation.turnTo(0);
 		
-		odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
+		//set odometer values according to the starting corner
+		switch(startCorner) {
+		case 0 :
+			odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
+			break;
+		case 1 :
+			odo.setXYT(FIELD_WIDTH - TILE_SIZE, TILE_SIZE, 270);
+			break;
+		case 2 :
+			odo.setXYT(FIELD_WIDTH - TILE_SIZE, FIELD_HEIGHT - TILE_SIZE, 180);
+			break;
+		case 3 : 
+			odo.setXYT(TILE_SIZE, FIELD_HEIGHT - TILE_SIZE, 90);
+			break;
+	
+		}
+	
 	}
 	
 	

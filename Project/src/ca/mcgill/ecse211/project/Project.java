@@ -133,22 +133,25 @@ public class Project {
 				usLocalizer = new UltrasonicLocalizer();
 				lightLocalizer = new LightLocalizer();
 
-				// usLocalizer.fallingEdge();
-				// lightLocalizer.moveToOrigin();
-
-				navigation.turnTo(7);
-				odometer.setTheta(0);
-				navigation.travelTo(0, 2);
-				navigation.turnTo(0);
-
-				// TODO: beta demo algorithm
-				navigation.travelTo(URx - 0.5, URy - 0.5);
-				navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
+				//beta demo algorithm
+				usLocalizer.fallingEdge();
+				lightLocalizer.moveToOrigin(SC);
+				navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy); 
+				
+				int startingCorner = navigation.travelToRingSet(TG_x, TG_y); // travel to nearest corner of the 2x2 square on which the ring set is centered
+				//startingCorner is an int from 0 to 3. 0 is lower left, 1 is lower right, 2 is upper right, 3 is upper left
+				
+				
+				// TODO: ring search and grab algorithm
+				
+				
+				//navigation.travelTo(URx - 0.5, URy - 0.5);
+				//navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
 				//odometryCorrector.disable();
-				navigation.travelTo(TURx - 0.5, TURy + 0.5);
+				//navigation.travelTo(TURx - 0.5, TURy + 0.5);
 				//odometryCorrector.enable();
-				navigation.travelTo(TGx, TURy + 0.5);
-				navigation.travelTo(TGx, TURy - 0.5);
+				//navigation.travelTo(TGx, TURy + 0.5);
+				//navigation.travelTo(TGx, TURy - 0.5);
 
 				while (!poller.foundRing()) {
 					for (int i = 0; i < 3; i++) {
