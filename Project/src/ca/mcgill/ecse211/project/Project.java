@@ -4,7 +4,6 @@ import java.util.Map;
 import ca.mcgill.ecse211.WiFiClient.WifiConnection;
 import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
-import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import ca.mcgill.ecse211.poller.Poller;
 import ca.mcgill.ecse211.poller.PollerException;
 import lejos.hardware.Button;
@@ -184,9 +183,8 @@ public class Project {
         //
         // navigation.travelTo(TGx + 0.5, TURy + 0.5);
         // navigation.travelTo(TGx + 0.5, TGy - 0.5);
-
-        int ringLocation = ringSearch.findRing();
-        ringSearch.grabRing(ringLocation);
+        //int ringLocation = ringSearch.findRing();
+        ringSearch.grabRing(0);
 
       }
 
