@@ -48,7 +48,6 @@ public class Project {
 	private static Navigation navigation;
 	private static UltrasonicLocalizer usLocalizer;
 	private static LightLocalizer lightLocalizer;
-	private static OdometryCorrection odometryCorrector;
 
 	private static final String SERVER_IP = "192.168.2.1";
 	private static final int TEAM_NUMBER = 7;
@@ -138,10 +137,6 @@ public class Project {
 				// usLocalizer.fallingEdge();
 				// lightLocalizer.moveToOrigin();
 
-				odometryCorrector = new OdometryCorrection();
-				Thread correctionThread = new Thread(odometryCorrector);
-				correctionThread.start();
-
 				navigation.turnTo(7);
 				odometer.setTheta(0);
 				navigation.travelTo(0, 2);
@@ -150,9 +145,9 @@ public class Project {
 				// TODO: beta demo algorithm
 				navigation.travelTo(URx - 0.5, URy - 0.5);
 				navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
-				odometryCorrector.disable();
+				//odometryCorrector.disable();
 				navigation.travelTo(TURx - 0.5, TURy + 0.5);
-				odometryCorrector.enable();
+				//odometryCorrector.enable();
 				navigation.travelTo(TGx, TURy + 0.5);
 				navigation.travelTo(TGx, TURy - 0.5);
 

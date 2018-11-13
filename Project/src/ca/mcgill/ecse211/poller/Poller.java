@@ -1,12 +1,17 @@
 package ca.mcgill.ecse211.poller;
 
+import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
+import ca.mcgill.ecse211.odometer.Odometer;
+import ca.mcgill.ecse211.odometer.OdometerExceptions;
+import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import ca.mcgill.ecse211.poller.RingDetector.ColourType;
+import ca.mcgill.ecse211.project.Navigation;
 
 /**
  * This class gets the samples for the light sensors
@@ -23,6 +28,11 @@ public class Poller implements Runnable {
 	private static Poller poller = null;
 	private static RingDetector ringDetector;
 	private static USSensorData sensorData;
+	
+	private Navigation navigation;
+	private OdometryCorrection odometryCorrector;
+	private static int tachoL = -1000; //-1000 dummy value so that we know if tachoL/tachoR hasn't been set yet
+	private static int tachoR = -1000;
 
 	// initialize us sensor
 	private static final Port usPort = LocalEV3.get().getPort("S4");
@@ -58,10 +68,13 @@ public class Poller implements Runnable {
 	 * Constructor
 	 * 
 	 * @throws PollerException 
+	 * @throws OdometerExceptions 
 	 */
-	public Poller() throws PollerException {
+	public Poller() throws PollerException, OdometerExceptions {
 		ringDetector = RingDetector.getRingDetector();
 		sensorData = USSensorData.getSensorData();
+	    this.navigation = new Navigation();
+	    this.odometryCorrector = new OdometryCorrection();
 	}
 
 	/**
@@ -69,8 +82,9 @@ public class Poller implements Runnable {
 	 * 
 	 * @return the Poller
 	 * @throws PollerException
+	 * @throws OdometerExceptions 
 	 */
-	public static Poller getPoller() throws PollerException {
+	public static Poller getPoller() throws PollerException, OdometerExceptions {
 		if (poller != null) { // Return existing object
 			return poller;
 		} else if (numberOfIntances < MAX_INSTANCES) { // create object and return it
@@ -89,6 +103,18 @@ public class Poller implements Runnable {
 		while (true) {
 			redSample1.fetchSample(redData1, 0);
 			redSample2.fetchSample(redData2, 0);
+			
+			if(redData1[0] < 0.33 && tachoL == -1000){
+				tachoL = navigation.getTacho("left");
+			}
+			if(redData2[0] < 0.33 && tachoR == -1000){
+				tachoR = navigation.getTacho("left");
+			}
+			if(tachoL != -1000 && tachoR != -1000){
+				odometryCorrector.correctAngle(tachoL, tachoR);
+				tachoL = -1000;
+				tachoR = -1000;
+			}
 			
 			lastRedReading1 = currentRedReading1;
 			currentRedReading1 = redData1[0];
@@ -172,6 +198,10 @@ public class Poller implements Runnable {
 		return ringDetector.getColourType();
 	}
 	
+	/**
+	 * Check if any ring is found
+	 * @return if a ring is found or not
+	 */
 	public boolean foundRing() {
 		return ringDetector.foundRing();
 	}
