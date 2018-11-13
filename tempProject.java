@@ -62,40 +62,40 @@ public class Project {
 
     WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
 
-//    try {
-//      Map data = conn.getData();
-//      System.out.println("Map:\n" + data);
-//
-//      // Team specifics
-//      int redTeam = ((Long) data.get("GreenTeam")).intValue();
-//      System.out.println("Red Team: " + redTeam);
-//
-//      // ringset location
-//      TGx = ((Long) data.get("TG_x")).intValue();
-//      System.out.println("X component of the Green ring tree: " + TGx);
-//      TGy = ((Long) data.get("TG_y")).intValue();
-//
-//      // tunnel
-//      TLLx = ((Long) data.get("TNG_LL_x")).intValue();
-//      TLLy = ((Long) data.get("TNG_LL_y")).intValue();
-//      TURx = ((Long) data.get("TNG_UR_x")).intValue();
-//      TURy = ((Long) data.get("TNG_UR_y")).intValue();
-//
-//      // zone
-//      URx = ((Long) data.get("Green_UR_x")).intValue();
-//      URy = ((Long) data.get("Green_UR_y")).intValue();
-//      LLx = ((Long) data.get("Green_LL_x")).intValue();
-//      LLy = ((Long) data.get("Green_LL_y")).intValue();
-//
-//      // island
-//      IURx = ((Long) data.get("Island_UR_x")).intValue();
-//      IURy = ((Long) data.get("Island_UR_y")).intValue();
-//      ILLx = ((Long) data.get("Island_LL_x")).intValue();
-//      ILLy = ((Long) data.get("Island_LL_y")).intValue();
-//
-//    } catch (Exception e) {
-//      System.err.println("Error: " + e.getMessage());
-//    }
+    /* try {
+      Map data = conn.getData();
+      System.out.println("Map:\n" + data);
+
+      // Team specifics
+      int redTeam = ((Long) data.get("GreenTeam")).intValue();
+      System.out.println("Red Team: " + redTeam);
+
+      // ringset location
+      TGx = ((Long) data.get("TG_x")).intValue();
+      System.out.println("X component of the Green ring tree: " + TGx);
+      TGy = ((Long) data.get("TG_y")).intValue();
+
+      // tunnel
+      TLLx = ((Long) data.get("TNG_LL_x")).intValue();
+      TLLy = ((Long) data.get("TNG_LL_y")).intValue();
+      TURx = ((Long) data.get("TNG_UR_x")).intValue();
+      TURy = ((Long) data.get("TNG_UR_y")).intValue();
+
+      // zone
+      URx = ((Long) data.get("Green_UR_x")).intValue();
+      URy = ((Long) data.get("Green_UR_y")).intValue();
+      LLx = ((Long) data.get("Green_LL_x")).intValue();
+      LLy = ((Long) data.get("Green_LL_y")).intValue();
+
+      // island
+      IURx = ((Long) data.get("Island_UR_x")).intValue();
+      IURy = ((Long) data.get("Island_UR_y")).intValue();
+      ILLx = ((Long) data.get("Island_LL_x")).intValue();
+      ILLy = ((Long) data.get("Island_LL_y")).intValue();
+
+    } catch (Exception e) {
+      System.err.println("Error: " + e.getMessage());
+    } */
 
     do {
       int buttonChoice;
@@ -141,26 +141,48 @@ public class Project {
         lightLocalizer = new LightLocalizer(navigation);
         ringSearch = new RingSearch(TGx, TGy, navigation);
 
+
+        // navigation.travelToYellowZone(TNG_LL_x, TNG_LL_y, TNG_UR_x, TNG_UR_y);
+        // int startingCorner = navigation.travelToRingSet(TG_x, TG_y); // travel to closest corner of the 2x2 square on which the ring set is centered
+        // int[] ringFound = ringSearch.findRing( TG_x, TG_y , startingCorner); //start to search rings
+        // ringSearch.faceRing(ringFound[1], TG_x, TG_y);
+        // ringSearch.grabRing(ringLevel, ringNumber); //to be implemented
+
         // beta demo algorithm
         poller.disableCorrection();
         usLocalizer.fallingEdge();
         lightLocalizer.moveToOrigin(SC);
         poller.enableCorrection();
+        
         ringSearch.enableTunnel(true);
 
-        // beta demo algorithm
-        navigation.turnTo(270);
-        navigation.moveForward(30.48, false);
-        navigation.travelTo(TLLx + 0.5, 1);
-        navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
-        // poller.disable();
-        navigation.travelTo(TLLx + 0.5, TURy + 0.5);
-        // poller.enable();
+        // hugo's version
+        // navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy);
+        // navigation.travelToRingSet(TGx, TGy);
 
-        navigation.travelTo(TGx, TURy + 0.5);
-        navigation.travelTo(TGx, TGy - 1);
-        // int ringLocation = ringSearch.findRing();
+        // travel to nearest corner of the 2x2 square on which the ring set is centered
+        // startingCocmdrner is an int from 0 to 3. 0 is lower left, 1 is lower right, 2 is upper
+        // right, 3 is upper left
+
+        // beta demo algorithm
+         navigation.turnTo(270);
+         navigation.moveForward(30.48, false);
+         navigation.travelTo(TLLx + 0.5, 1);
+         navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
+//         poller.disable();
+         navigation.travelTo(TLLx + 0.5, TURy + 0.5);
+//         poller.enable();
+        //
+         navigation.travelTo(TGx, TURy + 0.5);
+         navigation.travelTo(TGx, TGy-1);
+        //int ringLocation = ringSearch.findRing();
         ringSearch.grabRing(0);
+        
+        // Testing correction
+//        navigation.turnTo(10);
+//        odometer.setTheta(0);
+//        navigation.travelTo(0, 2);
+//        navigation.turnTo(0);
       }
 
       buttonChoice = Button.waitForAnyPress();

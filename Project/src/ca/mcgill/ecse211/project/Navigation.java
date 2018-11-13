@@ -2,7 +2,6 @@ package ca.mcgill.ecse211.project;
 
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import ca.mcgill.ecse211.odometer.*;
 
 /**
@@ -25,7 +24,7 @@ public class Navigation {
   private static final double TILE_SIZE = 30.48;
 
   public static final int FORWARD_SPEED = 200;
-  public static final int ROTATE_SPEED = 200;
+  public static final int ROTATE_SPEED = 150;
 
   private Odometer odo = null;
   public double[] currentDest = {0, 0};
@@ -201,6 +200,7 @@ public class Navigation {
     return;
 
   }
+  
   /*
    * /** This method makes the robot travel to the nearest corner of the 2x2 square on which the
    * ring set is centered, relative to the robot, and returns the corner number.
@@ -231,7 +231,6 @@ public class Navigation {
    * @param RS_y
    * @return SideNumber: 0 is down, 1 is right, 2 is up and 3 is left
    */
-
   public int travelToRingSet(int rs_x, int rs_y) {
     int neighborNumber = nearestNeighbor(rs_x, rs_y);
     double neighbor_x;
