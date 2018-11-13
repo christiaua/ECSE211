@@ -47,6 +47,7 @@ public class Project {
 	private static Navigation navigation;
 	private static UltrasonicLocalizer usLocalizer;
 	private static LightLocalizer lightLocalizer;
+	private static RingSearch ringSearch;
 
 	private static final String SERVER_IP = "192.168.2.1";
 	private static final int TEAM_NUMBER = 7;
@@ -107,6 +108,18 @@ public class Project {
 			} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 
 			navigation = new Navigation();
+			
+			odometer = Odometer.getOdometer();
+			Thread odoThread = new Thread(odometer);
+			odoThread.start();
+			
+			poller = Poller.getPoller(navigation);
+			Thread pollerThread = new Thread(poller);
+			pollerThread.start();
+			
+			display = new Display(lcd);
+			Thread displayThread = new Thread(display);
+			displayThread.start();
 
 			lcd.clear();
 			if (buttonChoice == Button.ID_LEFT) {
@@ -118,44 +131,36 @@ public class Project {
 			}
 
 			else if (buttonChoice == Button.ID_RIGHT) {
-				odometer = Odometer.getOdometer();
-				Thread odoThread = new Thread(odometer);
-				odoThread.start();
-
-				poller = Poller.getPoller();
-				Thread pollerThread = new Thread(poller);
-				pollerThread.start();
-
-				display = new Display(lcd);
-				Thread displayThread = new Thread(display);
-				displayThread.start();
-
-				usLocalizer = new UltrasonicLocalizer();
-				lightLocalizer = new LightLocalizer();
+				usLocalizer = new UltrasonicLocalizer(navigation);
+				lightLocalizer = new LightLocalizer(navigation);
+				ringSearch = new RingSearch(TGx, TGy, navigation);
 
 				// usLocalizer.fallingEdge();
-				// lightLocalizer.moveToOrigin();
+				// lightLocalizer.moveToOrigin(SC);
+				
+				//navigation.travelToYellowZone(TNG_LL_x, TNG_LL_y, TNG_UR_x, TNG_UR_y); 
+				
+				//int startingCorner = navigation.travelToRingSet(TG_x, TG_y); // travel to closest corner of the 2x2 square on which the ring set is centered
+				
+				//int[] ringFound = ringSearch.findRing( TG_x, TG_y , startingCorner); //start to search rings
+				
+				
+				//ringSearch.faceRing(ringFound[1], TG_x, TG_y); 
+				
+				//ringSearch.grabRing(ringLevel, ringNumber); //to be implemented
 
-				navigation.turnTo(7);
-				odometer.setTheta(0);
-				navigation.travelTo(0, 2);
-				navigation.turnTo(0);
-
-				// TODO: beta demo algorithm
-				navigation.travelTo(URx - 0.5, URy - 0.5);
+				//beta demo algorithm
+				navigation.travelTo(TLLx + 0.5, 1);
 				navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
-				//odometryCorrector.disable();
-				navigation.travelTo(TURx - 0.5, TURy + 0.5);
-				//odometryCorrector.enable();
-				navigation.travelTo(TGx, TURy + 0.5);
-				navigation.travelTo(TGx, TURy - 0.5);
+				poller.disable();
+				navigation.travelTo(TLLx + 0.5, TURy + 0.5);
+				poller.enable();
+				
+				navigation.travelTo(TGx + 0.5, TURy + 0.5);
+				navigation.travelTo(TGx + 0.5, TGy - 0.5);
 
-				while (!poller.foundRing()) {
-					for (int i = 0; i < 3; i++) {
-						navigation.travelTo(TGx + displacementX[i], TGy + displacementY[i]);
-					}
-				}
-				// TODO: take ring
+				int ringLocation = ringSearch.findRing();
+				ringSearch.grabRing(ringLocation);
 			}
 
 			buttonChoice = Button.waitForAnyPress();

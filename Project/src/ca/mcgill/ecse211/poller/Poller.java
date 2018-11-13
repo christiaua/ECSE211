@@ -62,6 +62,16 @@ public class Poller implements Runnable {
 	
 	private float lastRedReading1, lastRedReading2;
 	private float currentRedReading1, currentRedReading2;
+	
+	private boolean enabled = true;
+	
+	public void disable() {
+		enabled = false;
+	}
+	
+	public void enable() {
+		enabled = true;
+	}
 
 
 	/**
@@ -70,10 +80,10 @@ public class Poller implements Runnable {
 	 * @throws PollerException 
 	 * @throws OdometerExceptions 
 	 */
-	public Poller() throws PollerException, OdometerExceptions {
+	public Poller(Navigation nav) throws PollerException, OdometerExceptions {
 		ringDetector = RingDetector.getRingDetector();
 		sensorData = USSensorData.getSensorData();
-	    this.navigation = new Navigation();
+	    this.navigation = nav;
 	    this.odometryCorrector = new OdometryCorrection();
 	}
 
@@ -84,15 +94,23 @@ public class Poller implements Runnable {
 	 * @throws PollerException
 	 * @throws OdometerExceptions 
 	 */
-	public static Poller getPoller() throws PollerException, OdometerExceptions {
+	public static Poller getPoller(Navigation nav) throws PollerException, OdometerExceptions {
 		if (poller != null) { // Return existing object
 			return poller;
 		} else if (numberOfIntances < MAX_INSTANCES) { // create object and return it
-			poller = new Poller();
+			poller = new Poller(nav);
 			numberOfIntances += 1;
 			return poller;
 		} else {
 			throw new PollerException("Only one intance of the Poller can be created.");
+		}
+	}
+	
+	public static Poller getPoller() throws PollerException {
+		if (poller != null) { // Return existing object
+			return poller;
+		} else {
+			throw new PollerException("No Poller.");
 		}
 	}
 
@@ -101,35 +119,36 @@ public class Poller implements Runnable {
 	 */
 	public void run() {
 		while (true) {
-			redSample1.fetchSample(redData1, 0);
-			redSample2.fetchSample(redData2, 0);
-			
-			if(redData1[0] < 0.33 && tachoL == -1000){
-				tachoL = navigation.getTacho("left");
+			if(enabled) {
+				redSample1.fetchSample(redData1, 0);
+				redSample2.fetchSample(redData2, 0);
+				
+				if(redData1[0] < 0.33 && tachoL == -1000){
+					tachoL = navigation.getTacho("left");
+				}
+				if(redData2[0] < 0.33 && tachoR == -1000){
+					tachoR = navigation.getTacho("left");
+				}
+				if(tachoL != -1000 && tachoR != -1000){
+					odometryCorrector.correctAngle(tachoL, tachoR);
+					tachoL = -1000;
+					tachoR = -1000;
+				}
+				
+				lastRedReading1 = currentRedReading1;
+				currentRedReading1 = redData1[0];
+
+				lastRedReading2 = currentRedReading2;
+				currentRedReading2 = redData2[0];
+
+				/*rgbSample.fetchSample(rgbData, 0);
+				ringDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2]);*/
+
+				us.fetchSample(usData, 0); // acquire data
+				unfilteredDistance = (usData[0] * 100.0); // extract from buffer, cast to int
+
+				sensorData.updateDistance(unfilteredDistance);
 			}
-			if(redData2[0] < 0.33 && tachoR == -1000){
-				tachoR = navigation.getTacho("left");
-			}
-			if(tachoL != -1000 && tachoR != -1000){
-				odometryCorrector.correctAngle(tachoL, tachoR);
-				tachoL = -1000;
-				tachoR = -1000;
-			}
-			
-			lastRedReading1 = currentRedReading1;
-			currentRedReading1 = redData1[0];
-
-			lastRedReading2 = currentRedReading2;
-			currentRedReading2 = redData2[0];
-
-			/*rgbSample.fetchSample(rgbData, 0);
-			ringDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2]);*/
-
-			us.fetchSample(usData, 0); // acquire data
-			unfilteredDistance = (usData[0] * 100.0); // extract from buffer, cast to int
-
-			sensorData.updateDistance(unfilteredDistance);
-
 			try {
 				Thread.sleep(10);
 			} catch (Exception e) {

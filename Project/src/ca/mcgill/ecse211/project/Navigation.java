@@ -4,7 +4,6 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import ca.mcgill.ecse211.odometer.*;
-import ca.mcgill.ecse211.poller.*;
 
 /**
  * This class controls the robot motors
@@ -20,8 +19,6 @@ public class Navigation {
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final EV3LargeRegulatedMotor rightMotor =
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
-	private static final EV3MediumRegulatedMotor sensorMotor =
-			new EV3MediumRegulatedMotor(LocalEV3.get().getPort("C"));
 
 	private static final double WHEEL_RAD = 2.075;
 	private static final double TRACK = 14.725;
@@ -34,15 +31,8 @@ public class Navigation {
 	public double[] currentDest = {0, 0};
 
 	/**
-	 * This method is meant to drive the robot in a square of size 2x2 Tiles. It is to run in parallel
-	 * with the odometer and Odometer correcton classes allow testing their functionality.
-	 * 
-	 * @param leftMotor
-	 * @param rightMotor
-	 * @param leftRadius
-	 * @param rightRadius
-	 * @param width
-	 * @throws PollerException 
+	 * Constructor
+	 * @throws OdometerExceptions 
 	 */
 	public Navigation() throws OdometerExceptions{
 		odo = Odometer.getOdometer(leftMotor, rightMotor, TRACK, WHEEL_RAD);
