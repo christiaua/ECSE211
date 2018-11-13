@@ -43,10 +43,10 @@ public class Poller implements Runnable {
 	private double unfilteredDistance;
 
 	// initialize color sensors
-	/*private static final Port colorSensorPort = LocalEV3.get().getPort("S1");
+	private static final Port colorSensorPort = LocalEV3.get().getPort("S1");
 	static SensorModes colorSensor = new EV3ColorSensor(colorSensorPort);
 	static SampleProvider rgbSample = colorSensor.getMode("RGB");
-	static float[] rgbData = new float[rgbSample.sampleSize()];*/
+	static float[] rgbData = new float[rgbSample.sampleSize()];
 
 	// initialize line detecting sensors
 	private static final Port lsPort1 = LocalEV3.get().getPort("S2");
@@ -119,10 +119,10 @@ public class Poller implements Runnable {
 	 */
 	public void run() {
 		while (true) {
+			redSample1.fetchSample(redData1, 0);
+			redSample2.fetchSample(redData2, 0);
+			
 			if(enabled) {
-				redSample1.fetchSample(redData1, 0);
-				redSample2.fetchSample(redData2, 0);
-				
 				if(redData1[0] < 0.33 && tachoL == -1000){
 					tachoL = navigation.getTacho("left");
 				}
@@ -134,21 +134,20 @@ public class Poller implements Runnable {
 					tachoL = -1000;
 					tachoR = -1000;
 				}
-				
-				lastRedReading1 = currentRedReading1;
-				currentRedReading1 = redData1[0];
-
-				lastRedReading2 = currentRedReading2;
-				currentRedReading2 = redData2[0];
-
-				/*rgbSample.fetchSample(rgbData, 0);
-				ringDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2]);*/
-
-				us.fetchSample(usData, 0); // acquire data
-				unfilteredDistance = (usData[0] * 100.0); // extract from buffer, cast to int
-
-				sensorData.updateDistance(unfilteredDistance);
 			}
+			lastRedReading1 = currentRedReading1;
+			currentRedReading1 = redData1[0];
+
+			lastRedReading2 = currentRedReading2;
+			currentRedReading2 = redData2[0];
+
+			rgbSample.fetchSample(rgbData, 0);
+			ringDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2]);
+
+			us.fetchSample(usData, 0); // acquire data
+			unfilteredDistance = (usData[0] * 100.0); // extract from buffer, cast to int
+
+			sensorData.updateDistance(unfilteredDistance);
 			try {
 				Thread.sleep(10);
 			} catch (Exception e) {

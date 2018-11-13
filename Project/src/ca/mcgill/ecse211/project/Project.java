@@ -56,7 +56,7 @@ public class Project {
 	public static void main(String[] args) throws OdometerExceptions, PollerException {
 
 		WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
-		try {
+		/*try {
 			Map data = conn.getData();
 			System.out.println("Map:\n" + data);
 
@@ -90,7 +90,7 @@ public class Project {
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
 		}
-
+*/
 		do {
 			int buttonChoice;
 			do {
@@ -157,10 +157,10 @@ public class Project {
 				//beta demo algorithm
 				usLocalizer.fallingEdge();
 				lightLocalizer.moveToOrigin(SC);
-				navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy); 
+				//navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy); 
 				
-				int startingCorner = navigation.travelToRingSet(TG_x, TG_y); // travel to nearest corner of the 2x2 square on which the ring set is centered
-				//startingCorner is an int from 0 to 3. 0 is lower left, 1 is lower right, 2 is upper right, 3 is upper left
+				//int startingCorner = navigation.travelToRingSet(TGx, TGy); // travel to nearest corner of the 2x2 square on which the ring set is centered
+				//startingCocmdrner is an int from 0 to 3. 0 is lower left, 1 is lower right, 2 is upper right, 3 is upper left
 				
 				
 				// TODO: ring search and grab algorithm
