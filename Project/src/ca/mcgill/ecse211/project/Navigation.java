@@ -193,7 +193,7 @@ public class Navigation {
 		return;
 		
 	}
-	
+/*	
 	/**
 	 * This method makes the robot travel to the nearest corner of the 2x2 square on which the ring set is centered, relative to the robot,  and returns the corner number.
 	 * 
@@ -201,6 +201,7 @@ public class Navigation {
 	 * @param RS_y
 	 * @return Corner number: 0 is lower left, 1 is lower right, 2 is upper right and 3 is upper left
 	 */
+/*	
 	public int travelToRingSet(int rs_x, int rs_y) {
 		int cornerNumber = nearestCorner(rs_x , rs_y);
 		double corner_x;
@@ -220,15 +221,84 @@ public class Navigation {
 					corner_y = (rs_y + 1) * TILE_SIZE;
 					break;
 			default:	return -1; //error
+		}	
+		
+*/
+	
+	/**
+	 * This method makes the robot travel to the nearest neighbor intersection to the ring set , relative to the robot,  and returns the side number.
+	 * 
+	 * @param RS_x
+	 * @param RS_y
+	 * @return SideNumber: 0 is lower left, 1 is lower right, 2 is upper right and 3 is upper left
+	 */
+
+	public int travelToRingSet(int rs_x, int rs_y) {
+		int sideNumber = nearestNeighbor(rs_x , rs_y);
+		double neighbor_x;
+		double neighbor_y;
+		
+		switch(sideNumber) {
+			//down
+			case 0:	neighbor_x = (rs_x) * TILE_SIZE;
+					neighbor_y = (rs_y - 1) * TILE_SIZE;
+					break;
+			//right
+			case 1:	neighbor_x = (rs_x + 1) * TILE_SIZE;
+					neighbor_y = (rs_y) * TILE_SIZE;
+					break;
+			//up
+			case 2:	neighbor_x = (rs_x) * TILE_SIZE;
+					neighbor_y = (rs_y + 1) * TILE_SIZE;
+					break;
+			//left
+			case 3:	neighbor_x = (rs_x - 1) * TILE_SIZE;
+					neighbor_y = (rs_y) * TILE_SIZE;
+					break;
+			default:	return -1; //error
+		}	
+
+	
+		//always move in x axis first (arbitrary)
+		travelTo(neighbor_x,odo.getXYT()[1]);
+		//move in y axis
+		travelTo(neighbor_x,neighbor_y);
+		
+		double angleToTurnTo = calculateAngle(rs_x,rs_y, odo);
+		turnTo(angleToTurnTo);
+		
+		return neighborNumber;
+	}
+	
+	/**
+	 * This method returns the number of the nearest neighbor intersection to the the ring set, relative to the robot. 
+	 * 
+	 * @param rs_x  x position of the ring set
+	 * @param rs_y  y position of the ring set
+	 * @return Side number: 0 is lower left, 1 is lower right, 2 is upper right and 3 is upper left
+	 */
+	public int nearestNeighbor(double rs_x, double rs_y) {
+		
+		double odoX = odo.getXYT()[0];
+		double odoY = odo.getXYT()[1];
+		
+		double[][] neighborIntersection = {{rs_x , rs_y - 1},{rs_x + 1 , rs_y}, {rs_x , rs_y +1 }, {rs_x - 1 , rs_y}} ;
+		double[] distance = new double[4];
+		double dx, dy;
+		int i;
+	
+		
+		for(i = 0; i < 4; i++ ) {
+			dx = neighborIntersection[i][0] - odoX;
+			dy = neighborIntersection[i][1] - odoY;
+			distance[i] = Math.sqrt(dx * dx + dy * dy);
 		}
 		
-		//always move in x axis first (arbitrary)
-		travelTo(corner_x,odo.getXYT()[1]);
-		//move in y axis
-		travelTo(corner_x,corner_y);
-		
-		return cornerNumber;
+
+		return arrayMin(distance); 	
 	}
+	
+
 	
 	/**
 	 * This method returns the number of the nearest corner of the 2x2 square on which the ring set is centered, relative to the robot. 
