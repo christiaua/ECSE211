@@ -63,14 +63,14 @@ public class Poller implements Runnable {
 	private float lastRedReading1, lastRedReading2;
 	private float currentRedReading1, currentRedReading2;
 	
-	private boolean enabled = true;
+	private boolean correctionEnabled = true;
 	
-	public void disable() {
-		enabled = false;
+	public void disableCorrection() {
+		correctionEnabled = false;
 	}
 	
-	public void enable() {
-		enabled = true;
+	public void enableCorrection() {
+		correctionEnabled = true;
 	}
 
 
@@ -122,7 +122,7 @@ public class Poller implements Runnable {
 			redSample1.fetchSample(redData1, 0);
 			redSample2.fetchSample(redData2, 0);
 			
-			if(enabled) {
+			if(correctionEnabled) {
 				if(redData1[0] < 0.33 && tachoL == -1000){
 					tachoL = navigation.getTacho("left");
 				}

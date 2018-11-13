@@ -154,19 +154,17 @@ public class Project {
         // ringSearch.grabRing(ringLevel, ringNumber); //to be implemented
 
         // beta demo algorithm
-        // poller.disable();
-        // usLocalizer.fallingEdge();
-        // lightLocalizer.moveToOrigin(SC);
-        // poller.enable();
+        poller.disableCorrection();
+        usLocalizer.fallingEdge();
+        lightLocalizer.moveToOrigin(SC);
+        poller.enableCorrection();
         
-        odometer.setX(7 * 30.48);
-        odometer.setY(1 * 30.48);
         ringSearch.enableTunnel(true);
 
 
-        // navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy);
+        navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy);
 
-        // int startingCorner = navigation.travelToRingSet(TGx, TGy); 
+        navigation.travelToRingSet(TGx, TGy); 
         
         // travel to nearest corner of
         // the 2x2 square on which the ring set is centered

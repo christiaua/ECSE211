@@ -229,7 +229,7 @@ public class Navigation {
    * 
    * @param RS_x
    * @param RS_y
-   * @return SideNumber: 0 is lower left, 1 is lower right, 2 is upper right and 3 is upper left
+   * @return SideNumber: 0 is down, 1 is right, 2 is up and 3 is left
    */
 
   public int travelToRingSet(int rs_x, int rs_y) {
