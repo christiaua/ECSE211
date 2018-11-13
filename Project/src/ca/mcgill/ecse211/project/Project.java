@@ -18,8 +18,8 @@ public class Project {
 	private static int TLLy = 3;
 	private static int TURx = 3;
 	private static int TURy = 5;
-	private static int TGx = 7;
-	private static int TGy = 7;
+	private static int TGx = 6;
+	private static int TGy = 2;
 	//no prefix starting zone
 	private static int URx = 8;
 	private static int URy = 3;
@@ -31,7 +31,7 @@ public class Project {
 	private static int ILLx = 3;
 	private static int ILLy = 3;
 	//starting corner
-	private static int SC = 0;
+	private static int SC = 1;
 	
 	private static final double[] displacementX = { 0.5, 0, -0.5 };
 	private static final double[] displacementY = { 0.5, 1, 0, 5 };
@@ -131,17 +131,10 @@ public class Project {
 			}
 
 			else if (buttonChoice == Button.ID_RIGHT) {
-				usLocalizer = new UltrasonicLocalizer(navigation);
-				lightLocalizer = new LightLocalizer(navigation);
+//				usLocalizer = new UltrasonicLocalizer(navigation);
+//				lightLocalizer = new LightLocalizer(navigation);
 				ringSearch = new RingSearch(TGx, TGy, navigation);
 
-
-				
-	
-				// TODO: take ring
-
-				// usLocalizer.fallingEdge();
-				// lightLocalizer.moveToOrigin(SC);
 				
 				//navigation.travelToYellowZone(TNG_LL_x, TNG_LL_y, TNG_UR_x, TNG_UR_y); 
 				
@@ -155,26 +148,35 @@ public class Project {
 				//ringSearch.grabRing(ringLevel, ringNumber); //to be implemented
 
 				//beta demo algorithm
-				usLocalizer.fallingEdge();
-				lightLocalizer.moveToOrigin(SC);
+				
+				
+//				poller.disable();
+//				usLocalizer.fallingEdge();
+//				lightLocalizer.moveToOrigin(SC);
+//				poller.enable();
+				odometer.setX(7*30.48);
+				odometer.setY(1*30.48);
+				ringSearch.enableTunnel(true);
+				
+				
 				//navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy); 
 				
 				//int startingCorner = navigation.travelToRingSet(TGx, TGy); // travel to nearest corner of the 2x2 square on which the ring set is centered
 				//startingCocmdrner is an int from 0 to 3. 0 is lower left, 1 is lower right, 2 is upper right, 3 is upper left
 				
 				
-				// TODO: ring search and grab algorithm
-				
 
 				//beta demo algorithm
-				navigation.travelTo(TLLx + 0.5, 1);
-				navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
-				poller.disable();
-				navigation.travelTo(TLLx + 0.5, TURy + 0.5);
-				poller.enable();
-				
-				navigation.travelTo(TGx + 0.5, TURy + 0.5);
-				navigation.travelTo(TGx + 0.5, TGy - 0.5);
+//				navigation.turnTo(270);
+//				navigation.moveForward(30.48, false);
+//				navigation.travelTo(TLLx + 0.5, 1);
+//				navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
+//				poller.disable();
+//				navigation.travelTo(TLLx + 0.5, TURy + 0.5);
+//				poller.enable();
+//				
+//				navigation.travelTo(TGx + 0.5, TURy + 0.5);
+//				navigation.travelTo(TGx + 0.5, TGy - 0.5);
 
 				int ringLocation = ringSearch.findRing();
 				ringSearch.grabRing(ringLocation);

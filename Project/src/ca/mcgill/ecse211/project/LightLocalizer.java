@@ -17,7 +17,7 @@ public class LightLocalizer {
 	private Poller poller;
 	private double x;
 	private double y;
-	private static final double D = 15.3;
+	private static final double D = 10;
 	private double dthetaY;
 	private Navigation navigation;
 	private static final double TILE_SIZE = 30.48;

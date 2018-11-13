@@ -22,7 +22,7 @@ public class RingSearch {
 			new EV3MediumRegulatedMotor(LocalEV3.get().getPort("C"));
 	
 	private static final EV3MediumRegulatedMotor lowerMotor =
-			new EV3MediumRegulatedMotor(LocalEV3.get().getPort("D"));
+			new EV3MediumRegulatedMotor(LocalEV3.get().getPort("B"));
 	
 	public RingSearch(int tGx, int tGy, Navigation nav) throws PollerException {
 		RingSearch.navigation = nav;
@@ -73,6 +73,19 @@ public class RingSearch {
 		navigation.stop();
 	}
 	
+	public void enableTunnel(boolean immediateReturn) {
+		upperMotor.setSpeed(MOTOR_SPEED);
+		lowerMotor.setSpeed(MOTOR_SPEED);
+		lowerMotor.rotate(-90, true);
+		upperMotor.rotate(90, immediateReturn);
+	}
+	
+	public void disableTunnel(boolean immediateReturn) {
+		upperMotor.setSpeed(MOTOR_SPEED);
+		lowerMotor.setSpeed(MOTOR_SPEED);
+		lowerMotor.rotate(90, true);
+		upperMotor.rotate(-90, immediateReturn);
+	}
 	public void stop() {
 		upperMotor.stop(true);
 		lowerMotor.stop(false);

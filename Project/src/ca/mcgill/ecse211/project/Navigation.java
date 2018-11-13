@@ -21,10 +21,10 @@ public class Navigation {
 			new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 
 	private static final double WHEEL_RAD = 2.075;
-	private static final double TRACK = 14.725;
+	private static final double TRACK = 13.725;
 	private static final double TILE_SIZE = 30.48;
 
-	public static final int FORWARD_SPEED = 50;
+	public static final int FORWARD_SPEED = 200;
 	public static final int ROTATE_SPEED = 200;
 
 	private Odometer odo = null;

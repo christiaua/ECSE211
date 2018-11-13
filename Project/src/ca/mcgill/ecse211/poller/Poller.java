@@ -129,7 +129,7 @@ public class Poller implements Runnable {
 				if(redData2[0] < 0.33 && tachoR == -1000){
 					tachoR = navigation.getTacho("left");
 				}
-				if(tachoL != -1000 && tachoR != -1000){
+				if(!navigation.isTurning() && tachoL != -1000 && tachoR != -1000){
 					odometryCorrector.correctAngle(tachoL, tachoR);
 					tachoL = -1000;
 					tachoR = -1000;
