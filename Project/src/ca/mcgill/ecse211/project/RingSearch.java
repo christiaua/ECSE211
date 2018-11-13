@@ -2,6 +2,7 @@ package ca.mcgill.ecse211.project;
 
 import ca.mcgill.ecse211.poller.Poller;
 import ca.mcgill.ecse211.poller.PollerException;
+import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 
@@ -14,7 +15,7 @@ public class RingSearch {
 	
 	private static final double OFFSET = 0.5;
 	private static final double TILE_SIZE = 30.48;
-	private static final int MOTOR_SPEED = 200;
+	private static final int MOTOR_SPEED = 50;
 	private static final double D = 10;
 	
 	
@@ -29,46 +30,48 @@ public class RingSearch {
 		RingSearch.poller = Poller.getPoller();
 		RingSearch.TGx = tGx;
 		RingSearch.TGy = tGy;
+		upperMotor.setSpeed(MOTOR_SPEED);
+		lowerMotor.setSpeed(MOTOR_SPEED);
 	}
 
 	public int findRing() {
-		navigation.travelTo(TGx + OFFSET, TGy + OFFSET);
-		if(poller.foundRing()) return 0;
-		navigation.travelTo(TGx - OFFSET, TGy + OFFSET);
-		if(poller.foundRing()) return 1;
-		navigation.travelTo(TGx - OFFSET, TGy - OFFSET);
-		if(poller.foundRing()) return 2;
-		navigation.travelTo(TGx + OFFSET, TGy - OFFSET);
-		if(poller.foundRing()) return 3;
-		return 4;
+		int position = 3;
+		if(!(poller.getColour() == ColourType.NONE)) {
+			position = 1;
+		}
+		upperMotor.rotate(20, false);
+		
+		if(!(poller.getColour() == ColourType.NONE)) {
+			position = 0;
+		}
+		upperMotor.rotate(-5, false);
+		return position;
 	}
 
-	//0 right, 1 top, 2 left, 3 down
+	//0 low; 1 upper
 	public void grabRing(int ringPosition) {
-		navigation.moveForward(-TILE_SIZE/2, false);
-		switch(ringPosition) {
-			case 0:
-				navigation.turnTo(270);
-				break;
-			case 1:
-				navigation.turnTo(180);
-				break;
-			case 2:
-				navigation.turnTo(90);
-				break;
-			case 3:
-				navigation.turnTo(0);
-				break;
-			default:
-				return;
-		}
-		upperMotor.setSpeed(MOTOR_SPEED);
-		lowerMotor.setSpeed(MOTOR_SPEED);
-		upperMotor.rotate(100);
-		lowerMotor.rotate(100);
-		navigation.moveForward(D, false);
-		upperMotor.rotate(-100);
-		lowerMotor.rotate(-100);
+//		switch(ringPosition) {
+//			case 0:
+//				upperMotor.rotate(-75, false);
+//				navigation.moveForward(5, false);
+//				lowerMotor.rotate(30, true);
+//				break;
+//			case 1:
+//				navigation.moveForward(5, false);
+//				upperMotor.rotate(-30, true);
+//				break;
+//			default:
+//				break;
+//				
+//		}		
+		
+		upperMotor.rotate(-75, false);
+		navigation.moveForward(8, false);
+		lowerMotor.rotate(30, true);
+		navigation.moveForward(-D, false);
+		upperMotor.rotate(75, false);
+		navigation.moveForward(D+2, false);
+		upperMotor.rotate(-30, true);
 		navigation.moveForward(-D, false);
 		navigation.stop();
 	}
@@ -76,15 +79,15 @@ public class RingSearch {
 	public void enableTunnel(boolean immediateReturn) {
 		upperMotor.setSpeed(MOTOR_SPEED);
 		lowerMotor.setSpeed(MOTOR_SPEED);
-		lowerMotor.rotate(-90, true);
-		upperMotor.rotate(90, immediateReturn);
+		lowerMotor.rotate(-70, true);
+		upperMotor.rotate(75, immediateReturn);
 	}
 	
 	public void disableTunnel(boolean immediateReturn) {
 		upperMotor.setSpeed(MOTOR_SPEED);
 		lowerMotor.setSpeed(MOTOR_SPEED);
-		lowerMotor.rotate(90, true);
-		upperMotor.rotate(-90, immediateReturn);
+		lowerMotor.rotate(70, true);
+		upperMotor.rotate(-70, immediateReturn);
 	}
 	public void stop() {
 		upperMotor.stop(true);

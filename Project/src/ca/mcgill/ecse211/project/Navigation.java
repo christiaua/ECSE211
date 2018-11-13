@@ -107,6 +107,13 @@ public class Navigation {
 			rightMotor.forward();
 		}
 	}
+	
+	public void forward() {
+		leftMotor.setSpeed(50);
+		rightMotor.setSpeed(50);
+		leftMotor.forward();
+		rightMotor.forward();
+	}
 
 	public void travelToYellowZone(int tunnelLL_x, int tunnelLL_y, int tunnelUR_x, int tunnelUR_y) {
 		
