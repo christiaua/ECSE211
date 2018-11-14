@@ -166,33 +166,33 @@ public class Navigation {
     switch (tunnelOrientation) {
       case 0: // entrance left, exit right
         tunnelEntranceXY[0] = (double) (tunnelLL_x - 0.5) ;
-        tunnelEntranceXY[1] = (double) (tunnelLL_y + 0.5);
-        tunnelExitXY[0] = (double) (tunnelUR_x + 0.5);
+        tunnelEntranceXY[1] = (double) (tunnelLL_y + 0.5) ;
+        tunnelExitXY[0] = (double) (tunnelUR_x + 0.5) ;
         tunnelExitXY[1] = (double) (tunnelUR_y - 0.5);
         break;
 
 
       case 1: // entrance down, exit up
-        tunnelEntranceXY[0] = (double) (tunnelLL_x + 0.5);
+        tunnelEntranceXY[0] = (double) (tunnelLL_x + 0.5) ;
         tunnelEntranceXY[1] = (double) (tunnelLL_y - 0.5);
-        tunnelExitXY[0] = (double) (tunnelUR_x - 0.5);
+        tunnelExitXY[0] = (double) (tunnelUR_x - 0.5) ;
         tunnelExitXY[1] = (double) (tunnelUR_y + 0.5);
         break;
 
 
       case 2: // entrance right, exit left
-        tunnelEntranceXY[0] = (double) (tunnelUR_x + 0.5) ;
-        tunnelEntranceXY[1] = (double) (tunnelUR_y - 0.5);
-        tunnelExitXY[0] = (double) (tunnelLL_x - 0.5);
+        tunnelEntranceXY[0] = (double) (tunnelUR_x + 0.5);
+        tunnelEntranceXY[1] = (double) (tunnelUR_y - 0.5) ;
+        tunnelExitXY[0] = (double) (tunnelLL_x - 0.5) ;
         tunnelExitXY[1] = (double) (tunnelLL_y + 0.5) ;
         break;
 
 
       case 3: // entrance up, exit down
-        tunnelEntranceXY[0] = (double) (tunnelUR_x - 0.5);
-        tunnelEntranceXY[1] = (double) (tunnelUR_y + 0.5);
+        tunnelEntranceXY[0] = (double) (tunnelUR_x - 0.5) ;
+        tunnelEntranceXY[1] = (double) (tunnelUR_y + 0.5) ;
         tunnelExitXY[0] = (double) (tunnelLL_x + 0.5);
-        tunnelExitXY[1] = (double) (tunnelLL_y - 0.5);
+        tunnelExitXY[1] = (double) (tunnelLL_y - 0.5) ;
         break;
 
     }
@@ -242,33 +242,30 @@ public class Navigation {
       // down
       case 0:
         neighbor_x = (rs_x);
-        neighbor_y = (rs_y - 1) ;
-        
+        neighbor_y = (rs_y - 1);
         break;
       // right
       case 1:
-        neighbor_x = (rs_x + 1);
-        neighbor_y = (rs_y);
+        neighbor_x = (rs_x + 1) ;
+        neighbor_y = (rs_y) ;
         break;
       // up
       case 2:
         neighbor_x = (rs_x);
-        neighbor_y = (rs_y + 1);
+        neighbor_y = (rs_y + 1) ;
         break;
       // left
       case 3:
-        neighbor_x = (rs_x - 1);
-        neighbor_y = (rs_y) ;
+        neighbor_x = (rs_x - 1) ;
+        neighbor_y = (rs_y);
         break;
       default:
         return -1; // error
     
     }
-    double angleToTurnTo = calculateAngle(rs_x, rs_y, odo);
-    turnTo(angleToTurnTo);
 
     // always move in x axis first (arbitrary)
-    travelTo(neighbor_x, odo.getXYT()[1]);
+    travelTo(neighbor_x, odo.getXYT()[1]/TILE_SIZE);
     // move in y axis
     travelTo(neighbor_x, neighbor_y);
 
@@ -386,6 +383,7 @@ public class Navigation {
     currentPosition = odo.getXYT();
     currentDistance =
         calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
+
     moveForward(currentDistance, true);
 
     while(true) {
@@ -403,6 +401,23 @@ public class Navigation {
 	    }
     }
   }
+  
+  public void continueTraveling() {
+	  stop();
+	  try {
+		  Thread.sleep(30);
+	  }catch(Exception e) {
+		  
+	  }
+	  travelTo(currentDest[0], currentDest[1]);
+
+  }
+
+  public void travelToStraight(double x, double y) {
+    travelTo(x, odo.getXYT()[1]);
+    travelTo(odo.getXYT()[0], y);
+  }
+
 
   /**
    * This method turns the robot in place to the absolute angle theta.
