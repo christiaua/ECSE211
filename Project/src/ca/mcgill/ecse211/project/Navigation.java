@@ -28,7 +28,7 @@ public class Navigation {
 
   private Odometer odo = null;
   private static double[] currentDest = {0, 0};
-  private static boolean turning = false;
+  private static boolean movingStraight = false;
 
   /**
    * Constructor
@@ -165,34 +165,34 @@ public class Navigation {
 
     switch (tunnelOrientation) {
       case 0: // entrance left, exit right
-        tunnelEntranceXY[0] = (double) (tunnelLL_x - 0.5) * TILE_SIZE;
-        tunnelEntranceXY[1] = (double) (tunnelLL_y + 0.5) * TILE_SIZE;
-        tunnelExitXY[0] = (double) (tunnelUR_x + 0.5) * TILE_SIZE;
-        tunnelExitXY[1] = (double) (tunnelUR_y - 0.5) * TILE_SIZE;
+        tunnelEntranceXY[0] = (double) (tunnelLL_x - 0.5) ;
+        tunnelEntranceXY[1] = (double) (tunnelLL_y + 0.5) ;
+        tunnelExitXY[0] = (double) (tunnelUR_x + 0.5) ;
+        tunnelExitXY[1] = (double) (tunnelUR_y - 0.5);
         break;
 
 
       case 1: // entrance down, exit up
-        tunnelEntranceXY[0] = (double) (tunnelLL_x + 0.5) * TILE_SIZE;
-        tunnelEntranceXY[1] = (double) (tunnelLL_y - 0.5) * TILE_SIZE;
-        tunnelExitXY[0] = (double) (tunnelUR_x - 0.5) * TILE_SIZE;
-        tunnelExitXY[1] = (double) (tunnelUR_y + 0.5) * TILE_SIZE;
+        tunnelEntranceXY[0] = (double) (tunnelLL_x + 0.5) ;
+        tunnelEntranceXY[1] = (double) (tunnelLL_y - 0.5);
+        tunnelExitXY[0] = (double) (tunnelUR_x - 0.5) ;
+        tunnelExitXY[1] = (double) (tunnelUR_y + 0.5);
         break;
 
 
       case 2: // entrance right, exit left
-        tunnelEntranceXY[0] = (double) (tunnelUR_x + 0.5) * TILE_SIZE;
-        tunnelEntranceXY[1] = (double) (tunnelUR_y - 0.5) * TILE_SIZE;
-        tunnelExitXY[0] = (double) (tunnelLL_x - 0.5) * TILE_SIZE;
-        tunnelExitXY[1] = (double) (tunnelLL_y + 0.5) * TILE_SIZE;
+        tunnelEntranceXY[0] = (double) (tunnelUR_x + 0.5);
+        tunnelEntranceXY[1] = (double) (tunnelUR_y - 0.5) ;
+        tunnelExitXY[0] = (double) (tunnelLL_x - 0.5) ;
+        tunnelExitXY[1] = (double) (tunnelLL_y + 0.5) ;
         break;
 
 
       case 3: // entrance up, exit down
-        tunnelEntranceXY[0] = (double) (tunnelUR_x - 0.5) * TILE_SIZE;
-        tunnelEntranceXY[1] = (double) (tunnelUR_y + 0.5) * TILE_SIZE;
-        tunnelExitXY[0] = (double) (tunnelLL_x + 0.5) * TILE_SIZE;
-        tunnelExitXY[1] = (double) (tunnelLL_y - 0.5) * TILE_SIZE;
+        tunnelEntranceXY[0] = (double) (tunnelUR_x - 0.5) ;
+        tunnelEntranceXY[1] = (double) (tunnelUR_y + 0.5) ;
+        tunnelExitXY[0] = (double) (tunnelLL_x + 0.5);
+        tunnelExitXY[1] = (double) (tunnelLL_y - 0.5) ;
         break;
 
     }
@@ -384,15 +384,16 @@ public class Navigation {
         calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
 
     moveForward(currentDistance, true);
+
     while(true) {
     	currentPosition = odo.getXYT();
-	    if(Math.abs(currentPosition[2] - angleToTurnTo) > 5 || 
-	    		Math.abs(currentPosition[2] - angleToTurnTo) > 355) {
-		    stop();
-		    turnTo(angleToTurnTo);    
-		    currentDistance =
-		        calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
-		    moveForward(currentDistance, true);
+	    if(Math.abs(currentPosition[2] - angleToTurnTo) > 3 || 
+	    		Math.abs(currentPosition[2] - angleToTurnTo) > 357) {
+			    stop();
+			    turnTo(angleToTurnTo);    
+			    currentDistance =
+			        calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
+			    moveForward(currentDistance, true);
 	    }
 	    if(!leftMotor.isMoving() && !rightMotor.isMoving()) {
 	    	break;
@@ -415,6 +416,7 @@ public class Navigation {
     travelTo(x, odo.getXYT()[1]);
     travelTo(odo.getXYT()[0], y);
   }
+
 
   /**
    * This method turns the robot in place to the absolute angle theta.

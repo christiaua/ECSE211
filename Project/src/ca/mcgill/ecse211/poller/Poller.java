@@ -7,7 +7,6 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
-import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import ca.mcgill.ecse211.poller.RingDetector.ColourType;
@@ -123,16 +122,14 @@ public class Poller implements Runnable {
 			redSample2.fetchSample(redData2, 0);
 			
 			if(correctionEnabled) {
-				
-				if(redData1[0] < 0.33 && tachoL == -1000){
+				if(!navigation.isTurning() && redData1[0] < 0.33 && tachoL == -1000){
 					tachoL = navigation.getTacho("left");
 				}
-				if(redData2[0] < 0.33 && tachoR == -1000){
+				if(!navigation.isTurning() && redData2[0] < 0.33 && tachoR == -1000){
 					tachoR = navigation.getTacho("left");
 				}
 				if(!navigation.isTurning() && tachoL != -1000 && tachoR != -1000){
 					odometryCorrector.correctAngle(tachoL, tachoR);
-					//navigation.continueTraveling();
 					tachoL = -1000;
 					tachoR = -1000;
 					Sound.beep();
