@@ -11,6 +11,7 @@ import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.odometer.OdometryCorrection;
 import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 import ca.mcgill.ecse211.project.Navigation;
+import ca.mcgill.ecse211.project.Navigation.Side;
 
 /**
  * This class gets the samples for the light sensors
@@ -129,10 +130,10 @@ public class Poller implements Runnable {
 			
 			if(correctionEnabled) {
 				if(!navigation.isTurning() && redData1[0] < 0.33 && tachoL == -1000){
-					tachoL = navigation.getTacho("left");
+					tachoL = navigation.getTacho(Side.LEFT);
 				}
 				if(!navigation.isTurning() && redData2[0] < 0.33 && tachoR == -1000){
-					tachoR = navigation.getTacho("left");
+					tachoR = navigation.getTacho(Side.RIGHT);
 				}
 				if(!navigation.isTurning() && tachoL != -1000 && tachoR != -1000){
 					odometryCorrector.correctAngle(tachoL, tachoR);
