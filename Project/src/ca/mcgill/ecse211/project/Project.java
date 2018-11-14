@@ -137,9 +137,9 @@ public class Project {
 			lcd.clear();
 			if (buttonChoice == Button.ID_LEFT) {
 				// test the track and wheels
-				navigation.turnTo(90);
-				navigation.moveForward(120, false);
-				navigation.floatWheels();
+				Navigation.turnTo(90);
+				Navigation.moveForward(120, false);
+				Navigation.floatWheels();
 				System.exit(0);
 			}
 
@@ -173,45 +173,46 @@ public class Project {
 
 				//if horizontal
 				if (TURx - TLLx > 1) {
-					navigation.travelTo(7, TLLy + OFFSET);
-					navigation.travelTo(TURx + OFFSET, TLLy + OFFSET);
+					Navigation.turnTo(0);
+					Navigation.travelTo(7, TLLy + OFFSET);
+					Navigation.travelTo(TURx + OFFSET, TLLy + OFFSET);
 					poller.disableCorrection();
-					navigation.travelTo(TLLx - OFFSET, TLLy + OFFSET);
+					Navigation.travelTo(TLLx - OFFSET, TLLy + OFFSET);
 					poller.enableCorrection();
 
-					navigation.travelTo(TGx, TLLy + OFFSET);
+					Navigation.travelTo(TGx, TLLy + OFFSET);
 
 					if (TGy <= TLLy) {
-						navigation.travelTo(TGx, TGy + 1);
-						navigation.turnTo(180);
+						Navigation.travelTo(TGx, TGy + 1);
+						Navigation.turnTo(180);
 					} else {
-						navigation.travelTo(TGx, TGy - 1);
-						navigation.turnTo(0);
+						Navigation.travelTo(TGx, TGy - 1);
+						Navigation.turnTo(0);
 					}
 
 				} else {
-					navigation.travelTo(TLLx + OFFSET, 1);
-					navigation.travelTo(TLLx + OFFSET, TLLy - 0.5);
+					Navigation.travelTo(TLLx + OFFSET, 1);
+					Navigation.travelTo(TLLx + OFFSET, TLLy - 0.5);
 
 					poller.disableCorrection();
-					navigation.travelTo(TLLx + OFFSET, TURy + 0.5);
+					Navigation.travelTo(TLLx + OFFSET, TURy + 0.5);
 					poller.enableCorrection();
 
 					if (TGx < TURx) {
 						// left side of tunnel
-						navigation.travelTo(TLLx + OFFSET, TGy);
-						navigation.travelTo(TGx + 1, TGy);
-						navigation.turnTo(270);
+						Navigation.travelTo(TLLx + OFFSET, TGy);
+						Navigation.travelTo(TGx + 1, TGy);
+						Navigation.turnTo(270);
 					} else {
 						// right side of tunnel
-						navigation.travelTo(TLLx + OFFSET, TGy);
-						navigation.travelTo(TGx - 1, TGy);
-						navigation.turnTo(90);
+						Navigation.travelTo(TLLx + OFFSET, TGy);
+						Navigation.travelTo(TGx - 1, TGy);
+						Navigation.turnTo(90);
 					}
 				}
 
 				poller.disableCorrection();
-				ringSearch.grabRing(0);
+				RingSearch.grabRing(0);
 			}
 
 			buttonChoice = Button.waitForAnyPress();

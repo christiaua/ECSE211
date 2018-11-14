@@ -4,9 +4,7 @@
 package ca.mcgill.ecse211.odometer;
 
 import ca.mcgill.ecse211.poller.*;
-import ca.mcgill.ecse211.project.Navigation;
 import ca.mcgill.ecse211.project.Project;
-import lejos.hardware.Sound;
 
 public class OdometryCorrection{
   private static final double DIST_BETWEEN_SENSORS = 12.5;

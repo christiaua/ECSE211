@@ -26,7 +26,7 @@ public class Navigation {
   public static final int FORWARD_SPEED = 200;
   public static final int ROTATE_SPEED = 160;
 
-  private Odometer odo = null;
+  private static Odometer odo = null;
   private static double[] currentDest = {0, 0};
   private static boolean movingStraight = false;
 
@@ -73,7 +73,7 @@ public class Navigation {
    * @param angle
    * @param immediateReturn
    */
-  public void rotate(double angle, boolean immediateReturn) {
+  public static void rotate(double angle, boolean immediateReturn) {
     setSpeed(ROTATE_SPEED);
     if (angle < 0) {
       leftMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, Math.abs(angle)), true);
@@ -89,7 +89,7 @@ public class Navigation {
    * 
    * @param left motor speed and right motor speed
    */
-  public void rotateWheels(int leftSpeed, int rightSpeed) {
+  public static void rotateWheels(int leftSpeed, int rightSpeed) {
     stop();
     leftMotor.setSpeed(leftSpeed);
     rightMotor.setSpeed(rightSpeed);
@@ -371,7 +371,7 @@ public class Navigation {
    * @param x
    * @param y
    */
-  public void travelTo(double x, double y) {
+  public static void travelTo(double x, double y) {
     double angleToTurnTo;
     double currentDistance;
     double[] currentPosition = odo.getXYT();
@@ -401,30 +401,13 @@ public class Navigation {
 	    }
     }
   }
-  
-  public void continueTraveling() {
-	  stop();
-	  try {
-		  Thread.sleep(30);
-	  }catch(Exception e) {
-		  
-	  }
-	  travelTo(currentDest[0], currentDest[1]);
-
-  }
-
-  public void travelToStraight(double x, double y) {
-    travelTo(x, odo.getXYT()[1]);
-    travelTo(odo.getXYT()[0], y);
-  }
-
 
   /**
    * This method turns the robot in place to the absolute angle theta.
    * 
    * @param theta
    */
-  public void turnTo(double theta) {
+  public static void turnTo(double theta) {
     double currentTheta = odo.getXYT()[2];
     double dtheta = theta - currentTheta;
     double minAngle;
@@ -576,7 +559,7 @@ public class Navigation {
    * Move robot backwards
    * 
    */
-  public void backwards() {
+  public static void backwards() {
     setSpeed(FORWARD_SPEED);
     leftMotor.backward();
     rightMotor.backward();
