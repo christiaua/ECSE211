@@ -20,7 +20,7 @@ public class Project {
   private static int TURy = 5;
 
   // Ring tree
-  private static int TGx = 2;
+  private static int TGx = 5;
   private static int TGy = 6;
 
   // No prefix: starting zone
@@ -31,9 +31,9 @@ public class Project {
 
   // I: island
   private static int IURx = 8;
-  private static int IURy = 3;
-  private static int ILLx = 3;
-  private static int ILLy = 3;
+  private static int IURy = 8;
+  private static int ILLx = 0;
+  private static int ILLy = 5;
 
   // Starting corner
   private static int SC = 1;
@@ -142,28 +142,53 @@ public class Project {
         ringSearch = new RingSearch(TGx, TGy, navigation);
 
         // beta demo algorithm
+        
 //        poller.disableCorrection();
 //        usLocalizer.fallingEdge();
 //        //lightLocalizer.moveToOrigin(SC);        
 //        poller.enableCorrection();
-//        ringSearch.enableTunnel(true);
-//        
-        odometer.setX(7*30.48);
+        
+        
+        odometer.setX(30.48);
         odometer.setY(30.48);
         odometer.setTheta(0);
-        
-//        navigation.travelTo(0, 4);
-//        navigation.travelTo(4, 4);
 
         // beta demo algorithm
         
-        navigation.travelTo(TLLx + 0.5, 1);
-        //navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
-        navigation.travelTo(TLLx + 0.5, TURy + 0.5);
-
-        navigation.travelTo(TGx, TURy + 0.5);
-        navigation.travelTo(TGx, TGy - 1);
-         
+        navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy);
+        navigation.travelToRingSet(TGx, TGy);
+        
+        
+//        ringSearch.enableTunnel(true);
+//        navigation.travelTo(TLLx + 0.5, 1);
+//        navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
+//        
+//        poller.disableCorrection();
+//        navigation.travelTo(TLLx + 0.5, TURy + 0.5);
+//        poller.enableCorrection();
+//
+//        //no bot side
+//        if(TGy <= ILLy + 1) {
+//        	if(TGx < TURx) {
+//        		//left side of tunnel
+//        		navigation.travelTo(TLLx + 0.5, TGy);
+//        		navigation.travelTo(TGx + 1, TGy);
+//        		navigation.turnTo(270);
+//        	}
+//        	else {
+//        		//right side of tunnel
+//        		navigation.travelTo(TLLx + 0.5, TGy);
+//        		navigation.travelTo(TGx - 1, TGy);
+//        		navigation.turnTo(90);
+//        	}
+//        	
+//        }
+//        else {
+//            navigation.travelTo(TGx, TURy + 0.5);
+//            navigation.travelTo(TGx, TGy - 1);
+//            navigation.turnTo(0);
+//        }
+        poller.disableCorrection();
         ringSearch.grabRing(0);
       }
 

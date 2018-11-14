@@ -20,7 +20,7 @@ public class Navigation {
       new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 
   private static final double WHEEL_RAD = 2.075;
-  private static final double TRACK = 13.5;
+  private static final double TRACK = 14.725;
   private static final double TILE_SIZE = 30.48;
 
   public static final int FORWARD_SPEED = 200;
@@ -165,34 +165,34 @@ public class Navigation {
 
     switch (tunnelOrientation) {
       case 0: // entrance left, exit right
-        tunnelEntranceXY[0] = (double) (tunnelLL_x - 0.5) * TILE_SIZE;
-        tunnelEntranceXY[1] = (double) (tunnelLL_y + 0.5) * TILE_SIZE;
-        tunnelExitXY[0] = (double) (tunnelUR_x + 0.5) * TILE_SIZE;
-        tunnelExitXY[1] = (double) (tunnelUR_y - 0.5) * TILE_SIZE;
+        tunnelEntranceXY[0] = (double) (tunnelLL_x - 0.5) ;
+        tunnelEntranceXY[1] = (double) (tunnelLL_y + 0.5);
+        tunnelExitXY[0] = (double) (tunnelUR_x + 0.5);
+        tunnelExitXY[1] = (double) (tunnelUR_y - 0.5);
         break;
 
 
       case 1: // entrance down, exit up
-        tunnelEntranceXY[0] = (double) (tunnelLL_x + 0.5) * TILE_SIZE;
-        tunnelEntranceXY[1] = (double) (tunnelLL_y - 0.5) * TILE_SIZE;
-        tunnelExitXY[0] = (double) (tunnelUR_x - 0.5) * TILE_SIZE;
-        tunnelExitXY[1] = (double) (tunnelUR_y + 0.5) * TILE_SIZE;
+        tunnelEntranceXY[0] = (double) (tunnelLL_x + 0.5);
+        tunnelEntranceXY[1] = (double) (tunnelLL_y - 0.5);
+        tunnelExitXY[0] = (double) (tunnelUR_x - 0.5);
+        tunnelExitXY[1] = (double) (tunnelUR_y + 0.5);
         break;
 
 
       case 2: // entrance right, exit left
-        tunnelEntranceXY[0] = (double) (tunnelUR_x + 0.5) * TILE_SIZE;
-        tunnelEntranceXY[1] = (double) (tunnelUR_y - 0.5) * TILE_SIZE;
-        tunnelExitXY[0] = (double) (tunnelLL_x - 0.5) * TILE_SIZE;
-        tunnelExitXY[1] = (double) (tunnelLL_y + 0.5) * TILE_SIZE;
+        tunnelEntranceXY[0] = (double) (tunnelUR_x + 0.5) ;
+        tunnelEntranceXY[1] = (double) (tunnelUR_y - 0.5);
+        tunnelExitXY[0] = (double) (tunnelLL_x - 0.5);
+        tunnelExitXY[1] = (double) (tunnelLL_y + 0.5) ;
         break;
 
 
       case 3: // entrance up, exit down
-        tunnelEntranceXY[0] = (double) (tunnelUR_x - 0.5) * TILE_SIZE;
-        tunnelEntranceXY[1] = (double) (tunnelUR_y + 0.5) * TILE_SIZE;
-        tunnelExitXY[0] = (double) (tunnelLL_x + 0.5) * TILE_SIZE;
-        tunnelExitXY[1] = (double) (tunnelLL_y - 0.5) * TILE_SIZE;
+        tunnelEntranceXY[0] = (double) (tunnelUR_x - 0.5);
+        tunnelEntranceXY[1] = (double) (tunnelUR_y + 0.5);
+        tunnelExitXY[0] = (double) (tunnelLL_x + 0.5);
+        tunnelExitXY[1] = (double) (tunnelLL_y - 0.5);
         break;
 
     }
@@ -236,32 +236,36 @@ public class Navigation {
     int neighborNumber = nearestNeighbor(rs_x, rs_y);
     double neighbor_x;
     double neighbor_y;
+    
 
     switch (neighborNumber) {
       // down
       case 0:
-        neighbor_x = (rs_x) * TILE_SIZE;
-        neighbor_y = (rs_y - 1) * TILE_SIZE;
+        neighbor_x = (rs_x);
+        neighbor_y = (rs_y - 1) ;
+        
         break;
       // right
       case 1:
-        neighbor_x = (rs_x + 1) * TILE_SIZE;
-        neighbor_y = (rs_y) * TILE_SIZE;
+        neighbor_x = (rs_x + 1);
+        neighbor_y = (rs_y);
         break;
       // up
       case 2:
-        neighbor_x = (rs_x) * TILE_SIZE;
-        neighbor_y = (rs_y + 1) * TILE_SIZE;
+        neighbor_x = (rs_x);
+        neighbor_y = (rs_y + 1);
         break;
       // left
       case 3:
-        neighbor_x = (rs_x - 1) * TILE_SIZE;
-        neighbor_y = (rs_y) * TILE_SIZE;
+        neighbor_x = (rs_x - 1);
+        neighbor_y = (rs_y) ;
         break;
       default:
         return -1; // error
+    
     }
-
+    double angleToTurnTo = calculateAngle(rs_x, rs_y, odo);
+    turnTo(angleToTurnTo);
 
     // always move in x axis first (arbitrary)
     travelTo(neighbor_x, odo.getXYT()[1]);
@@ -386,7 +390,7 @@ public class Navigation {
 
     while(true) {
     	currentPosition = odo.getXYT();
-	    if(Math.abs(currentPosition[2] - angleToTurnTo) > 3 || 
+	    if(Math.abs(currentPosition[2] - angleToTurnTo) > 1 || 
 	    		Math.abs(currentPosition[2] - angleToTurnTo) > 357) {
 			    stop();
 			    turnTo(angleToTurnTo);    

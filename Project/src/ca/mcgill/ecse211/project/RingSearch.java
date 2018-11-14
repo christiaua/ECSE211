@@ -62,8 +62,8 @@ public class RingSearch {
 //				break;
 //			default:
 //				break;
-//		}		
-		
+//		}	
+		navigation.moveForward(4, false);
 		upperMotor.rotate(-75, false);
 		navigation.moveForward(8, false);
 		lowerMotor.rotate(30, true);
