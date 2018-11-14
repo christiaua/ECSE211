@@ -64,6 +64,8 @@ public class Poller implements Runnable {
 	
 	private boolean correctionEnabled = true;
 	
+	private boolean line = false;
+	
 	public void disableCorrection() {
 		correctionEnabled = false;
 	}
@@ -112,6 +114,10 @@ public class Poller implements Runnable {
 			throw new PollerException("No Poller.");
 		}
 	}
+	
+	public boolean getLine() {
+		return line;
+	}
 
 	/**
 	 * Get the samples and process them
@@ -133,6 +139,10 @@ public class Poller implements Runnable {
 					tachoL = -1000;
 					tachoR = -1000;
 					Sound.beep();
+					line = true;
+				}
+				else {
+					line = false;
 				}
 			}
 			lastRedReading1 = currentRedReading1;

@@ -14,10 +14,10 @@ public class Project {
   // CUSTOM VARIABLES
 
   // T: tunnel
-  private static int TLLx = 2;
-  private static int TLLy = 3;
-  private static int TURx = 3;
-  private static int TURy = 5;
+  private static int TLLx = 6;
+  private static int TLLy = 2;
+  private static int TURx = 7;
+  private static int TURy = 4;
 
   // Ring tree
   private static int TGx = 5;
@@ -52,6 +52,8 @@ public class Project {
   private static UltrasonicLocalizer usLocalizer;
   private static LightLocalizer lightLocalizer;
   private static RingSearch ringSearch;
+  
+  private static final double OFFSET = 0.4;
 
   private static final String SERVER_IP = "192.168.2.1";
   // Christiana's IP: 192.168.2.34
@@ -60,7 +62,39 @@ public class Project {
   @SuppressWarnings("rawtypes")
   public static void main(String[] args) throws OdometerExceptions, PollerException {
 
-    WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
+    do {
+      int buttonChoice;
+      do {
+        // clear the display
+        lcd.clear();
+
+        // ask the user whether the motors should do lab 5 or float
+        lcd.drawString("< Left | Right >", 0, 0);
+        lcd.drawString("       |        ", 0, 1);
+        lcd.drawString("  Test | Drive  ", 0, 2);
+        lcd.drawString("motors | and do ", 0, 3);
+        lcd.drawString("       | Project", 0, 4);
+
+        buttonChoice = Button.waitForAnyPress(); // Record choice (left or right press)
+      } while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+
+      navigation = new Navigation();
+
+      odometer = Odometer.getOdometer();
+      Thread odoThread = new Thread(odometer);
+      odoThread.start();
+
+      poller = Poller.getPoller(navigation);
+      Thread pollerThread = new Thread(poller);
+      pollerThread.start();
+
+      display = new Display(lcd);
+      Thread displayThread = new Thread(display);
+      displayThread.start();
+
+      lcd.clear();
+      lcd.drawString("ready", 0, 0);
+      WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
 
 //    try {
 //      Map data = conn.getData();
@@ -96,37 +130,6 @@ public class Project {
 //    } catch (Exception e) {
 //      System.err.println("Error: " + e.getMessage());
 //    }
-
-    do {
-      int buttonChoice;
-      do {
-        // clear the display
-        lcd.clear();
-
-        // ask the user whether the motors should do lab 5 or float
-        lcd.drawString("< Left | Right >", 0, 0);
-        lcd.drawString("       |        ", 0, 1);
-        lcd.drawString("  Test | Drive  ", 0, 2);
-        lcd.drawString("motors | and do ", 0, 3);
-        lcd.drawString("       | Project", 0, 4);
-
-        buttonChoice = Button.waitForAnyPress(); // Record choice (left or right press)
-      } while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-
-      navigation = new Navigation();
-
-      odometer = Odometer.getOdometer();
-      Thread odoThread = new Thread(odometer);
-      odoThread.start();
-
-      poller = Poller.getPoller(navigation);
-      Thread pollerThread = new Thread(poller);
-      pollerThread.start();
-
-      display = new Display(lcd);
-      Thread displayThread = new Thread(display);
-      displayThread.start();
-
       lcd.clear();
       if (buttonChoice == Button.ID_LEFT) {
         // test the track and wheels
@@ -149,45 +152,50 @@ public class Project {
 //        poller.enableCorrection();
         
         
-        odometer.setX(30.48);
+        odometer.setX(7*30.48);
         odometer.setY(30.48);
         odometer.setTheta(0);
 
         // beta demo algorithm
         
-        navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy);
-        navigation.travelToRingSet(TGx, TGy);
+//        navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy);
+//        navigation.travelToRingSet(TGx, TGy);
+        
+//        navigation.travelTo(7, 3);
+//        navigation.travelTo(4, 3);
+//        navigation.travelTo(4, 1);
+//        navigation.travelTo(1, 1);
         
         
-//        ringSearch.enableTunnel(true);
-//        navigation.travelTo(TLLx + 0.5, 1);
-//        navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
-//        
-//        poller.disableCorrection();
-//        navigation.travelTo(TLLx + 0.5, TURy + 0.5);
-//        poller.enableCorrection();
-//
-//        //no bot side
-//        if(TGy <= ILLy + 1) {
-//        	if(TGx < TURx) {
-//        		//left side of tunnel
-//        		navigation.travelTo(TLLx + 0.5, TGy);
-//        		navigation.travelTo(TGx + 1, TGy);
-//        		navigation.turnTo(270);
-//        	}
-//        	else {
-//        		//right side of tunnel
-//        		navigation.travelTo(TLLx + 0.5, TGy);
-//        		navigation.travelTo(TGx - 1, TGy);
-//        		navigation.turnTo(90);
-//        	}
-//        	
-//        }
-//        else {
-//            navigation.travelTo(TGx, TURy + 0.5);
-//            navigation.travelTo(TGx, TGy - 1);
-//            navigation.turnTo(0);
-//        }
+        ringSearch.enableTunnel(true);
+        navigation.travelTo(TLLx + OFFSET, 1);
+        navigation.travelTo(TLLx + OFFSET, TLLy - 0.5);
+        
+        poller.disableCorrection();
+        navigation.travelTo(TLLx + OFFSET, TURy + 0.5);
+        poller.enableCorrection();
+
+        //no bot side
+        if(TGy <= ILLy + 1) {
+        	if(TGx < TURx) {
+        		//left side of tunnel
+        		navigation.travelTo(TLLx + OFFSET, TGy);
+        		navigation.travelTo(TGx + 1, TGy);
+        		navigation.turnTo(270);
+        	}
+        	else {
+        		//right side of tunnel
+        		navigation.travelTo(TLLx + OFFSET, TGy);
+        		navigation.travelTo(TGx - 1, TGy);
+        		navigation.turnTo(90);
+        	}
+        	
+        }
+        else {
+            navigation.travelTo(TGx, TURy + 0.5);
+            navigation.travelTo(TGx, TGy - 1);
+            navigation.turnTo(0);
+        }
         poller.disableCorrection();
         ringSearch.grabRing(0);
       }
