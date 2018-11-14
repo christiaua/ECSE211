@@ -20,11 +20,11 @@ public class Navigation {
       new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 
   private static final double WHEEL_RAD = 2.075;
-  private static final double TRACK = 14.725;
+  private static final double TRACK = 14.225;
   private static final double TILE_SIZE = 30.48;
 
   public static final int FORWARD_SPEED = 200;
-  public static final int ROTATE_SPEED = 150;
+  public static final int ROTATE_SPEED = 160;
 
   private Odometer odo = null;
   private static double[] currentDest = {0, 0};
@@ -42,7 +42,7 @@ public class Navigation {
   /**
    * Floates the wheels
    */
-  public void floatWheels() {
+  public static void floatWheels() {
     leftMotor.forward();
     leftMotor.flt();
     rightMotor.forward();
@@ -55,7 +55,7 @@ public class Navigation {
    * @param distance
    * @param immediateReturn
    */
-  public void moveForward(double distance, boolean immediateReturn) {
+  public static void moveForward(double distance, boolean immediateReturn) {
     stop();
     setSpeed(FORWARD_SPEED);
     if (distance < 0) {
@@ -546,7 +546,7 @@ public class Navigation {
    * Stops both right and left motors
    * 
    */
-  public void stop() {
+  public static void stop() {
     leftMotor.stop(true);
     rightMotor.stop(false);
   }
@@ -567,7 +567,7 @@ public class Navigation {
    * Set speed for both motors
    * 
    */
-  public void setSpeed(int speed) {
+  public static void setSpeed(int speed) {
     leftMotor.setSpeed(speed);
     rightMotor.setSpeed(speed);
   }

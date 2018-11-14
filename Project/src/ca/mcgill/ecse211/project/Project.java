@@ -11,197 +11,211 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 
 public class Project {
-  // CUSTOM VARIABLES
+	// CUSTOM VARIABLES
 
-  // T: tunnel
-  private static int TLLx = 6;
-  private static int TLLy = 2;
-  private static int TURx = 7;
-  private static int TURy = 4;
+	// T: tunnel
+	private static int TLLx = 6;
+	private static int TLLy = 2;
+	private static int TURx = 7;
+	private static int TURy = 4;
 
-  // Ring tree
-  private static int TGx = 5;
-  private static int TGy = 6;
+	// Ring tree
+	private static int TGx = 5;
+	private static int TGy = 6;
 
-  // No prefix: starting zone
-  private static int URx = 8;
-  private static int URy = 3;
-  private static int LLx = 3;
-  private static int LLy = 3;
+	// No prefix: starting zone
+	private static int URx = 8;
+	private static int URy = 3;
+	private static int LLx = 3;
+	private static int LLy = 3;
 
-  // I: island
-  private static int IURx = 8;
-  private static int IURy = 8;
-  private static int ILLx = 0;
-  private static int ILLy = 5;
+	// I: island
+	private static int IURx = 8;
+	private static int IURy = 8;
+	private static int ILLx = 0;
+	private static int ILLy = 5;
 
-  // Starting corner
-  private static int SC = 1;
+	// Starting corner
+	private static int SC = 1;
 
-  private static final double[] displacementX = {0.5, 0, -0.5};
-  private static final double[] displacementY = {0.5, 1, 0, 5};
+	private static final double[] displacementX = { 0.5, 0, -0.5 };
+	private static final double[] displacementY = { 0.5, 1, 0, 5 };
 
-  // private static final int TR = 4; // 1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
-  // private static final int[][] CORNERS = {{1, 1}, {1, 7}, {7, 7}, {7, 1}};
+	// private static final int TR = 4; // 1 BLUE, 2 GREEN, 3 YELLOW, 4 ORANGE
+	// private static final int[][] CORNERS = {{1, 1}, {1, 7}, {7, 7}, {7, 1}};
 
-  public static final TextLCD lcd = LocalEV3.get().getTextLCD();
-  private static Display display;
-  private static Odometer odometer;
-  private static Poller poller;
-  private static Navigation navigation;
-  private static UltrasonicLocalizer usLocalizer;
-  private static LightLocalizer lightLocalizer;
-  private static RingSearch ringSearch;
-  
-  private static final double OFFSET = 0.4;
+	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
+	private static Display display;
+	private static Odometer odometer;
+	private static Poller poller;
+	private static Navigation navigation;
+	private static UltrasonicLocalizer usLocalizer;
+	private static LightLocalizer lightLocalizer;
+	private static RingSearch ringSearch;
 
-  private static final String SERVER_IP = "192.168.2.1";
-  // Christiana's IP: 192.168.2.34
-  private static final int TEAM_NUMBER = 7;
+	private static final double OFFSET = 0.4;
 
-  @SuppressWarnings("rawtypes")
-  public static void main(String[] args) throws OdometerExceptions, PollerException {
+	private static final String SERVER_IP = "192.168.2.40";
+	// Christiana's IP: 192.168.2.34
+	private static final int TEAM_NUMBER = 7;
 
-    do {
-      int buttonChoice;
-      do {
-        // clear the display
-        lcd.clear();
+	@SuppressWarnings("rawtypes")
+	public static void main(String[] args) throws OdometerExceptions, PollerException {
 
-        // ask the user whether the motors should do lab 5 or float
-        lcd.drawString("< Left | Right >", 0, 0);
-        lcd.drawString("       |        ", 0, 1);
-        lcd.drawString("  Test | Drive  ", 0, 2);
-        lcd.drawString("motors | and do ", 0, 3);
-        lcd.drawString("       | Project", 0, 4);
+		do {
+			int buttonChoice;
+			do {
+				// clear the display
+				lcd.clear();
 
-        buttonChoice = Button.waitForAnyPress(); // Record choice (left or right press)
-      } while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+				// ask the user whether the motors should do lab 5 or float
+				lcd.drawString("< Left | Right >", 0, 0);
+				lcd.drawString("       |        ", 0, 1);
+				lcd.drawString("  Test | Drive  ", 0, 2);
+				lcd.drawString("motors | and do ", 0, 3);
+				lcd.drawString("       | Project", 0, 4);
 
-      navigation = new Navigation();
+				buttonChoice = Button.waitForAnyPress(); // Record choice (left or right press)
+			} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 
-      odometer = Odometer.getOdometer();
-      Thread odoThread = new Thread(odometer);
-      odoThread.start();
+			navigation = new Navigation();
 
-      poller = Poller.getPoller(navigation);
-      Thread pollerThread = new Thread(poller);
-      pollerThread.start();
+			odometer = Odometer.getOdometer();
+			Thread odoThread = new Thread(odometer);
+			odoThread.start();
 
-      display = new Display(lcd);
-      Thread displayThread = new Thread(display);
-      displayThread.start();
+			poller = Poller.getPoller(navigation);
+			Thread pollerThread = new Thread(poller);
+			pollerThread.start();
 
-      lcd.clear();
-      lcd.drawString("ready", 0, 0);
-      WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
+			display = new Display(lcd);
+			Thread displayThread = new Thread(display);
+			displayThread.start();
 
-//    try {
-//      Map data = conn.getData();
-//      System.out.println("Map:\n" + data);
-//
-//      // Team specifics
-//      int redTeam = ((Long) data.get("GreenTeam")).intValue();
-//      System.out.println("Red Team: " + redTeam);
-//
-//      // ringset location
-//      TGx = ((Long) data.get("TG_x")).intValue();
-//      System.out.println("X component of the Green ring tree: " + TGx);
-//      TGy = ((Long) data.get("TG_y")).intValue();
-//
-//      // tunnel
-//      TLLx = ((Long) data.get("TNG_LL_x")).intValue();
-//      TLLy = ((Long) data.get("TNG_LL_y")).intValue();
-//      TURx = ((Long) data.get("TNG_UR_x")).intValue();
-//      TURy = ((Long) data.get("TNG_UR_y")).intValue();
-//
-//      // zone
-//      URx = ((Long) data.get("Green_UR_x")).intValue();
-//      URy = ((Long) data.get("Green_UR_y")).intValue();
-//      LLx = ((Long) data.get("Green_LL_x")).intValue();
-//      LLy = ((Long) data.get("Green_LL_y")).intValue();
-//
-//      // island
-//      IURx = ((Long) data.get("Island_UR_x")).intValue();
-//      IURy = ((Long) data.get("Island_UR_y")).intValue();
-//      ILLx = ((Long) data.get("Island_LL_x")).intValue();
-//      ILLy = ((Long) data.get("Island_LL_y")).intValue();
-//
-//    } catch (Exception e) {
-//      System.err.println("Error: " + e.getMessage());
-//    }
-      lcd.clear();
-      if (buttonChoice == Button.ID_LEFT) {
-        // test the track and wheels
-        navigation.turnTo(90);
-        navigation.moveForward(120, false);
-        navigation.floatWheels();
-        System.exit(0);
-      }
+//			lcd.clear();
+//			lcd.drawString("ready", 0, 0);
+			
+			//buttonChoice = Button.waitForAnyPress();
 
-      else if (buttonChoice == Button.ID_RIGHT) {
-        usLocalizer = new UltrasonicLocalizer(navigation);
-        lightLocalizer = new LightLocalizer(navigation);
-        ringSearch = new RingSearch(TGx, TGy, navigation);
+			WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
 
-        // beta demo algorithm
-        
-//        poller.disableCorrection();
-//        usLocalizer.fallingEdge();
-//        //lightLocalizer.moveToOrigin(SC);        
-//        poller.enableCorrection();
-        
-        
-        odometer.setX(7*30.48);
-        odometer.setY(30.48);
-        odometer.setTheta(0);
+			try {
+				Map data = conn.getData();
+				System.out.println("Map:\n" + data);
 
-        // beta demo algorithm
-        
-//        navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy);
-//        navigation.travelToRingSet(TGx, TGy);
-        
-//        navigation.travelTo(7, 3);
-//        navigation.travelTo(4, 3);
-//        navigation.travelTo(4, 1);
-//        navigation.travelTo(1, 1);
-        
-        
-        ringSearch.enableTunnel(true);
-        navigation.travelTo(TLLx + OFFSET, 1);
-        navigation.travelTo(TLLx + OFFSET, TLLy - 0.5);
-        
-        poller.disableCorrection();
-        navigation.travelTo(TLLx + OFFSET, TURy + 0.5);
-        poller.enableCorrection();
+				// Team specifics
+				int redTeam = ((Long) data.get("GreenTeam")).intValue();
+				System.out.println("Red Team: " + redTeam);
 
-        //no bot side
-        if(TGy <= ILLy + 1) {
-        	if(TGx < TURx) {
-        		//left side of tunnel
-        		navigation.travelTo(TLLx + OFFSET, TGy);
-        		navigation.travelTo(TGx + 1, TGy);
-        		navigation.turnTo(270);
-        	}
-        	else {
-        		//right side of tunnel
-        		navigation.travelTo(TLLx + OFFSET, TGy);
-        		navigation.travelTo(TGx - 1, TGy);
-        		navigation.turnTo(90);
-        	}
-        	
-        }
-        else {
-            navigation.travelTo(TGx, TURy + 0.5);
-            navigation.travelTo(TGx, TGy - 1);
-            navigation.turnTo(0);
-        }
-        poller.disableCorrection();
-        ringSearch.grabRing(0);
-      }
+				// ringset location
+				TGx = ((Long) data.get("TG_x")).intValue();
+				System.out.println("X component of the Green ring tree: " + TGx);
+				TGy = ((Long) data.get("TG_y")).intValue();
 
-      buttonChoice = Button.waitForAnyPress();
-    } while (Button.waitForAnyPress() != Button.ID_ESCAPE);
-    System.exit(0);
-  }
+				// tunnel
+				TLLx = ((Long) data.get("TNG_LL_x")).intValue();
+				TLLy = ((Long) data.get("TNG_LL_y")).intValue();
+				TURx = ((Long) data.get("TNG_UR_x")).intValue();
+				TURy = ((Long) data.get("TNG_UR_y")).intValue();
+
+				// zone
+				URx = ((Long) data.get("Green_UR_x")).intValue();
+				URy = ((Long) data.get("Green_UR_y")).intValue();
+				LLx = ((Long) data.get("Green_LL_x")).intValue();
+				LLy = ((Long) data.get("Green_LL_y")).intValue();
+
+				// island
+				IURx = ((Long) data.get("Island_UR_x")).intValue();
+				IURy = ((Long) data.get("Island_UR_y")).intValue();
+				ILLx = ((Long) data.get("Island_LL_x")).intValue();
+				ILLy = ((Long) data.get("Island_LL_y")).intValue();
+
+			} catch (Exception e) {
+				System.err.println("Error: " + e.getMessage());
+			}
+
+			lcd.clear();
+			if (buttonChoice == Button.ID_LEFT) {
+				// test the track and wheels
+				navigation.turnTo(90);
+				navigation.moveForward(120, false);
+				navigation.floatWheels();
+				System.exit(0);
+			}
+
+			else if (buttonChoice == Button.ID_RIGHT) {
+				usLocalizer = new UltrasonicLocalizer(navigation);
+				lightLocalizer = new LightLocalizer(navigation);
+				ringSearch = new RingSearch(TGx, TGy, navigation);
+
+				// beta demo algorithm
+
+				poller.disableCorrection();
+				usLocalizer.fallingEdge();
+				lightLocalizer.moveToOrigin(SC);
+				poller.enableCorrection();
+
+				// odometer.setX(7*30.48);
+				// odometer.setY(30.48);
+				// odometer.setTheta(0);
+
+				// beta demo algorithm
+
+				// navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy);
+				// navigation.travelToRingSet(TGx, TGy);
+
+				// navigation.travelTo(7, 3);
+				// navigation.travelTo(4, 3);
+				// navigation.travelTo(4, 1);
+				// navigation.travelTo(1, 1);
+
+				ringSearch.enableTunnel(true);
+
+				//if horizontal
+				if (TURx - TLLx > 1) {
+					navigation.travelTo(7, TLLy + OFFSET);
+					navigation.travelTo(TURx + OFFSET, TLLy + OFFSET);
+					poller.disableCorrection();
+					navigation.travelTo(TLLx - OFFSET, TLLy + OFFSET);
+					poller.enableCorrection();
+
+					navigation.travelTo(TGx, TLLy + OFFSET);
+
+					if (TGy <= TLLy) {
+						navigation.travelTo(TGx, TGy + 1);
+						navigation.turnTo(180);
+					} else {
+						navigation.travelTo(TGx, TGy - 1);
+						navigation.turnTo(0);
+					}
+
+				} else {
+					navigation.travelTo(TLLx + OFFSET, 1);
+					navigation.travelTo(TLLx + OFFSET, TLLy - 0.5);
+
+					poller.disableCorrection();
+					navigation.travelTo(TLLx + OFFSET, TURy + 0.5);
+					poller.enableCorrection();
+
+					if (TGx < TURx) {
+						// left side of tunnel
+						navigation.travelTo(TLLx + OFFSET, TGy);
+						navigation.travelTo(TGx + 1, TGy);
+						navigation.turnTo(270);
+					} else {
+						// right side of tunnel
+						navigation.travelTo(TLLx + OFFSET, TGy);
+						navigation.travelTo(TGx - 1, TGy);
+						navigation.turnTo(90);
+					}
+				}
+
+				poller.disableCorrection();
+				ringSearch.grabRing(0);
+			}
+
+			buttonChoice = Button.waitForAnyPress();
+		} while (Button.waitForAnyPress() != Button.ID_ESCAPE);
+		System.exit(0);
+	}
 }

@@ -49,7 +49,7 @@ public class RingSearch {
 	}
 
 	//0 low; 1 upper
-	public void grabRing(int ringPosition) {
+	public static void grabRing(int ringPosition) {
 //		switch(ringPosition) {
 //			case 0:
 //				upperMotor.rotate(-75, false);
@@ -63,23 +63,26 @@ public class RingSearch {
 //			default:
 //				break;
 //		}	
-		navigation.moveForward(D/2, false);
+		Navigation.moveForward(D/2, false);
 		upperMotor.rotate(-75, false);
-		navigation.moveForward(8, false);
-		lowerMotor.rotate(30, true);
-		navigation.moveForward(-D, false);
+		Navigation.moveForward(8, false);
+		Navigation.stop();
+		lowerMotor.rotate(30, false);
+		Navigation.moveForward(-D, false);
+		Navigation.stop();
 		upperMotor.rotate(75, false);
-		navigation.moveForward(D+2, false);
+		Navigation.moveForward(D+2, false);
+		Navigation.stop();
 		upperMotor.rotate(-30, true);
-		navigation.moveForward(-D, false);
-		navigation.stop();
+		Navigation.moveForward(-D, false);
+		Navigation.stop();
 	}
 	
 	public void enableTunnel(boolean immediateReturn) {
 		upperMotor.setSpeed(MOTOR_SPEED);
 		lowerMotor.setSpeed(MOTOR_SPEED);
 		lowerMotor.rotate(-70, true);
-		upperMotor.rotate(75, immediateReturn);
+		upperMotor.rotate(70, immediateReturn);
 	}
 	
 	public void disableTunnel(boolean immediateReturn) {
