@@ -38,19 +38,20 @@ public class OdometryCorrection{
 		}
 		
 		Project.lcd.drawString(angleCorrection + "    ", 0, 5);
-		
-		//Assume angle is within 45 degree precision
-		if((currentAngle < 45 && currentAngle > 0) || (currentAngle < 360 && currentAngle > 315)){
-			odometer.setTheta(angleCorrection);
-		}			
-		else if(currentAngle < 135 && currentAngle > 45){
-			odometer.setTheta(90 + angleCorrection);
-		}
-		else if(currentAngle < 225 && currentAngle > 135){
-			odometer.setTheta(180 + angleCorrection);
-		}
-		else if(currentAngle < 315 && currentAngle > 225){
-			odometer.setTheta(270 + angleCorrection);
+		if(angleCorrection < 10) {
+			//Assume angle is within 45 degree precision
+			if((currentAngle < 45 && currentAngle > 0) || (currentAngle < 360 && currentAngle > 315)){
+				odometer.setTheta(angleCorrection);
+			}			
+			else if(currentAngle < 135 && currentAngle > 45){
+				odometer.setTheta(90 + angleCorrection);
+			}
+			else if(currentAngle < 225 && currentAngle > 135){
+				odometer.setTheta(180 + angleCorrection);
+			}
+			else if(currentAngle < 315 && currentAngle > 225){
+				odometer.setTheta(270 + angleCorrection);	
+			}
 		}
 	}
   

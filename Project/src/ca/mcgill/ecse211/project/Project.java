@@ -142,25 +142,67 @@ public class Project {
         ringSearch = new RingSearch(TGx, TGy, navigation);
 
         // beta demo algorithm
-        poller.disableCorrection();
-        usLocalizer.fallingEdge();
-        lightLocalizer.moveToOrigin(SC);
-        poller.enableCorrection();
-        ringSearch.enableTunnel(true);
+//        poller.disableCorrection();
+//        usLocalizer.fallingEdge();
+//        //lightLocalizer.moveToOrigin(SC);        
+//        poller.enableCorrection();
+//        ringSearch.enableTunnel(true);
+//        
+        odometer.setX(0);
+        odometer.setY(0);
+        odometer.setTheta(0);
+        
+        navigation.travelTo(0, 4);
+        navigation.travelTo(4, 4);
 
         // beta demo algorithm
-        navigation.turnTo(270);
-        navigation.moveForward(30.48, false);
-        navigation.travelTo(TLLx + 0.5, 1);
-        navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
-        // poller.disable();
-        navigation.travelTo(TLLx + 0.5, TURy + 0.5);
-        // poller.enable();
-
-        navigation.travelTo(TGx, TURy + 0.5);
-        navigation.travelTo(TGx, TGy - 1);
-        // int ringLocation = ringSearch.findRing();
-        ringSearch.grabRing(0);
+        
+//        navigation.turnTo(270);
+//        navigation.moveForward(40, true);
+//        if(poller.getCurrentRedReading("left") < 0.33) {
+//        	navigation.stop();
+//        	navigation.rotateWheels(0, 50);
+//        	if(poller.getCurrentRedReading("right") < 0.33) {
+//        		navigation.stop();
+//        	}
+//        	
+//        }
+//        else if(poller.getCurrentRedReading("right") < 0.33) {
+//        	navigation.stop();
+//        	navigation.rotateWheels(50, 0);
+//        	if(poller.getCurrentRedReading("left") < 0.33) {
+//        		navigation.stop();
+//        	}
+//        }
+//        
+//       // navigation.moveForward(30.48, false);
+//        navigation.travelTo(TLLx + 0.5, 1);
+//        navigation.moveForward(40, true);
+//        navigation.turnTo(0);
+//        if(poller.getCurrentRedReading("left") < 0.33) {
+//        	navigation.stop();
+//        	navigation.rotateWheels(0, 50);
+//        	if(poller.getCurrentRedReading("right") < 0.33) {
+//        		navigation.stop();
+//        	}
+//        	
+//        }
+//        else if(poller.getCurrentRedReading("right") < 0.33) {
+//        	navigation.stop();
+//        	navigation.rotateWheels(50, 0);
+//        	if(poller.getCurrentRedReading("left") < 0.33) {
+//        		navigation.stop();
+//        	}
+//        }
+//        navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
+//        // poller.disable();
+//        navigation.travelTo(TLLx + 0.5, TURy + 0.5);
+//        // poller.enable();
+//
+//        navigation.travelTo(TGx, TURy + 0.5);
+//        navigation.travelTo(TGx, TGy - 1);
+//         
+//        ringSearch.grabRing(0);
       }
 
       buttonChoice = Button.waitForAnyPress();
