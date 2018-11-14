@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="DPM Initial Gantt Chart" company="" webLink="http://" view-date="2018-10-23" view-index="0" gantt-divider-location="443" resource-divider-location="420" version="2.8.9" locale="en_CA">
+    <description/>
+    <view zooming-state="default:1" id="gantt-chart">
+        <field id="tpd3" name="Name" width="273" order="0"/>
+        <field id="tpd4" name="Begin date" width="70" order="1"/>
+        <field id="tpd5" name="End date" width="79" order="2"/>
+        <option id="color.recent"><![CDATA[#000000 #ff9900 #eeeeee]]></option>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Name" width="263" order="0"/>
+        <field id="1" name="Default role" width="136" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="true"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+        <date year="2017" month="2" date="27" type="HOLIDAY"/>
+        <date year="2017" month="2" date="28" type="HOLIDAY"/>
+        <date year="2017" month="3" date="1" type="HOLIDAY"/>
+        <date year="2017" month="3" date="2" type="HOLIDAY"/>
+        <date year="2017" month="3" date="3" type="HOLIDAY"/>
+        <date year="2017" month="3" date="4" type="HOLIDAY"/>
+        <date year="2017" month="3" date="5" type="HOLIDAY"/>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="35" name="Complete Software Design" color="#000000" meeting="false" start="2018-10-25" duration="7" complete="0" thirdDate="2018-02-28" thirdDate-constraint="0" expand="true">
+            <depend id="38" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="25" name="Second Design Meeting" color="#ff0033" meeting="true" start="2018-10-26" duration="0" complete="0" thirdDate="2018-03-15" thirdDate-constraint="0" expand="true">
+            <depend id="57" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="57" name="Detailed Testing Plan" color="#000000" meeting="false" start="2018-10-26" duration="3" complete="0" thirdDate="2018-03-15" thirdDate-constraint="0" expand="true">
+            <depend id="41" type="2" difference="0" hardness="Rubber"/>
+            <depend id="77" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="32" name="Build Preliminary Physical Model" color="#000000" meeting="false" start="2018-10-27" duration="8" complete="0" thirdDate="2018-10-24" thirdDate-constraint="0" expand="true">
+            <depend id="48" type="2" difference="0" hardness="Strong"/>
+            <depend id="120" type="2" difference="0" hardness="Strong"/>
+            <task id="594" name="Additional Arm Designs" color="#000000" meeting="false" start="2018-10-27" duration="3" complete="0" thirdDate="2018-11-01" thirdDate-constraint="0" expand="true">
+                <depend id="623" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="623" name="Build Robot with chosen design" color="#000000" meeting="false" start="2018-10-30" duration="5" complete="0" thirdDate="2018-11-01" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="48" name="Complete Beta Mechanical Design" color="#000000" meeting="false" start="2018-11-04" duration="3" complete="0" thirdDate="2018-03-01" thirdDate-constraint="0" expand="true">
+            <depend id="671" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="38" name="Preliminary API docs" color="#000000" meeting="false" start="2018-11-01" duration="1" complete="0" thirdDate="2018-03-10" thirdDate-constraint="0" expand="true">
+            <depend id="51" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="51" name="Software development phase 1" color="#000000" meeting="false" start="2018-11-02" duration="3" complete="0" thirdDate="2018-11-07" thirdDate-constraint="0" expand="true">
+            <depend id="81" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="41" name="Third Design Meeting" color="#ff0033" meeting="true" start="2018-11-02" duration="0" complete="0" thirdDate="2018-03-22" thirdDate-constraint="1" expand="true">
+            <depend id="98" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="81" name="Completion of software for beta demo" color="#000000" meeting="false" start="2018-11-05" duration="7" complete="0" thirdDate="2018-03-17" thirdDate-constraint="0" expand="true">
+            <depend id="88" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="64" name="Beta demo preparation" color="#000000" meeting="false" start="2018-11-07" duration="2" complete="0" thirdDate="2018-11-12" thirdDate-constraint="0" expand="true">
+            <depend id="98" type="2" difference="0" hardness="Strong"/>
+            <task id="688" name="Choose color sensor location" color="#000000" meeting="false" start="2018-11-07" duration="1" complete="0" thirdDate="2018-11-04" thirdDate-constraint="0" expand="true"/>
+            <task id="653" name="Software: Add Odometry Correction" color="#000000" meeting="false" start="2018-11-08" duration="1" complete="0" thirdDate="2018-11-04" thirdDate-constraint="0" expand="true">
+                <depend id="667" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="648" name="Beta hardware testing" color="#000000" meeting="false" start="2018-11-07" duration="7" complete="0" thirdDate="2018-11-03" thirdDate-constraint="0" expand="true">
+            <task id="665" name="Tunnel navigation" color="#000000" meeting="false" start="2018-11-07" duration="1" complete="0" thirdDate="2018-10-30" thirdDate-constraint="0" expand="true"/>
+            <task id="671" name="Navigation" color="#000000" meeting="false" start="2018-11-07" duration="3" complete="0" thirdDate="2018-03-12" thirdDate-constraint="0" expand="true">
+                <depend id="77" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="666" name="Localization" color="#000000" meeting="false" start="2018-11-08" duration="1" complete="0" thirdDate="2018-11-03" thirdDate-constraint="0" expand="true"/>
+            <task id="667" name="Odometer Correction" color="#000000" meeting="false" start="2018-11-09" duration="2" complete="0" thirdDate="2018-11-03" thirdDate-constraint="0" expand="true"/>
+            <task id="669" name="Getting &amp; Detecting Rings" color="#000000" meeting="false" start="2018-11-12" duration="2" complete="0" thirdDate="2018-11-02" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="77" name="Complete testing of mechanical design" color="#8cb6ce" meeting="false" start="2018-11-10" duration="2" complete="0" expand="true">
+            <depend id="88" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="88" name="Initial test of mech and soft for beta" color="#8cb6ce" meeting="false" start="2018-11-12" duration="1" complete="0" thirdDate="2018-11-13" thirdDate-constraint="0" expand="true">
+            <depend id="94" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="94" name="Full testing for beta demo" color="#8cb6ce" meeting="false" start="2018-11-13" duration="1" complete="0" thirdDate="2018-03-21" thirdDate-constraint="0" expand="true">
+            <depend id="98" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="98" name="Beta Demo Milestone" color="#00ff00" meeting="true" start="2018-11-14" duration="0" complete="0" thirdDate="2018-03-23" thirdDate-constraint="1" expand="true">
+            <depend id="105" type="2" difference="0" hardness="Strong"/>
+            <depend id="111" type="2" difference="0" hardness="Strong"/>
+            <depend id="120" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="105" name="Revisions and testing from beta" color="#8cb6ce" meeting="false" start="2018-11-14" duration="7" complete="0" thirdDate="2018-11-17" thirdDate-constraint="0" expand="true">
+            <depend id="116" type="2" difference="0" hardness="Rubber"/>
+        </task>
+        <task id="108" name="Development of Checklist" color="#8cb6ce" meeting="false" start="2018-11-24" duration="2" complete="0" thirdDate="2018-03-23" thirdDate-constraint="0" expand="true">
+            <depend id="480" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="111" name="Phase 1 integration testing" color="#8cb6ce" meeting="false" start="2018-11-14" duration="5" complete="0" thirdDate="2018-03-23" thirdDate-constraint="0" expand="true">
+            <depend id="124" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="116" name="Fourth Design Meeting" color="#ff0033" meeting="true" start="2018-11-24" duration="0" complete="0" thirdDate="2018-03-29" thirdDate-constraint="1" expand="true">
+            <depend id="108" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="480" name="Fifth Design Meeting" color="#8cb6ce" meeting="true" start="2018-11-26" duration="0" complete="0" thirdDate="2018-04-05" thirdDate-constraint="1" expand="true">
+            <depend id="490" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="120" name="Phase 1 poster design" color="#8cb6ce" meeting="false" start="2018-11-14" duration="6" complete="0" expand="true">
+            <depend id="128" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="124" name="Final Integation Testing part 1" color="#8cb6ce" meeting="false" start="2018-11-19" duration="4" complete="0" thirdDate="2018-03-28" thirdDate-constraint="0" expand="true">
+            <depend id="480" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="490" name="Final Integration Testing Part 2" color="#8cb6ce" meeting="false" start="2018-11-26" duration="5" complete="0" thirdDate="2018-04-05" thirdDate-constraint="0" expand="true">
+            <depend id="132" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="128" name="Final Poster Design and Print" color="#8cb6ce" meeting="false" start="2018-11-20" duration="7" complete="0" thirdDate="2018-03-29" thirdDate-constraint="0" expand="true">
+            <depend id="132" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="132" name="Final Demo" color="#333333" meeting="true" start="2018-12-01" duration="0" complete="0" thirdDate="2018-04-11" thirdDate-constraint="1" expand="true">
+            <depend id="135" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="135" name="Final document preparation for submission" color="#8cb6ce" meeting="false" start="2018-12-01" duration="3" complete="0" thirdDate="2018-04-11" thirdDate-constraint="0" expand="true">
+            <depend id="138" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="138" name="Final Class" color="#333333" meeting="true" start="2018-12-04" duration="0" complete="0" thirdDate="2018-04-13" thirdDate-constraint="1" expand="true"/>
+        <task id="717" name="" color="#8cb6ce" meeting="false" start="2018-10-01" duration="1" complete="0" thirdDate="2018-10-17" thirdDate-constraint="0" expand="true"/>
+        <task id="0" name="Project Kick off" color="#000000" meeting="false" start="2018-10-17" duration="1" complete="0" thirdDate="2017-10-15" thirdDate-constraint="0" expand="true">
+            <depend id="1" type="2" difference="0" hardness="Strong"/>
+            <depend id="2" type="2" difference="0" hardness="Strong"/>
+            <depend id="135" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="1" name="First version of the 4 documents" color="#000000" meeting="false" start="2018-10-18" duration="1" complete="0" thirdDate="2018-02-20" thirdDate-constraint="0" expand="true" cost-manual-value="1.0" cost-calculated="false">
+            <depend id="3" type="2" difference="0" hardness="Strong"/>
+            <depend id="204" type="2" difference="0" hardness="Strong"/>
+            <depend id="398" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="2" name="Preliminary design ideas" color="#000000" meeting="false" start="2018-10-18" duration="1" complete="0" thirdDate="2018-02-20" thirdDate-constraint="0" expand="true" cost-manual-value="1.0" cost-calculated="false">
+            <depend id="204" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="398" name="Test Plans for Testing Document" color="#000000" meeting="false" start="2018-10-19" duration="3" complete="0" thirdDate="2018-02-22" thirdDate-constraint="0" expand="true" cost-manual-value="3.0" cost-calculated="false">
+            <depend id="25" type="2" difference="0" hardness="Rubber"/>
+        </task>
+        <task id="204" name="Idea Evaluation" color="#000000" meeting="false" start="2018-10-19" duration="1" complete="0" thirdDate="2018-02-22" thirdDate-constraint="0" expand="true" cost-manual-value="1.0" cost-calculated="false">
+            <depend id="14" type="2" difference="0" hardness="Strong"/>
+            <depend id="17" type="2" difference="0" hardness="Strong"/>
+            <depend id="234" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="3" name="First Design Meeting" color="#ff0033" meeting="true" start="2018-10-19" duration="0" complete="0" thirdDate="2018-03-01" thirdDate-constraint="1" expand="true" cost-manual-value="1.5" cost-calculated="false"/>
+        <task id="234" name="Update Gantt Chart" color="#000000" meeting="false" start="2018-10-20" duration="1" complete="0" thirdDate="2018-02-18" thirdDate-constraint="0" expand="true" cost-manual-value="1.0" cost-calculated="false">
+            <depend id="22" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="14" name="Mechanical Design Proposal" color="#000000" meeting="false" start="2018-10-20" duration="2" complete="0" thirdDate="2018-02-23" thirdDate-constraint="0" expand="true" cost-manual-value="1.0" cost-calculated="false">
+            <depend id="25" type="2" difference="0" hardness="Rubber"/>
+            <depend id="28" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="22" name="Documentation updates" color="#000000" meeting="false" start="2018-10-21" duration="3" complete="0" thirdDate="2018-02-24" thirdDate-constraint="0" expand="true" cost-manual-value="1.0" cost-calculated="false"/>
+        <task id="28" name="Choose Mechanical Arm Design" color="#000000" meeting="false" start="2018-10-22" duration="1" complete="0" thirdDate="2018-03-08" thirdDate-constraint="0" expand="true">
+            <depend id="32" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="17" name="Software Architecture" color="#000000" meeting="false" start="2018-10-23" duration="2" complete="0" thirdDate="2018-02-23" thirdDate-constraint="0" expand="false">
+            <depend id="35" type="2" difference="0" hardness="Strong"/>
+            <task id="494" name="Preliminary Software Flow" color="#000000" meeting="false" start="2018-10-23" duration="2" complete="0" thirdDate="2018-10-13" thirdDate-constraint="0" expand="true" cost-manual-value="1.0" cost-calculated="false"/>
+            <task id="495" name="Preliminary Class Diagram" color="#000000" meeting="false" start="2018-10-24" duration="1" complete="0" thirdDate="2018-10-13" thirdDate-constraint="0" expand="true" cost-manual-value="1.0" cost-calculated="false"/>
+        </task>
+        <task id="501" name="Update Budget" color="#000000" meeting="false" start="2018-10-24" duration="1" complete="0" thirdDate="2018-10-13" thirdDate-constraint="0" expand="true" cost-manual-value="1.0" cost-calculated="false"/>
+    </tasks>
+    <resources>
+        <resource id="0" name="Christiana Chen" function="Default:1" contacts="christiana.chen@mail.mcgill.ca" phone="514-531-7539"/>
+        <resource id="1" name="Sophie Deng" function="2" contacts="" phone=""/>
+        <resource id="2" name="Ayse Ozhasman" function="6" contacts="" phone=""/>
+        <resource id="3" name="Hugo Parent-Pothier" function="3" contacts="" phone=""/>
+        <resource id="4" name="Mohammad Edris Jebran" function="5" contacts="" phone=""/>
+        <resource id="5" name="Edward Huang" function="4" contacts="" phone=""/>
+    </resources>
+    <allocations>
+        <allocation task-id="1" resource-id="0" function="Default:1" responsible="false" load="100.0"/>
+        <allocation task-id="204" resource-id="0" function="Default:1" responsible="true" load="100.0"/>
+        <allocation task-id="495" resource-id="0" function="Default:1" responsible="false" load="10.0"/>
+        <allocation task-id="501" resource-id="0" function="Default:1" responsible="true" load="100.0"/>
+        <allocation task-id="22" resource-id="0" function="Default:1" responsible="false" load="25.0"/>
+        <allocation task-id="234" resource-id="0" function="Default:1" responsible="true" load="100.0"/>
+        <allocation task-id="1" resource-id="1" function="2" responsible="true" load="100.0"/>
+        <allocation task-id="204" resource-id="1" function="2" responsible="false" load="100.0"/>
+        <allocation task-id="495" resource-id="1" function="2" responsible="true" load="100.0"/>
+        <allocation task-id="22" resource-id="1" function="2" responsible="true" load="75.0"/>
+        <allocation task-id="1" resource-id="2" function="6" responsible="false" load="50.0"/>
+        <allocation task-id="2" resource-id="2" function="6" responsible="false" load="50.0"/>
+        <allocation task-id="204" resource-id="2" function="6" responsible="false" load="100.0"/>
+        <allocation task-id="14" resource-id="2" function="6" responsible="false" load="100.0"/>
+        <allocation task-id="1" resource-id="3" function="3" responsible="false" load="50.0"/>
+        <allocation task-id="2" resource-id="3" function="3" responsible="true" load="50.0"/>
+        <allocation task-id="204" resource-id="3" function="3" responsible="false" load="100.0"/>
+        <allocation task-id="14" resource-id="3" function="3" responsible="true" load="100.0"/>
+        <allocation task-id="1" resource-id="4" function="5" responsible="false" load="100.0"/>
+        <allocation task-id="398" resource-id="4" function="5" responsible="true" load="100.0"/>
+        <allocation task-id="1" resource-id="5" function="4" responsible="false" load="100.0"/>
+        <allocation task-id="204" resource-id="5" function="4" responsible="false" load="100.0"/>
+        <allocation task-id="494" resource-id="5" function="4" responsible="true" load="100.0"/>
+    </allocations>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+    <roles roleset-name="SoftwareDevelopment"/>
+    <roles>
+        <role id="1" name="Team Manager"/>
+        <role id="2" name="Documentation Manager"/>
+        <role id="3" name="Hardware Lead Designer"/>
+        <role id="4" name="Software Lead Designer"/>
+        <role id="5" name="Testing Manager"/>
+        <role id="6" name="Team Memnber (Hardware)"/>
+        <role id="7" name="Team Member (Software)"/>
+        <role id="8" name=""/>
+    </roles>
+</project>
