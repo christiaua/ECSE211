@@ -20,14 +20,15 @@ public class Navigation {
       new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 
   private static final double WHEEL_RAD = 2.075;
-  private static final double TRACK = 13.725;
+  private static final double TRACK = 13.5;
   private static final double TILE_SIZE = 30.48;
 
   public static final int FORWARD_SPEED = 200;
   public static final int ROTATE_SPEED = 150;
 
   private Odometer odo = null;
-  public double[] currentDest = {0, 0};
+  private static double[] currentDest = {0, 0};
+  private static boolean turning = false;
 
   /**
    * Constructor
@@ -381,8 +382,33 @@ public class Navigation {
     currentPosition = odo.getXYT();
     currentDistance =
         calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
-    moveForward(currentDistance, false);
-    
+
+    moveForward(currentDistance, true);
+    while(true) {
+    	currentPosition = odo.getXYT();
+	    if(Math.abs(currentPosition[2] - angleToTurnTo) > 5 || 
+	    		Math.abs(currentPosition[2] - angleToTurnTo) > 355) {
+		    stop();
+		    turnTo(angleToTurnTo);    
+		    currentDistance =
+		        calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
+		    moveForward(currentDistance, true);
+	    }
+	    if(!leftMotor.isMoving() && !rightMotor.isMoving()) {
+	    	break;
+	    }
+    }
+  }
+  
+  public void continueTraveling() {
+	  stop();
+	  try {
+		  Thread.sleep(30);
+	  }catch(Exception e) {
+		  
+	  }
+	  travelTo(currentDest[0], currentDest[1]);
+
   }
 
   public void travelToStraight(double x, double y) {

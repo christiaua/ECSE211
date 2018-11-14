@@ -123,6 +123,7 @@ public class Poller implements Runnable {
 			redSample2.fetchSample(redData2, 0);
 			
 			if(correctionEnabled) {
+				
 				if(redData1[0] < 0.33 && tachoL == -1000){
 					tachoL = navigation.getTacho("left");
 				}
@@ -131,8 +132,10 @@ public class Poller implements Runnable {
 				}
 				if(!navigation.isTurning() && tachoL != -1000 && tachoR != -1000){
 					odometryCorrector.correctAngle(tachoL, tachoR);
+					//navigation.continueTraveling();
 					tachoL = -1000;
 					tachoR = -1000;
+					Sound.beep();
 				}
 			}
 			lastRedReading1 = currentRedReading1;
