@@ -146,21 +146,39 @@ public class Project {
         usLocalizer.fallingEdge();
         lightLocalizer.moveToOrigin(SC);
         poller.enableCorrection();
+
         ringSearch.enableTunnel(true);
 
-        // beta demo algorithm
-        navigation.turnTo(270);
-        navigation.moveForward(30.48, false);
-        navigation.travelTo(TLLx + 0.5, 1);
-        navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
-        // poller.disable();
-        navigation.travelTo(TLLx + 0.5, TURy + 0.5);
-        // poller.enable();
+        
+     
+        //ringSearch.enableTunnel(false);
+      
+        //odometer.setXYT(30.48, 30.48, 0);
+        //navigation.travelTo(2, odometer.getXYT()[1] / 30.48);
+        //navigation.travelToYellowZone(TLLx, TLLy, TURx, TURy);
 
-        navigation.travelTo(TGx, TURy + 0.5);
-        navigation.travelTo(TGx, TGy - 1);
-        // int ringLocation = ringSearch.findRing();
-        ringSearch.grabRing(0);
+        //navigation.travelToRingSet(TGx, TGy); 
+       
+        // travel to nearest corner of
+        // the 2x2 square on which the ring set is centered
+        // startingCocmdrner is an int from 0 to 3. 0 is lower left, 1 is lower right, 2 is upper
+        // right, 3 is upper left
+
+
+
+//        // beta demo algorithm
+//        navigation.turnTo(270);
+//        navigation.moveForward(30.48, false);
+//        navigation.travelTo(TLLx + 0.5, 1);
+//        navigation.travelTo(TLLx + 0.5, TLLy - 0.5);
+//        // poller.disable();
+//        navigation.travelTo(TLLx + 0.5, TURy + 0.5);
+//        // poller.enable();
+//
+//        navigation.travelTo(TGx, TURy + 0.5);
+//        navigation.travelTo(TGx, TGy - 1);
+//        // int ringLocation = ringSearch.findRing();
+//        ringSearch.grabRing(0);
       }
 
       buttonChoice = Button.waitForAnyPress();

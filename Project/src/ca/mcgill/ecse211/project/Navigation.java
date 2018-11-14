@@ -239,23 +239,23 @@ public class Navigation {
     switch (neighborNumber) {
       // down
       case 0:
-        neighbor_x = (rs_x) * TILE_SIZE;
-        neighbor_y = (rs_y - 1) * TILE_SIZE;
+        neighbor_x = (rs_x);
+        neighbor_y = (rs_y - 1);
         break;
       // right
       case 1:
-        neighbor_x = (rs_x + 1) * TILE_SIZE;
-        neighbor_y = (rs_y) * TILE_SIZE;
+        neighbor_x = (rs_x + 1) ;
+        neighbor_y = (rs_y) ;
         break;
       // up
       case 2:
-        neighbor_x = (rs_x) * TILE_SIZE;
-        neighbor_y = (rs_y + 1) * TILE_SIZE;
+        neighbor_x = (rs_x);
+        neighbor_y = (rs_y + 1) ;
         break;
       // left
       case 3:
-        neighbor_x = (rs_x - 1) * TILE_SIZE;
-        neighbor_y = (rs_y) * TILE_SIZE;
+        neighbor_x = (rs_x - 1) ;
+        neighbor_y = (rs_y);
         break;
       default:
         return -1; // error
@@ -263,7 +263,7 @@ public class Navigation {
 
 
     // always move in x axis first (arbitrary)
-    travelTo(neighbor_x, odo.getXYT()[1]);
+    travelTo(neighbor_x, odo.getXYT()[1]/TILE_SIZE);
     // move in y axis
     travelTo(neighbor_x, neighbor_y);
 
@@ -382,6 +382,7 @@ public class Navigation {
     currentDistance =
         calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);
     moveForward(currentDistance, false);
+    
   }
 
   public void travelToStraight(double x, double y) {
