@@ -12,15 +12,15 @@ import ca.mcgill.ecse211.project.Navigation.Side;
  * @author Hugo Parent-Pothier
  */
 public class LightLocalizer {
-  private Odometer odo;
+  private static Odometer odo;
 
   private static final int MAX_DISTANCE = 70;
-  private Poller poller;
-  private double x;
-  private double y;
+  private static Poller poller;
+  private static double x;
+  private static double y;
   private static final double D = 10;
-  private double dthetaY;
-  private Navigation navigation;
+  private static double dthetaY;
+  private static Navigation navigation;
   private static final double TILE_SIZE = 30.48;
   private static final double FIELD_WIDTH = 8 * TILE_SIZE;
   private static final double FIELD_HEIGHT = 8 * TILE_SIZE;
@@ -34,9 +34,9 @@ public class LightLocalizer {
    * @throws PollerException
    */
   public LightLocalizer(Navigation nav) throws OdometerExceptions, PollerException {
-    this.poller = Poller.getPoller();
-    this.odo = Odometer.getOdometer();
-    this.navigation = nav;
+    LightLocalizer.poller = Poller.getPoller();
+    LightLocalizer.odo = Odometer.getOdometer();
+    LightLocalizer.navigation = nav;
   }
 
   /**
@@ -44,7 +44,7 @@ public class LightLocalizer {
    * Moves to the corner of the starting tile when done.
    * @param SC The starting corner (0, 1, 2, or 3).
    */
-  public void moveToOrigin(int SC) {
+public static void moveToOrigin(int SC) {
     int lineCount = 0;
     double[] theta = new double[4];
     double thetaY;
@@ -56,13 +56,13 @@ public class LightLocalizer {
 
     while (true) {
       // checks if robot crosses a line while moving
-      if (navigation.isNavigating() && poller.getLightSensorData(Side.LEFT, true) < 0.33) {
+      if (Navigation.isNavigating() && poller.getLightSensorData(Side.LEFT, true) < 0.33) {
         Navigation.stop();
         Sound.beep();
         break;
       }
       // checks if robot stopped moving without seeing a line
-      if (!navigation.isNavigating()) {
+      if (!Navigation.isNavigating()) {
         // go backwards until seeing a line
         Navigation.backwards();
       }
@@ -73,7 +73,7 @@ public class LightLocalizer {
     // perform a 360
     Navigation.rotate(360, true);
 
-    while (navigation.isNavigating()) {
+    while (Navigation.isNavigating()) {
       if (poller.getLightSensorData(Side.LEFT, false)
           - poller.getLightSensorData(Side.LEFT, true) > 0.1) {
         Sound.beep();

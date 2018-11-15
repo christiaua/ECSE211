@@ -272,7 +272,7 @@ public class Navigation {
    * Checks if the robot is navigating.
    * @return True if robot is navigating, False if not navigating.
    */
-  public boolean isNavigating() {
+  public static boolean isNavigating() {
     if (leftMotor.isMoving() || rightMotor.isMoving())
       return true;
     else
@@ -283,14 +283,14 @@ public class Navigation {
    * Checks if the robot is turning.
    * @return True if robot is turning, False if not turning.
    */
-  public boolean isTurning() {
+  public static boolean isTurning() {
     if (leftMotor.getSpeed() == ROTATE_SPEED || rightMotor.getSpeed() == ROTATE_SPEED)
       return true;
     else
       return false;
   }
   
-  public int getTacho(Side side) {
+  public static int getTacho(Side side) {
     if (side == Side.LEFT) {
       return leftMotor.getTachoCount();
     } else if (side == Side.RIGHT) {

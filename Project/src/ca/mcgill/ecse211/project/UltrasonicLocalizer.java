@@ -46,7 +46,7 @@ public class UltrasonicLocalizer {
 		double actualHeading;
 		double dtheta;
 		
-		navigation.rotate(360, true);
+		Navigation.rotate(360, true);
 		
 		for(int i = 0; i < 2; i++){
 			while(true){
@@ -66,9 +66,9 @@ public class UltrasonicLocalizer {
 					    } 
 					}
 					fallingEdgeAngle[i] = (temp1 + temp2) / 2;
-					navigation.stop();
+					Navigation.stop();
 					if(i == 0){
-						navigation.rotate(-360, true);
+						Navigation.rotate(-360, true);
 					}
 					break;
 				}
@@ -88,6 +88,6 @@ public class UltrasonicLocalizer {
 		
 		actualHeading = odo.getXYT()[2] + dtheta;
 		odo.setTheta(actualHeading);
-		navigation.turnTo(0);
+		Navigation.turnTo(0);
 	}
 }
