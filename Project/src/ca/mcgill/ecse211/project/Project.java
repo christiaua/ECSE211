@@ -137,10 +137,10 @@ public class Project {
         ringSearch = new RingSearch(TGx, TGy, navigation);
 
         // beta demo algorithm
-        poller.disableCorrection();
+        poller.enableCorrection(false);
         usLocalizer.fallingEdge();
         lightLocalizer.moveToOrigin(SC);
-        poller.enableCorrection();
+        poller.enableCorrection(true);
         ringSearch.enableTunnel(true);
 
         // If tunnel horizontal
@@ -148,9 +148,9 @@ public class Project {
           Navigation.turnTo(0);
           Navigation.travelTo(7, TLLy + OFFSET);
           Navigation.travelTo(TURx + OFFSET, TLLy + OFFSET);
-          poller.disableCorrection();
+          poller.enableCorrection(false);
           Navigation.travelTo(TLLx - OFFSET, TLLy + OFFSET);
-          poller.enableCorrection();
+          poller.enableCorrection(true);
 
           Navigation.travelTo(TGx, TLLy + OFFSET);
 
@@ -166,9 +166,9 @@ public class Project {
           Navigation.travelTo(TLLx + OFFSET, 1);
           Navigation.travelTo(TLLx + OFFSET, TLLy - 0.5);
 
-          poller.disableCorrection();
+          poller.enableCorrection(false);
           Navigation.travelTo(TLLx + OFFSET, TURy + 0.5);
-          poller.enableCorrection();
+          poller.enableCorrection(true);
 
           if (TGx < TURx) {
             // left side of tunnel
@@ -182,7 +182,7 @@ public class Project {
             Navigation.turnTo(90);
           }
         }
-        poller.disableCorrection();
+        poller.enableCorrection(false);
         RingSearch.grabRing(0);
       }
       buttonChoice = Button.waitForAnyPress();
