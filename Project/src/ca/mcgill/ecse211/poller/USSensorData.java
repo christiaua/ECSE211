@@ -6,7 +6,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * This class processes the ultrasonic sensor data
+ * This class processes the ultrasonic sensor data.
  * 
  * @author Edward Huang
  * @author Hugo Parent-Pothier
@@ -39,8 +39,8 @@ public class USSensorData {
 	}
 
 	/**
-	 * get the one instance of the class or creates new if doesn't exist
-	 * @return the one instance of USSensorData
+	 * Gets the one instance of the class or creates a new instance if one doesn't exist already.
+	 * @return USSensorData instance.
 	 * @throws PollerException
 	 */
 	public synchronized static USSensorData getSensorData() throws PollerException {
@@ -58,8 +58,8 @@ public class USSensorData {
 
 
 	/**
-	 * Get the filtered distance to the wall
-	 * @return distance
+	 * Get the distance read by the ultrasonic sensor after it has been filtered.
+	 * @return distance The filtered distance.
 	 */
 	public double getDistance() {
 		double d = 0;
@@ -78,8 +78,8 @@ public class USSensorData {
 	}
 	
 	/**
-	 * Get the filtered previous distance to the wall
-	 * @return distance
+	 * Get the previous ultrasonic sensor reading after it has been filtered.
+	 * @return distance The previous ultrasonic sensor reading after it has been filtered.
 	 */
 	public double getLastDistance() {
 		double d = 0;
@@ -99,8 +99,9 @@ public class USSensorData {
 
 
 	/**
-	 * Updates the wall distance, samples and filters the data
-	 * @param newDistance
+	 * Filters ultrasonic sensor data by taking the median of previous readings.
+	 * Updates the current and previous filtered ultrasonic sensor readings.
+	 * @param newDistance The unfiltered ultrasonic sensor reading.
 	 */
 	public void updateDistance(double newDistance) {
 		lock.lock();

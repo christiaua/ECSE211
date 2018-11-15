@@ -164,8 +164,8 @@ public class Poller implements Runnable {
   /**
    * Get red value of specified sensor
    * 
-   * @param side
-   * @param current
+   * @param side The light sensor from which to get data from.
+   * @param current 
    * @return sensor reading
    */
   public float getLightSensorData(Side side, boolean current) {
@@ -185,27 +185,27 @@ public class Poller implements Runnable {
   }
 
   /**
-   * Get the filtered distance to the wall
+   * Get the filtered ultrasonic sensor reading.
    * 
-   * @return distance
+   * @return distance The filtered ultrasonic sensor reading.
    */
   public double getDistance() {
     return sensorData.getDistance();
   }
 
   /**
-   * Get the filtered distance to the wall
+   * Get the previous filtered ultrasonic sensor reading.
    * 
-   * @return distance
+   * @return distance The previous filtered ultrasonic sensor reading.
    */
   public double getLastDistance() {
     return sensorData.getLastDistance();
   }
 
   /**
-   * Get the colour of the detected ring
+   * Get the colour of the detected ring.
    * 
-   * @return colour
+   * @return colour The colour of the detected ring.
    */
   public ColourType getColour() {
     return ringDetector.getColourType();

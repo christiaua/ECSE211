@@ -22,8 +22,8 @@ public class UltrasonicLocalizer {
 	
 	/**
 	 * Constructor
-	 * @param usPoller
-	 * @param nav
+	 * @param usPoller This object is used to poll the ultrasonic sensor.
+	 * @param nav This object is used to control the robot's motors.
 	 * @throws OdometerExceptions
 	 */
 	public UltrasonicLocalizer(Navigation nav) throws OdometerExceptions, PollerException{
@@ -88,29 +88,6 @@ public class UltrasonicLocalizer {
 		
 		actualHeading = odo.getXYT()[2] + dtheta;
 		odo.setTheta(actualHeading);
-		turnTo(0);
-	}
-	
-	/**
-	   * This method turns the robot in place to the absolute angle theta.
-	   * @param theta
-	   */
-	private void turnTo(double theta){
-		double currentTheta = odo.getXYT()[2];
-		double dtheta = theta - currentTheta;
-		double minAngle;
-		  
-		//calculate minimum angle needed to turn to get to desired angle
-		if(Math.abs(dtheta) > 180){
-			if(dtheta > 0)
-				minAngle = dtheta - 360;
-			else
-				minAngle = dtheta + 360;
-		}
-		else
-			minAngle = dtheta;
-		  
-		 	//set motor speed
-		 	navigation.rotate(minAngle, false);
+		navigation.turnTo(0);
 	}
 }

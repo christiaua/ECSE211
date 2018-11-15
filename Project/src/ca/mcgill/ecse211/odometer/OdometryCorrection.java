@@ -6,6 +6,11 @@ package ca.mcgill.ecse211.odometer;
 import ca.mcgill.ecse211.poller.*;
 import ca.mcgill.ecse211.project.Project;
 
+/**
+ * This class is used to correct the heading of the robot using information from an odometer.
+ * @author Edward Huang
+ *
+ */
 public class OdometryCorrection{
   private static final double DIST_BETWEEN_SENSORS = 12.5;
   private static final double WHEEL_RAD = 2.2;
@@ -16,12 +21,19 @@ public class OdometryCorrection{
    * ensure thread safety.
    * 
    * @throws OdometerExceptions
- * @throws PollerException 
    */
   public OdometryCorrection() throws OdometerExceptions{
 	  this.odometer = Odometer.getOdometer();
   }
   
+  /**
+   * Corrects the angle of the robot given the tacho count of the motors on the detection of a line
+   * by the left light sensor, and the detection of a line by the right sensor.
+   * @param tacho_at_left_detection The tacho count of the motors on the detection of a line
+   * by the left light sensor.
+   * @param tacho_at_right_detection The tacho count of the motors on the detection of a line
+   * by the right light sensor.
+   */
   public void correctAngle(int tacho_at_left_detection, int tacho_at_right_detection){
 	  	double angleCorrection;
 		double dtacho = Math.abs(tacho_at_left_detection - tacho_at_right_detection);

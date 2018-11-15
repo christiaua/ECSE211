@@ -53,10 +53,10 @@ public class Navigation {
   }
 
   /**
-   * Moves the robot forwards a distance. A negative distance implies going backwards
+   * Moves the robot forwards a distance.
    * 
-   * @param distance
-   * @param immediateReturn
+   * @param distance The distance to move. A negative distance implies going backwards.
+   * @param immediateReturn To give immediate return or not.
    */
   public static void moveForward(double distance, boolean immediateReturn) {
     stop();
@@ -73,8 +73,8 @@ public class Navigation {
   /**
    * Rotates the robot by certain angle. Positive angle is clockwise
    * 
-   * @param angle
-   * @param immediateReturn
+   * @param angle The angle to rotate by.
+   * @param immediateReturn To give immediate return or not.
    */
   public static void rotate(double angle, boolean immediateReturn) {
     setSpeed(ROTATE_SPEED);
@@ -88,10 +88,10 @@ public class Navigation {
   }
 
   /**
-   * This method controls the robot to move towards x, y (tile position)
+   * This method controls the robot to move towards x, y (tile position).
    * 
-   * @param x
-   * @param y
+   * @param x The x position to travel to.
+   * @param y The y position to travel to.
    */
   public static void travelTo(double x, double y) {
     double angleToTurnTo;
@@ -127,7 +127,7 @@ public class Navigation {
   /**
    * This method turns the robot in place to the absolute angle theta.
    * 
-   * @param theta
+   * @param theta The angle to turn to.
    */
   public static void turnTo(double theta) {
     double currentTheta = odo.getXYT()[2];
@@ -156,10 +156,11 @@ public class Navigation {
    * This method calculates the angle which the robot has to turn to reach tile position x, y using
    * the data from the odometer which is passed into the method.
    * 
-   * @param x
-   * @param y
-   * @param odo
-   * @return angle
+   * @param x The x position which is used to calculate the angle.
+   * @param y The y position which is used to calculate the angle.
+   * @param odo The odometer from which to obtain the robot's current position and heading.
+   * @return The angle which the robot has to turn to reach tile position x, y using
+   * the data from the odometer which is passed into the method. 
    */
   public static double calculateAngle(double x, double y, Odometer odo) {
     double angle, dx, dy, h;
@@ -186,9 +187,9 @@ public class Navigation {
    * This method allows the conversion of a distance to the total rotation of each wheel need to
    * cover that distance.
    * 
-   * @param radius
-   * @param distance
-   * @return wheel rotation
+   * @param radius The radius of the wheel.
+   * @param distance The distance to travel.
+   * @return The rotation in degrees needed for the wheel to cover distance.
    */
   private static int convertDistance(double radius, double distance) {
     return (int) ((180.0 * distance) / (Math.PI * radius));
@@ -197,9 +198,10 @@ public class Navigation {
   /**
    * This method computes how much the wheels should turn to get to an angle
    * 
-   * @param radius
-   * @param distance
-   * @return wheel rotation
+   * @param radius The radius of the wheels.
+   * @param width The wheelbase of the robot.
+   * @param angle The angle to turn.
+   * @return The rotation in degrees needed for the robot to turn the given angle.
    */
   public static int convertAngle(double radius, double width, double angle) {
     return convertDistance(radius, Math.PI * width * angle / 360.0);
@@ -208,11 +210,11 @@ public class Navigation {
   /**
    * This method calculates the Euclidean distance given x, y initial and x, y final.
    * 
-   * @param x1
-   * @param y1
-   * @param x2
-   * @param y2
-   * @return euclidean distance
+   * @param x1 The initial x.
+   * @param y1 The initial y.
+   * @param x2 The final x.
+   * @param y2 The final y.
+   * @return The Euclidean distance given x, y initial and x, y final.
    */
   private static double calculateDistance(double x1, double y1, double x2, double y2) {
     double distance;
@@ -223,9 +225,9 @@ public class Navigation {
   /**
    * This method calculates the minimum difference between two angles a1 and a2.
    * 
-   * @param a1
-   * @param a2
-   * @return minimum angle difference
+   * @param a1 The first angle.
+   * @param a2 The second angle.
+   * @return The minimum difference between two angles a1 and a2.
    */
   public static double angleDiff(double a1, double a2) {
     double diff = a1 - a2;
@@ -249,7 +251,7 @@ public class Navigation {
 
   /**
    * Set speed for both motors
-   * 
+   * @param speed The speed at which to set the motors to.
    */
   public static void setSpeed(int speed) {
     leftMotor.setSpeed(speed);
@@ -257,7 +259,7 @@ public class Navigation {
   }
 
   /**
-   * Move robot backwards
+   * Move left and right motors backwards.
    * 
    */
   public static void backwards() {
@@ -266,16 +268,10 @@ public class Navigation {
     rightMotor.backward();
   }
 
-  public int getTacho(Side side) {
-    if (side == Side.LEFT) {
-      return leftMotor.getTachoCount();
-    } else if (side == Side.RIGHT) {
-      return rightMotor.getTachoCount();
-    } else {
-      return 0;
-    }
-  }
-
+  /**
+   * Checks if the robot is navigating.
+   * @return True if robot is navigating, False if not navigating.
+   */
   public boolean isNavigating() {
     if (leftMotor.isMoving() || rightMotor.isMoving())
       return true;
@@ -283,6 +279,10 @@ public class Navigation {
       return false;
   }
 
+  /**
+   * Checks if the robot is turning.
+   * @return True if robot is turning, False if not turning.
+   */
   public boolean isTurning() {
     if (leftMotor.getSpeed() == ROTATE_SPEED || rightMotor.getSpeed() == ROTATE_SPEED)
       return true;

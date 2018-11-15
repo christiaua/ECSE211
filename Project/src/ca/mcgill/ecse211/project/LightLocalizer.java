@@ -40,7 +40,9 @@ public class LightLocalizer {
   }
 
   /**
-   * makes the robot turn to 45 and goes until it finds the first intersection AKA (1,1)
+   * Performs localization using the robot's light sensors. 
+   * Moves to the corner of the starting tile when done.
+   * @param SC The starting corner (0, 1, 2, or 3).
    */
   public void moveToOrigin(int SC) {
     int lineCount = 0;

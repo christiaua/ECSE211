@@ -52,6 +52,9 @@ public class Display implements Runnable {
 		odo = Odometer.getOdometer();
 	}
 
+	/**
+	 * Starts the display thread.
+	 */
 	public void run() {
 
 		lcd.clear();

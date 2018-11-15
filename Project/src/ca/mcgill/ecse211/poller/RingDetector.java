@@ -56,6 +56,10 @@ public class RingDetector {
 		}
 	}
 	
+	/**
+	 * This method checks if a ring has been found.
+	 * @return If a ring has been found.
+	 */
 	public boolean foundRing() {
 		for(int i = 0; i < foundRings.length; i++) {
 			if(foundRings[i]) return true;
@@ -64,8 +68,10 @@ public class RingDetector {
 	}
 	
 	/**
-	 * beeps after detecting ring
-	 * @param colour
+	 * Beeps 1, 2, 3, or 4 times depending on the colour. If this method has already been
+	 * called before for a ring colour, it does not beep.
+	 * @param colour Valid values for colour are 0 (blue), 1 (green), 2 (yellow), 3 (orange)
+	 * for beeping one, two, three or four times respectively.
 	 */
 	private void soundAlert(int colour) {
 		if(foundRings[colour]) return;	
@@ -80,7 +86,7 @@ public class RingDetector {
 			Sound.beep();		
 			Sound.twoBeeps();
 			break;
-		case 4:
+		case 3:
 			Sound.twoBeeps();
 			Sound.twoBeeps();
 			break;
@@ -90,13 +96,15 @@ public class RingDetector {
 	}
 
 	/**
-	 * Processes the data and checks ring colour
+	 * Processes RGB data to determine whether a ring has been detected or not.
+	 * If the RGB data corresponds to a ring, the robot beeps a number of times depending
+	 * on the colour of the ring that has been detected. Beeps one time for blue, two times for green,
+	 * three times for yellow and four times for orange. Does not beep again if the ring has already
+	 * been detected previously.
 	 * 
-	 * @param R
-	 * @param B
-	 * @param G
-	 * @param target
-	 * @throws OdometerExceptions
+	 * @param R The red of the RGB data.
+	 * @param B The blue of the RGB data.
+	 * @param G The green of the RGB data.
 	 */
 	public void processRGBData(float R, float B, float G) {
 		lock.lock();
@@ -155,12 +163,12 @@ public class RingDetector {
 	}
 
 	/**
-	 * Normalizes the data
+	 * Normalizes the RGB data.
 	 * 
-	 * @param R
-	 * @param B
-	 * @param G
-	 * @return normalized data
+	 * @param R Red of the RGB data.
+	 * @param B Blue of the RGB data.
+	 * @param G Green of the RGB data.
+	 * @return The normalized RGB data.
 	 */
 	private static float[] normalizeRGBData(float R, float B, float G) {
 		float[] result = new float[3];
@@ -171,8 +179,8 @@ public class RingDetector {
 	}
 
 	/**
-	 * get the colour of the ring detected
-	 * @return the colour
+	 * Get the colour of the ring detected.
+	 * @return The colour.
 	 */
 	public ColourType getColourType() {
 		ColourType type = ColourType.NONE;
