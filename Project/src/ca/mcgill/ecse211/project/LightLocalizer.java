@@ -44,7 +44,7 @@ public class LightLocalizer {
    * Moves to the corner of the starting tile when done.
    * @param SC The starting corner (0, 1, 2, or 3).
    */
-public static void moveToOrigin(int SC) {
+public void moveToOrigin(int SC) {
     int lineCount = 0;
     double[] theta = new double[4];
     double thetaY;

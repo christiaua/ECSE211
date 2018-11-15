@@ -77,51 +77,51 @@ public class Project {
 
 
       // Receive data over Wifi
-      WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
-
-      try {
-        Map data = conn.getData();
-        System.console().writer().println("Map:\n" + data);
-
-        // Team specifics
-        int team = ((Long) data.get("GreenTeam")).intValue();
-        System.console().writer().println("Team: " + team);
-
-        // Target ring tree location
-        TGx = ((Long) data.get("TG_x")).intValue();
-        TGy = ((Long) data.get("TG_y")).intValue();
-        System.console().writer().println("Green Tree: " + TGx + ", " + TGy);
-
-        // Tunnel location
-        TLLx = ((Long) data.get("TNG_LL_x")).intValue();
-        TLLy = ((Long) data.get("TNG_LL_y")).intValue();
-        System.console().writer().println("Tunnel LL: " + TLLx + ", " + TLLy);
-
-        TURx = ((Long) data.get("TNG_UR_x")).intValue();
-        TURy = ((Long) data.get("TNG_UR_y")).intValue();
-        System.console().writer().println("Tunnel UR: " + TURx + ", " + TURy);
-
-        // Starting zone
-        LLx = ((Long) data.get("Green_LL_x")).intValue();
-        LLy = ((Long) data.get("Green_LL_y")).intValue();
-        System.console().writer().println("Starting LL: " + LLx + ", " + LLy);
-
-        URx = ((Long) data.get("Green_UR_x")).intValue();
-        URy = ((Long) data.get("Green_UR_y")).intValue();
-        System.console().writer().println("Starting UR: " + URx + ", " + URy);
-
-        // Island zone
-        ILLx = ((Long) data.get("Island_LL_x")).intValue();
-        ILLy = ((Long) data.get("Island_LL_y")).intValue();
-        System.console().writer().println("Island LL: " + LLx + ", " + LLy);
-
-        IURx = ((Long) data.get("Island_UR_x")).intValue();
-        IURy = ((Long) data.get("Island_UR_y")).intValue();
-        System.console().writer().println("Island UR: " + IURx + ", " + IURy);
-
-      } catch (Exception e) {
-        System.err.println("Error: " + e.getMessage());
-      }
+//      WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
+//
+//      try {
+//        Map data = conn.getData();
+//        System.console().writer().println("Map:\n" + data);
+//
+//        // Team specifics
+//        int team = ((Long) data.get("GreenTeam")).intValue();
+//        System.console().writer().println("Team: " + team);
+//
+//        // Target ring tree location
+//        TGx = ((Long) data.get("TG_x")).intValue();
+//        TGy = ((Long) data.get("TG_y")).intValue();
+//        System.console().writer().println("Green Tree: " + TGx + ", " + TGy);
+//
+//        // Tunnel location
+//        TLLx = ((Long) data.get("TNG_LL_x")).intValue();
+//        TLLy = ((Long) data.get("TNG_LL_y")).intValue();
+//        System.console().writer().println("Tunnel LL: " + TLLx + ", " + TLLy);
+//
+//        TURx = ((Long) data.get("TNG_UR_x")).intValue();
+//        TURy = ((Long) data.get("TNG_UR_y")).intValue();
+//        System.console().writer().println("Tunnel UR: " + TURx + ", " + TURy);
+//
+//        // Starting zone
+//        LLx = ((Long) data.get("Green_LL_x")).intValue();
+//        LLy = ((Long) data.get("Green_LL_y")).intValue();
+//        System.console().writer().println("Starting LL: " + LLx + ", " + LLy);
+//
+//        URx = ((Long) data.get("Green_UR_x")).intValue();
+//        URy = ((Long) data.get("Green_UR_y")).intValue();
+//        System.console().writer().println("Starting UR: " + URx + ", " + URy);
+//
+//        // Island zone
+//        ILLx = ((Long) data.get("Island_LL_x")).intValue();
+//        ILLy = ((Long) data.get("Island_LL_y")).intValue();
+//        System.console().writer().println("Island LL: " + LLx + ", " + LLy);
+//
+//        IURx = ((Long) data.get("Island_UR_x")).intValue();
+//        IURy = ((Long) data.get("Island_UR_y")).intValue();
+//        System.console().writer().println("Island UR: " + IURx + ", " + IURy);
+//
+//      } catch (Exception e) {
+//        System.err.println("Error: " + e.getMessage());
+//      }
 
       lcd.clear();
 
