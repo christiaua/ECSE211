@@ -28,7 +28,6 @@ public class UltrasonicLocalizer {
 	public UltrasonicLocalizer(Navigation nav) throws OdometerExceptions, PollerException{
 		this.odo = Odometer.getOdometer();
 		this.poller = Poller.getPoller();
-		this.navigation = nav;
 	}
 	/**
 	 * This method is used to find the angle of the robot assuming 
