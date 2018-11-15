@@ -20,7 +20,6 @@ public class LightLocalizer {
   private static double y;
   private static final double D = 10;
   private static double dthetaY;
-  private static Navigation navigation;
   private static final double TILE_SIZE = 30.48;
   private static final double FIELD_WIDTH = 8 * TILE_SIZE;
   private static final double FIELD_HEIGHT = 8 * TILE_SIZE;
@@ -36,7 +35,6 @@ public class LightLocalizer {
   public LightLocalizer(Navigation nav) throws OdometerExceptions, PollerException {
     LightLocalizer.poller = Poller.getPoller();
     LightLocalizer.odo = Odometer.getOdometer();
-    LightLocalizer.navigation = nav;
   }
 
   /**
@@ -74,8 +72,7 @@ public void moveToOrigin(int SC) {
     Navigation.rotate(360, true);
 
     while (Navigation.isNavigating()) {
-      if (poller.getLightSensorData(Side.LEFT, false)
-          - poller.getLightSensorData(Side.LEFT, true) > 0.1) {
+      if (poller.getLightSensorData(Side.LEFT, true) < 0.33) {
         Sound.beep();
         theta[lineCount] = odo.getXYT()[2];
         lineCount++;
