@@ -32,7 +32,7 @@ public class LightLocalizer {
    * @throws OdometerExceptions
    * @throws PollerException
    */
-  public LightLocalizer(Navigation nav) throws OdometerExceptions, PollerException {
+  public LightLocalizer() throws OdometerExceptions, PollerException {
     LightLocalizer.poller = Poller.getPoller();
     LightLocalizer.odo = Odometer.getOdometer();
   }

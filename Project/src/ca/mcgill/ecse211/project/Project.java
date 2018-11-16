@@ -77,7 +77,7 @@ public class Project {
 			Thread odoThread = new Thread(odometer);
 			odoThread.start();
 
-			poller = Poller.getPoller(navigation);
+			poller = Poller.getPoller();
 			Thread pollerThread = new Thread(poller);
 			pollerThread.start();
 
@@ -145,9 +145,9 @@ public class Project {
 				
 				
 			} else if (buttonChoice == Button.ID_RIGHT) {
-				usLocalizer = new UltrasonicLocalizer(navigation);
-				lightLocalizer = new LightLocalizer(navigation);
-				ringSearch = new RingSearch(TGx, TGy, navigation);
+				usLocalizer = new UltrasonicLocalizer();
+				lightLocalizer = new LightLocalizer();
+				ringSearch = new RingSearch(TGx, TGy);
 
 				// beta demo algorithm
 				poller.enableCorrection(false);

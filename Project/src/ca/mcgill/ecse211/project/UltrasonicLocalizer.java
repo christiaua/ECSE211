@@ -25,7 +25,7 @@ public class UltrasonicLocalizer {
 	 * @param nav This object is used to control the robot's motors.
 	 * @throws OdometerExceptions
 	 */
-	public UltrasonicLocalizer(Navigation nav) throws OdometerExceptions, PollerException{
+	public UltrasonicLocalizer() throws OdometerExceptions, PollerException{
 		this.odo = Odometer.getOdometer();
 		this.poller = Poller.getPoller();
 	}

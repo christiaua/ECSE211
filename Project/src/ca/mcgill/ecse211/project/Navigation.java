@@ -87,6 +87,40 @@ public class Navigation {
     leftMotor.rotate(convertAngle(WHEEL_RAD, TRACK, Math.abs(angle)), true);
     rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, Math.abs(angle)), immediateReturn);
   }
+  
+  public static void travelToTunnel(int TLLx, int TLLy, int TURx, int TURy, int LLx, int LLy, int URx, int URy) {
+	  double currentY = odo.getXYT()[1]/TILE_SIZE;
+	  double currentX = odo.getXYT()[0]/TILE_SIZE;
+	  if(TURx - TLLx == 1) {
+		  //vertical tunnel
+		  if(TLLx == LLx+1) {
+			  moveForward(-TILE_SIZE/2, false);
+		  } 
+		  travelTo(TLLx + 0.5, currentY);
+		  travelTo(TLLx + 0.5, TLLy - 0.5);
+	  }
+	  else {	  
+		  if(TURx == URx-1) {
+			travelTo(currentX + 0.5, currentY);
+			currentX = odo.getXYT()[0]/TILE_SIZE;
+		  }
+		  travelTo(currentX, TLLy + 0.5);
+		  travelTo(TURx + 0.5, TLLy + 0.5);
+	  }
+  }
+  public static void traverseTunnel(int TLLx, int TLLy, int TURx, int TURy) {
+	  if(TURx - TLLx == 1) {
+		  //vertical tunnel
+		  travelTo(TLLx + 0.5, TURy + 0.5);
+	  }
+	  else {
+		  travelTo(TLLx - 0.5, TLLy + 0.5);
+	  }
+  }
+  
+  public static void travelToRing(int TLLx, int TLLy, int TURx, int TURy, int LLx, int LLy, int URx, int URy){
+	  
+  }
 
   /**
    * This method controls the robot to move towards x, y (tile position).
@@ -292,6 +326,11 @@ public class Navigation {
       return false;
   }
   
+  /**
+   * Gets the tacho count of the wanted wheel
+   * @param side
+   * @return tacho count
+   */
   public static int getTacho(Side side) {
     if (side == Side.LEFT) {
       return leftMotor.getTachoCount();

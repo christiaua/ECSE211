@@ -1,5 +1,6 @@
 package ca.mcgill.ecse211.project;
 
+import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.poller.Poller;
 import ca.mcgill.ecse211.poller.PollerException;
 import ca.mcgill.ecse211.poller.RingDetector.ColourType;
@@ -24,7 +25,7 @@ public class RingSearch {
 	private static final EV3MediumRegulatedMotor lowerMotor =
 			new EV3MediumRegulatedMotor(LocalEV3.get().getPort("B"));
 	
-	public RingSearch(int tGx, int tGy, Navigation nav) throws PollerException {
+	public RingSearch(int tGx, int tGy) throws PollerException, OdometerExceptions {
 		RingSearch.poller = Poller.getPoller();
 		RingSearch.TGx = tGx;
 		RingSearch.TGy = tGy;

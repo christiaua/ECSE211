@@ -29,10 +29,8 @@ public class Poller implements Runnable {
   private static RingDetector ringDetector;
   private static USSensorData sensorData;
 
-  private Navigation navigation;
   private OdometryCorrection odometryCorrector;
   
-  //TODO: Is there a better way to do this?s
   private static int tachoL = -1000; // -1000 dummy value so that we know if tachoL/tachoR hasn't
                                      // been set yet
   private static int tachoR = -1000;
@@ -73,10 +71,9 @@ public class Poller implements Runnable {
    * @throws PollerException
    * @throws OdometerExceptions
    */
-  public Poller(Navigation nav) throws PollerException, OdometerExceptions {
+  public Poller() throws PollerException, OdometerExceptions {
     ringDetector = RingDetector.getRingDetector();
     sensorData = USSensorData.getSensorData();
-    this.navigation = nav;
     this.odometryCorrector = new OdometryCorrection();
   }
 
@@ -96,25 +93,15 @@ public class Poller implements Runnable {
    * @throws PollerException
    * @throws OdometerExceptions
    */
-  public static Poller getPoller(Navigation nav) throws PollerException, OdometerExceptions {
+  public static Poller getPoller() throws PollerException, OdometerExceptions {
     if (poller != null) { // Return existing object
       return poller;
     } else if (numberOfIntances < MAX_INSTANCES) { // create object and return it
-      poller = new Poller(nav);
+      poller = new Poller();
       numberOfIntances += 1;
       return poller;
     } else {
-      throw new PollerException("Only one intance of the Poller can be created."); // TODO: Does
-                                                                                   // this ever
-                                                                                   // occur?
-    }
-  }
-
-  public static Poller getPoller() throws PollerException {
-    if (poller != null) { // Return existing object
-      return poller;
-    } else {
-      throw new PollerException("No Poller.");
+      throw new PollerException("Only one intance of the Poller can be created.");
     }
   }
 
