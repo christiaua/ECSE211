@@ -1,12 +1,15 @@
 package ca.mcgill.ecse211.project;
 
 import java.util.Map;
+import java.util.Stack;
+
 import ca.mcgill.ecse211.WiFiClient.WifiConnection;
 import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.poller.Poller;
 import ca.mcgill.ecse211.poller.PollerException;
 import lejos.hardware.Button;
+import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 
@@ -14,13 +17,13 @@ public class Project {
 	// CUSTOM VARIABLES
 
 	// T: tunnel
-	private static int TLLx = 0;
-	private static int TLLy = 3;
-	private static int TURx = 1;
-	private static int TURy = 5;
+	private static int TLLx = 5;
+	private static int TLLy = 2;
+	private static int TURx = 6;
+	private static int TURy = 4;
 
 	// Ring tree
-	private static int TGx = 2;
+	private static int TGx = 7;
 	private static int TGy = 6;
 
 	// No prefix: starting zone
@@ -145,9 +148,10 @@ public class Project {
 				
 				
 			} else if (buttonChoice == Button.ID_RIGHT) {
-				usLocalizer = new UltrasonicLocalizer();
-				lightLocalizer = new LightLocalizer();
+				//usLocalizer = new UltrasonicLocalizer();
+				//lightLocalizer = new LightLocalizer();
 				ringSearch = new RingSearch(TGx, TGy);
+				Stack<Coordinate> waypoints = new Stack<Coordinate>();
 
 				// beta demo algorithm
 				poller.enableCorrection(false);
@@ -155,49 +159,68 @@ public class Project {
 				//lightLocalizer.moveToOrigin(SC);
 				odometer.setXYT(7*30.48, 30.48, 0);
 				poller.enableCorrection(true);
+				
 				ringSearch.enableTunnel(true);
+					
+				Navigation.travelToTunnel(waypoints, TLLx, TLLy, TURx, TURy, LLx, LLy, URx, URy);
+				//poller.enableCorrection(false);
+				Navigation.traverseTunnel(waypoints, TLLx, TLLy, TURx, TURy);
+				//poller.enableCorrection(true);
+				Navigation.travelToRing(waypoints, TGx, TGy, TLLx, TLLy, TURx, TURy, ILLx, ILLy, IURx, IURy);
+				RingSearch.grabLowerRing();
+					
+				Sound.beepSequenceUp();
+				
+				while(!waypoints.isEmpty()) {
+					Coordinate point = waypoints.pop();
+					Navigation.travelTo(point.x, point.y);
+				}
+				Navigation.travelTo(7, 1);
+				Navigation.turnTo(90+45);
+				RingSearch.dropRing();
+				Sound.beepSequenceUp();
 
 				// If tunnel horizontal
-				if (TURx - TLLx > 1) {
-					Navigation.turnTo(0);
-					Navigation.travelTo(7, TLLy + OFFSET);
-					Navigation.travelTo(TURx + OFFSET, TLLy + OFFSET);
-					poller.enableCorrection(false);
-					Navigation.travelTo(TLLx - OFFSET, TLLy + OFFSET);
-					poller.enableCorrection(true);
-
-					Navigation.travelTo(TGx, TLLy + OFFSET);
-
-					if (TGy <= TLLy) {
-						Navigation.travelTo(TGx, TGy + 1);
-						Navigation.turnTo(180);
-					} else {
-						Navigation.travelTo(TGx, TGy - 1);
-						Navigation.turnTo(0);
-					}
-
-				} else {
-					Navigation.travelTo(TLLx + OFFSET, 1);
-					Navigation.travelTo(TLLx + OFFSET, TLLy - 0.5);
-
-					poller.enableCorrection(false);
-					Navigation.travelTo(TLLx + OFFSET, TURy + 0.5);
-					poller.enableCorrection(true);
-
-					if (TGx < TURx) {
-						// left side of tunnel
-						Navigation.travelTo(TLLx + OFFSET, TGy);
-						Navigation.travelTo(TGx + 1, TGy);
-						Navigation.turnTo(270);
-					} else {
-						// right side of tunnel
-						Navigation.travelTo(TLLx + OFFSET, TGy);
-						Navigation.travelTo(TGx - 1, TGy);
-						Navigation.turnTo(90);
-					}
-				}
-				poller.enableCorrection(false);
-				RingSearch.grabRing(0);
+//				if (TURx - TLLx > 1) {
+//					Navigation.turnTo(0);
+//					Navigation.travelTo(7, TLLy + OFFSET);
+//					Navigation.travelTo(TURx + OFFSET, TLLy + OFFSET);
+//					poller.enableCorrection(false);
+//					Navigation.travelTo(TLLx - OFFSET, TLLy + OFFSET);
+//					poller.enableCorrection(true);
+//
+//					Navigation.travelTo(TGx, TLLy + OFFSET);
+//
+//					if (TGy <= TLLy) {
+//						Navigation.travelTo(TGx, TGy + 1);
+//						Navigation.turnTo(180);
+//					} else {
+//						Navigation.travelTo(TGx, TGy - 1);
+//						Navigation.turnTo(0);
+//					}
+//
+//				} else {
+//					Navigation.travelTo(TLLx + OFFSET, 1);
+//					Navigation.travelTo(TLLx + OFFSET, TLLy - 0.5);
+//
+//					poller.enableCorrection(false);
+//					Navigation.travelTo(TLLx + OFFSET, TURy + 0.5);
+//					poller.enableCorrection(true);
+//
+//					if (TGx < TURx) {
+//						// left side of tunnel
+//						Navigation.travelTo(TLLx + OFFSET, TGy);
+//						Navigation.travelTo(TGx + 1, TGy);
+//						Navigation.turnTo(270);
+//					} else {
+//						// right side of tunnel
+//						Navigation.travelTo(TLLx + OFFSET, TGy);
+//						Navigation.travelTo(TGx - 1, TGy);
+//						Navigation.turnTo(90);
+//					}
+//				}
+//				poller.enableCorrection(false);
+//				RingSearch.grabLowerRing();
 			}
 			buttonChoice = Button.waitForAnyPress();
 		} while (Button.waitForAnyPress() != Button.ID_ESCAPE);

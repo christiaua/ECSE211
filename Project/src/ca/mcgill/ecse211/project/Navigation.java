@@ -3,6 +3,9 @@ package ca.mcgill.ecse211.project;
 import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+
+import java.util.Stack;
+
 import ca.mcgill.ecse211.odometer.*;
 
 /**
@@ -24,6 +27,7 @@ public class Navigation {
   private static final double TRACK = 14.225;
   private static final double TILE_SIZE = 30.48;
 
+  public static final int DROP_SPEED = 1000;
   public static final int FORWARD_SPEED = 200;
   public static final int ROTATE_SPEED = 160;
 
@@ -88,7 +92,7 @@ public class Navigation {
     rightMotor.rotate(-convertAngle(WHEEL_RAD, TRACK, Math.abs(angle)), immediateReturn);
   }
   
-  public static void travelToTunnel(int TLLx, int TLLy, int TURx, int TURy, int LLx, int LLy, int URx, int URy) {
+  public static void travelToTunnel(Stack<Coordinate> s, int TLLx, int TLLy, int TURx, int TURy, int LLx, int LLy, int URx, int URy) {
 	  double currentY = odo.getXYT()[1]/TILE_SIZE;
 	  double currentX = odo.getXYT()[0]/TILE_SIZE;
 	  if(TURx - TLLx == 1) {
@@ -97,29 +101,71 @@ public class Navigation {
 			  moveForward(-TILE_SIZE/2, false);
 		  } 
 		  travelTo(TLLx + 0.5, currentY);
+		  s.push(new Coordinate(TLLx + 0.5, currentY));
 		  travelTo(TLLx + 0.5, TLLy - 0.5);
+		  s.push(new Coordinate(TLLx + 0.5, TLLy - 0.5));
 	  }
 	  else {	  
 		  if(TURx == URx-1) {
 			travelTo(currentX + 0.5, currentY);
+			s.push(new Coordinate(currentX + 0.5, currentY));
 			currentX = odo.getXYT()[0]/TILE_SIZE;
 		  }
 		  travelTo(currentX, TLLy + 0.5);
+		  s.push(new Coordinate(currentX, TLLy + 0.5));
 		  travelTo(TURx + 0.5, TLLy + 0.5);
+		  s.push(new Coordinate(TURx + 0.5, TLLy + 0.5));
 	  }
   }
-  public static void traverseTunnel(int TLLx, int TLLy, int TURx, int TURy) {
+  public static void traverseTunnel(Stack<Coordinate> s, int TLLx, int TLLy, int TURx, int TURy) {
 	  if(TURx - TLLx == 1) {
 		  //vertical tunnel
 		  travelTo(TLLx + 0.5, TURy + 0.5);
+		  s.push(new Coordinate(TLLx + 0.5, TURy + 0.5));
 	  }
 	  else {
 		  travelTo(TLLx - 0.5, TLLy + 0.5);
+		  s.push(new Coordinate(TLLx - 0.5, TLLy + 0.5));
 	  }
   }
   
-  public static void travelToRing(int TLLx, int TLLy, int TURx, int TURy, int LLx, int LLy, int URx, int URy){
-	  
+  public static void travelToRing(Stack<Coordinate> s, int TGx, int TGy, int TLLx, int TLLy, int TURx, int TURy, int ILLx, int ILLy, int IURx, int IURy){
+	  if(TURx - TLLx == 1) {
+		  //vertical tunnel
+			if (TGx < TURx) {
+			// left side of tunnel
+			Navigation.travelTo(TLLx + 0.5, TGy);
+			s.push(new Coordinate(TLLx + 0.5, TGy));
+			Navigation.travelTo(TGx + 1, TGy);
+			s.push(new Coordinate(TGx + 1, TGy));
+			Navigation.turnTo(270);
+		} else {
+			// right side of tunnel
+			Navigation.travelTo(TLLx + 0.5, TGy);
+			s.push(new Coordinate(TLLx + 0.5, TGy));
+			Navigation.travelTo(TGx - 1, TGy);
+			s.push(new Coordinate(TGx - 1, TGy));
+			Navigation.turnTo(90);
+		}
+	  }
+	  else {
+			if (TGy <= TLLy) {
+			Navigation.travelTo(TGx, TGy + 1);
+			s.push(new Coordinate(TGx, TGy + 1));
+			Navigation.turnTo(180);
+		} else {
+			Navigation.travelTo(TGx, TGy - 1);
+			s.push(new Coordinate(TGx, TGy - 1));
+			Navigation.turnTo(0);
+		}
+	  }
+  }
+  
+  public static void dropRing() {
+	  leftMotor.setSpeed(DROP_SPEED);
+	  rightMotor.setSpeed(DROP_SPEED);
+	  leftMotor.rotate(-convertDistance(WHEEL_RAD, 10), true);
+      rightMotor.rotate(-convertDistance(WHEEL_RAD, 10), false);
   }
 
   /**
@@ -146,7 +192,7 @@ public class Navigation {
     while (true) {
       currentPosition = odo.getXYT();
       double angleDif = Math.abs(currentPosition[2] - angleToTurnTo);
-      if ((angleDif > 1 && angleDif < 20) || (angleDif > 350 && angleDif < 358)) {
+      if ((angleDif > 1 && angleDif < 20) || (angleDif > 350 && angleDif < 359)) {
         stop();
         Sound.beep();
         turnTo(angleToTurnTo);
