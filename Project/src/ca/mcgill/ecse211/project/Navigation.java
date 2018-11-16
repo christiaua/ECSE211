@@ -289,4 +289,14 @@ public class Navigation {
     else
       return false;
   }
+  
+  public int getTacho(Side side) {
+    if (side == Side.LEFT) {
+      return leftMotor.getTachoCount();
+    } else if (side == Side.RIGHT) {
+      return rightMotor.getTachoCount();
+    } else {
+      return 0;
+    }
+  }
 }
