@@ -1,5 +1,6 @@
 package ca.mcgill.ecse211.project;
 
+import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import ca.mcgill.ecse211.odometer.*;
@@ -110,9 +111,10 @@ public class Navigation {
 
     while (true) {
       currentPosition = odo.getXYT();
-      if (Math.abs(currentPosition[2] - angleToTurnTo) > 1
-          || Math.abs(currentPosition[2] - angleToTurnTo) > 357) {
+      double angleDif = Math.abs(currentPosition[2] - angleToTurnTo);
+      if ((angleDif > 1 && angleDif < 20) || (angleDif > 350 && angleDif < 358)) {
         stop();
+        Sound.beep();
         turnTo(angleToTurnTo);
         currentDistance =
             calculateDistance(x * TILE_SIZE, y * TILE_SIZE, currentPosition[0], currentPosition[1]);

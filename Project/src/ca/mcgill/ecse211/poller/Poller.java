@@ -126,18 +126,18 @@ public class Poller implements Runnable {
       redSample1.fetchSample(redData1, 0);
       redSample2.fetchSample(redData2, 0);
 
-      if (correctionEnabled) {
-        if (!navigation.isTurning() && redData1[0] < 0.33 && tachoL == -1000) {
-          tachoL = navigation.getTacho(Side.LEFT);
+      if (correctionEnabled && !Navigation.isTurning()) {
+        if (redData1[0] < 0.33 && tachoL == -1000) {
+          tachoL = Navigation.getTacho(Side.LEFT);
         }
-        if (!navigation.isTurning() && redData2[0] < 0.33 && tachoR == -1000) {
-          tachoR = navigation.getTacho(Side.RIGHT);
+        if (redData2[0] < 0.33 && tachoR == -1000) {
+          tachoR = Navigation.getTacho(Side.LEFT);
         }
-        if (!navigation.isTurning() && tachoL != -1000 && tachoR != -1000) {
+        if (tachoL != -1000 && tachoR != -1000) {
           odometryCorrector.correctAngle(tachoL, tachoR);
           tachoL = -1000;
           tachoR = -1000;
-          Sound.beep();
+          //Sound.beep();
         }
       }
       

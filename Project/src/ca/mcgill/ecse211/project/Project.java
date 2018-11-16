@@ -14,13 +14,13 @@ public class Project {
 	// CUSTOM VARIABLES
 
 	// T: tunnel
-	private static int TLLx = 6;
-	private static int TLLy = 2;
-	private static int TURx = 7;
-	private static int TURy = 4;
+	private static int TLLx = 0;
+	private static int TLLy = 3;
+	private static int TURx = 1;
+	private static int TURy = 5;
 
 	// Ring tree
-	private static int TGx = 5;
+	private static int TGx = 2;
 	private static int TGy = 6;
 
 	// No prefix: starting zone
@@ -48,7 +48,7 @@ public class Project {
 	private static RingSearch ringSearch;
 
 	// Constants
-	private static final double OFFSET = 0.4; // TODO: more descriptive?
+	private static final double OFFSET = 0.5; // TODO: more descriptive?
 	private static final int TEAM_NUMBER = 7;
 	private static final String SERVER_IP = "192.168.2.2";
 
@@ -136,10 +136,14 @@ public class Project {
 
 			if (buttonChoice == Button.ID_LEFT) {
 				// Test the track and wheels
-				Navigation.turnTo(90);
-				Navigation.moveForward(120, false);
-				Navigation.floatWheels();
-				System.exit(0);
+				
+				Navigation.turnTo(10);
+				odometer.setTheta(0);
+				Navigation.moveForward(40, false);
+				//Navigation.travelTo(0,4);
+				Navigation.turnTo(0);
+				
+				
 			} else if (buttonChoice == Button.ID_RIGHT) {
 				usLocalizer = new UltrasonicLocalizer(navigation);
 				lightLocalizer = new LightLocalizer(navigation);
@@ -147,8 +151,9 @@ public class Project {
 
 				// beta demo algorithm
 				poller.enableCorrection(false);
-				usLocalizer.fallingEdge();
-				lightLocalizer.moveToOrigin(SC);
+				//usLocalizer.fallingEdge();
+				//lightLocalizer.moveToOrigin(SC);
+				odometer.setXYT(7*30.48, 30.48, 0);
 				poller.enableCorrection(true);
 				ringSearch.enableTunnel(true);
 

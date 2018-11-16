@@ -7,7 +7,6 @@ import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 
 public class RingSearch {
-	private static Navigation navigation;
 	private static Poller poller;
 	
 	private static int TGx = 5;
@@ -26,7 +25,6 @@ public class RingSearch {
 			new EV3MediumRegulatedMotor(LocalEV3.get().getPort("B"));
 	
 	public RingSearch(int tGx, int tGy, Navigation nav) throws PollerException {
-		RingSearch.navigation = nav;
 		RingSearch.poller = Poller.getPoller();
 		RingSearch.TGx = tGx;
 		RingSearch.TGy = tGy;
@@ -67,13 +65,13 @@ public class RingSearch {
 		upperMotor.rotate(-75, false);
 		Navigation.moveForward(8, false);
 		Navigation.stop();
-		lowerMotor.rotate(30, false);
+		lowerMotor.rotate(30, true);
 		Navigation.moveForward(-D, false);
 		Navigation.stop();
 		upperMotor.rotate(75, false);
 		Navigation.moveForward(D+2, false);
 		Navigation.stop();
-		upperMotor.rotate(-30, true);
+		upperMotor.rotate(-20, true);
 		Navigation.moveForward(-D, false);
 		Navigation.stop();
 	}
