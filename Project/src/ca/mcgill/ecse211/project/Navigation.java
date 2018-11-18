@@ -112,8 +112,8 @@ public class Navigation {
 			travelTo(TLLx + 0.5, TURy + 0.5);
 			s.push(new Coordinate(TLLx + 0.5, TURy + 0.5));
 		} else {
-			travelTo(TLLx - 0.5, TLLy + 0.5);
-			s.push(new Coordinate(TLLx - 0.5, TLLy + 0.5));
+			travelTo(TURx + 0.5, TURy - 0.5);
+			s.push(new Coordinate(TURx + 0.5, TURy - 0.5));
 		}
 	}
 	
