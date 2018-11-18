@@ -111,67 +111,92 @@ public class Project {
 				Navigation.moveForward(40, false);
 				// Navigation.travelTo(0,4);
 				Navigation.turnTo(0);
+				
+				System.exit(0);
 
 			} else if (buttonChoice == Button.ID_RIGHT) {
 				// Receive data over Wifi
-//				WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
-//				try {
-//					Map data = conn.getData();
-//					System.console().writer().println("Map:\n" + data);
-//
-//					// Team specifics
-//					int greenTeam = ((Long) data.get("GreenTeam")).intValue();
-//					int redTeam = ((Long) data.get("RedTeam")).intValue();
-//					// Island zone
-//					ILLx = ((Long) data.get("Island_LL_x")).intValue();
-//					ILLy = ((Long) data.get("Island_LL_y")).intValue();
-//					IURx = ((Long) data.get("Island_UR_x")).intValue();
-//					IURy = ((Long) data.get("Island_UR_y")).intValue();
-//					if (greenTeam == TEAM_NUMBER) {
-//						// Target ring tree location
-//						TGx = ((Long) data.get("TG_x")).intValue();
-//						TGy = ((Long) data.get("TG_y")).intValue();
-//						// Other team ring
-//						TRx = ((Long) data.get("TR_x")).intValue();
-//						TRy = ((Long) data.get("TR_y")).intValue();
-//						// Tunnel location
-//						TLLx = ((Long) data.get("TNG_LL_x")).intValue();
-//						TLLy = ((Long) data.get("TNG_LL_y")).intValue();
-//						TURx = ((Long) data.get("TNG_UR_x")).intValue();
-//						TURy = ((Long) data.get("TNG_UR_y")).intValue();
-//						// Starting zone
-//						LLx = ((Long) data.get("Green_LL_x")).intValue();
-//						LLy = ((Long) data.get("Green_LL_y")).intValue();
-//						URx = ((Long) data.get("Green_UR_x")).intValue();
-//						URy = ((Long) data.get("Green_UR_y")).intValue();
-//					} else if (redTeam == TEAM_NUMBER) {
-//						// Target ring tree location
-//						TRx = ((Long) data.get("TG_x")).intValue();
-//						TRy = ((Long) data.get("TG_y")).intValue();
-//						// Other team ring
-//						TGx = ((Long) data.get("TR_x")).intValue();
-//						TGy = ((Long) data.get("TR_y")).intValue();
-//						// Tunnel location
-//						TLLx = ((Long) data.get("TNR_LL_x")).intValue();
-//						TLLy = ((Long) data.get("TNR_LL_y")).intValue();
-//						TURx = ((Long) data.get("TNR_UR_x")).intValue();
-//						TURy = ((Long) data.get("TNR_UR_y")).intValue();
-//						// Starting zone
-//						LLx = ((Long) data.get("Red_LL_x")).intValue();
-//						LLy = ((Long) data.get("Red_LL_y")).intValue();
-//						URx = ((Long) data.get("Red_UR_x")).intValue();
-//						URy = ((Long) data.get("Red_UR_y")).intValue();
-//					} else {
-//						System.err.println("Error: team not received");
-//						System.exit(0);
-//					}
-//
-//				} catch (Exception e) {
-//					System.err.println("Error: " + e.getMessage());
-//				}
+				// WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
+				// try {
+				// Map data = conn.getData();
+				// System.console().writer().println("Map:\n" + data);
+				//
+				// // Team specifics
+				// int greenTeam = ((Long) data.get("GreenTeam")).intValue();
+				// int redTeam = ((Long) data.get("RedTeam")).intValue();
+				// // Island zone
+				// ILLx = ((Long) data.get("Island_LL_x")).intValue();
+				// ILLy = ((Long) data.get("Island_LL_y")).intValue();
+				// IURx = ((Long) data.get("Island_UR_x")).intValue();
+				// IURy = ((Long) data.get("Island_UR_y")).intValue();
+				// if (greenTeam == TEAM_NUMBER) {
+				// // Target ring tree location
+				// TGx = ((Long) data.get("TG_x")).intValue();
+				// TGy = ((Long) data.get("TG_y")).intValue();
+				// // Other team ring
+				// TRx = ((Long) data.get("TR_x")).intValue();
+				// TRy = ((Long) data.get("TR_y")).intValue();
+				// // Tunnel location
+				// TLLx = ((Long) data.get("TNG_LL_x")).intValue();
+				// TLLy = ((Long) data.get("TNG_LL_y")).intValue();
+				// TURx = ((Long) data.get("TNG_UR_x")).intValue();
+				// TURy = ((Long) data.get("TNG_UR_y")).intValue();
+				// // Starting zone
+				// LLx = ((Long) data.get("Green_LL_x")).intValue();
+				// LLy = ((Long) data.get("Green_LL_y")).intValue();
+				// URx = ((Long) data.get("Green_UR_x")).intValue();
+				// URy = ((Long) data.get("Green_UR_y")).intValue();
+				// } else if (redTeam == TEAM_NUMBER) {
+				// // Target ring tree location
+				// TRx = ((Long) data.get("TG_x")).intValue();
+				// TRy = ((Long) data.get("TG_y")).intValue();
+				// // Other team ring
+				// TGx = ((Long) data.get("TR_x")).intValue();
+				// TGy = ((Long) data.get("TR_y")).intValue();
+				// // Tunnel location
+				// TLLx = ((Long) data.get("TNR_LL_x")).intValue();
+				// TLLy = ((Long) data.get("TNR_LL_y")).intValue();
+				// TURx = ((Long) data.get("TNR_UR_x")).intValue();
+				// TURy = ((Long) data.get("TNR_UR_y")).intValue();
+				// // Starting zone
+				// LLx = ((Long) data.get("Red_LL_x")).intValue();
+				// LLy = ((Long) data.get("Red_LL_y")).intValue();
+				// URx = ((Long) data.get("Red_UR_x")).intValue();
+				// URy = ((Long) data.get("Red_UR_y")).intValue();
+				// } else {
+				// System.err.println("Error: team not received");
+				// System.exit(0);
+				// }
+				//
+				// } catch (Exception e) {
+				// System.err.println("Error: " + e.getMessage());
+				// }
 				if (TURx - TLLx > 1) {
 					tunnel = Tunnel.HORIZONTAL;
 				}
+				//checkfor valid inputs
+				if(tunnel == Tunnel.VERTICAL) {
+					if(TURx <= ILLx || TURx > IURx || TURy < ILLy || TURy >= IURy) {
+						System.err.println("Error: Tunnel not connecting to island");
+						System.exit(0);
+					}
+					if(TLLx >= URx || TLLx < LLx || TLLy > URy || TLLy <= LLy) {
+						System.err.println("Error: Tunnel not connecting to starting zone");
+						System.exit(0);
+					}
+				}
+				else {
+					if(TURx < ILLx || TURx >= IURx || TURy > IURy || TURy <= ILLy) {
+						System.err.println("Error: Tunnel not connecting to island");
+						System.exit(0);
+					}
+					if(TLLx > URx || TLLx <= LLx || TLLy >= URy || TLLy < LLy) {
+						System.err.println("Error: Tunnel not connecting to starting zone");
+						System.exit(0);
+					}
+				}
+			
+				
 				// usLocalizer = new UltrasonicLocalizer();
 				// lightLocalizer = new LightLocalizer();
 				ringSearch = new RingSearch(TGx, TGy);
@@ -249,9 +274,9 @@ public class Project {
 
 				LinkedList<Coordinate> pathToRing = findPath(waypoints.peek().x, waypoints.peek().y,
 						RingCoordinates.get(0).x, RingCoordinates.get(0).y, true);
-				
+
 				Navigation.travelByPath(waypoints, pathToRing);
-				
+
 				Navigation.face(TGx, TGy);
 
 				RingSearch.grabLowerRing();
@@ -294,52 +319,154 @@ public class Project {
 	 * @param endy
 	 * @return
 	 */
-	private static LinkedList<Coordinate> findPath(double startx, double starty, double endx, double endy, boolean island) {
+	private static LinkedList<Coordinate> findPath(double startx, double starty, double endx, double endy,
+			boolean island) {
 		LinkedList<Coordinate> path = new LinkedList<Coordinate>();
 		double currentx = startx;
 		double currenty = starty;
 		// Move as long as not at destination
 		while (currentx != endx || currenty != endy) {
-			// move x
 			double lastx = currentx;
 			double lasty = currenty;
-				while (endx < currentx) {
-					// move left
-					currentx -= 0.5;
-					if (!isInBoundaries(new Coordinate(currentx, currenty), island)) {
-						currentx += 0.5;
-						break;
-					}
-				}
-				while (endx > currentx) {
-					// move right
+			while (endx < currentx) {
+				// move left
+				currentx -= 0.5;
+				if (!isInBoundaries(new Coordinate(currentx, currenty), island)) {
 					currentx += 0.5;
-					if (!isInBoundaries(new Coordinate(currentx, currenty), island)) {
-						currentx -= 0.5;
-						break;
-					}
+					break;
 				}
+			}
+			while (endx > currentx) {
+				// move right
+				currentx += 0.5;
+				if (!isInBoundaries(new Coordinate(currentx, currenty), island)) {
+					currentx -= 0.5;
+					break;
+				}
+			}
+			//add to path if moved in x
+			if (!(lastx == currentx && lasty == currenty)) {
 				path.add(new Coordinate(currentx, currenty));
-			// move in y
-				while (endy < currenty) {
-					// move down
-					currenty -= 0.5;
-					if (!isInBoundaries(new Coordinate(currentx, currenty), island)) {
-						currenty += 0.5;
-						break;
-					}
-				}
-				while (endy > currenty) {
-					// move up
-					currenty += 0.5;
-					if (!isInBoundaries(new Coordinate(currentx, currenty), island)) {
-						currenty -= 0.5;
-						break;
-					}
-				}
-				path.add(new Coordinate(currentx, currenty));
-			if (lastx == currentx && lasty == currenty)
+			}
+			//break if at destination
+			if (currentx == endx && currenty == endy)
 				break;
+			while (endy < currenty) {
+				// move down
+				currenty -= 0.5;
+				if (!isInBoundaries(new Coordinate(currentx, currenty), island)) {
+					currenty += 0.5;
+					break;
+				}
+			}
+			while (endy > currenty) {
+				// move up
+				currenty += 0.5;
+				if (!isInBoundaries(new Coordinate(currentx, currenty), island)) {
+					currenty -= 0.5;
+					break;
+				}
+			}
+			//add to path if moved in y
+			if (!(lastx == currentx && lasty == currenty)) {
+				path.add(new Coordinate(currentx, currenty));
+			}
+			
+			//if there is an obstacle in the way
+			if (lastx == currentx && lasty == currenty) {
+				// same x, y not there
+				if (currenty < endy) {
+					// go right and up
+					if (isInBoundaries(new Coordinate(currentx + 1, currenty), island)
+							&& isInBoundaries(new Coordinate(currentx + 1, currenty + 1), island)
+							&& isInBoundaries(new Coordinate(currentx + 1, currenty + 2), island)) {
+						currentx += 1;
+						path.add(new Coordinate(currentx, currenty));
+						currenty += 1;
+						path.add(new Coordinate(currentx, currenty));
+					} else if (isInBoundaries(new Coordinate(currentx - 1, currenty), island)
+							&& isInBoundaries(new Coordinate(currentx - 1, currenty + 1), island)
+							&& isInBoundaries(new Coordinate(currentx - 1, currenty + 2), island)) {
+						//go left and up
+						currentx -= 1;
+						path.add(new Coordinate(currentx, currenty));
+						currenty += 1;
+						path.add(new Coordinate(currentx, currenty));
+					} else {
+						System.err.println("Error: Path not found");
+						break;
+					}
+				}
+				else if (currenty > endy) {
+					// go right and down
+					if (isInBoundaries(new Coordinate(currentx + 1, currenty), island)
+							&& isInBoundaries(new Coordinate(currentx + 1, currenty - 1), island)
+							&& isInBoundaries(new Coordinate(currentx + 1, currenty - 2), island)) {
+						currentx += 1;
+						path.add(new Coordinate(currentx, currenty));
+						currenty -= 1;
+						path.add(new Coordinate(currentx, currenty));
+					} else if (isInBoundaries(new Coordinate(currentx - 1, currenty), island)
+							&& isInBoundaries(new Coordinate(currentx - 1, currenty - 1), island)
+							&& isInBoundaries(new Coordinate(currentx - 1, currenty - 2), island)) {
+						//go left and down
+						currentx -= 1;
+						path.add(new Coordinate(currentx, currenty));
+						currenty -= 1;
+						path.add(new Coordinate(currentx, currenty));
+					} else {
+						System.err.println("Error: Path not found");
+						break;
+					}
+				}
+				// same y, x not there
+				else if (currentx < endx) {
+					// go up and right
+					if (isInBoundaries(new Coordinate(currentx, currenty + 1), island)
+							&& isInBoundaries(new Coordinate(currentx + 1, currenty + 1), island)
+							&& isInBoundaries(new Coordinate(currentx + 2, currenty + 1), island)) {
+						currenty += 1;
+						path.add(new Coordinate(currentx, currenty));
+						currentx += 1;
+						path.add(new Coordinate(currentx, currenty));
+					}
+					// go down and right
+					else if (isInBoundaries(new Coordinate(currentx, currenty - 1), island)
+							&& isInBoundaries(new Coordinate(currentx + 1, currenty - 1), island)
+							&& isInBoundaries(new Coordinate(currentx + 2, currenty - 1), island)) {
+						currenty -= 1;
+						path.add(new Coordinate(currentx, currenty));
+						currentx += 1;
+						path.add(new Coordinate(currentx, currenty));
+					} else {
+						System.err.println("Error: Path not found");
+						break;
+					}
+				}
+				else if (currentx > endx) {
+					// go up and left
+					if (isInBoundaries(new Coordinate(currentx, currenty + 1), island)
+							&& isInBoundaries(new Coordinate(currentx - 1, currenty + 1), island)
+							&& isInBoundaries(new Coordinate(currentx - 2, currenty + 1), island)) {
+						currenty += 1;
+						path.add(new Coordinate(currentx, currenty));
+						currentx -= 1;
+						path.add(new Coordinate(currentx, currenty));
+					}
+					// go down and left
+					else if (isInBoundaries(new Coordinate(currentx, currenty - 1), island)
+							&& isInBoundaries(new Coordinate(currentx - 1, currenty - 1), island)
+							&& isInBoundaries(new Coordinate(currentx - 2, currenty - 2), island)) {
+						currenty -= 1;
+						path.add(new Coordinate(currentx, currenty));
+						currentx -= 1;
+						path.add(new Coordinate(currentx, currenty));
+					} else {
+						System.err.println("Error: Path not found");
+						break;
+					}
+				}
+			}
 		}
 		return path;
 	}
@@ -359,23 +486,31 @@ public class Project {
 		// robot cannot go on a tunnel
 		if (coord.x == TURx && coord.y == TURy)
 			return false;
+		if (coord.x == TLLx && coord.y == TLLy)
+			return false;
 		if (tunnel == Tunnel.HORIZONTAL) {
 			if (coord.x == TURx && coord.y == TURy - 1)
 				return false;
+			if (coord.x == TLLx && coord.y == TLLy + 1)
+				return false;
 		} else {
 			if (coord.x == TURx - 1 && coord.y == TURy)
+				return false;
+			if (coord.x == TLLx + 1 && coord.y == TLLy)
 				return false;
 		}
 		// robot cannot be on ring sets
 		if (coord.x == TGx && coord.y == TGy)
 			return false;
-		if (coord.x == TRx && coord.y == TRx)
+		if (coord.x >= TRx - 0.5 && coord.x <= TRx + 0.5 && coord.y >= TRy - 0.5 && coord.y <= TRy + 0.5)
 			return false;
 
-      if(island){
-        if(coord.x > IURx || coord.x < ILLx) return false;
-        if(coord.y > IURx || coord.y < ILLy) return false;
-      }
+		if (island) {
+			if (coord.x > IURx || coord.x < ILLx)
+				return false;
+			if (coord.y > IURx || coord.y < ILLy)
+				return false;
+		}
 		return true;
 	}
 }
