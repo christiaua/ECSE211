@@ -58,8 +58,7 @@ public class RingSearch {
 		upperMotor.setSpeed(DROP_SPEED);
 		lowerMotor.setSpeed(DROP_SPEED);
 		upperMotor.rotate(70,true);
-		lowerMotor.rotate(-70, false);
-		Navigation.dropRing();
+		lowerMotor.rotate(-70, true);
 	}
 
 	public static void grabUpperRing() {

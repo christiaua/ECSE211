@@ -20,9 +20,6 @@ public class LightLocalizer {
   private static double y;
   private static final double D = 10;
   private static double dthetaY;
-  private static final double TILE_SIZE = 30.48;
-  private static final double FIELD_WIDTH = 8 * TILE_SIZE;
-  private static final double FIELD_HEIGHT = 8 * TILE_SIZE;
 
   /**
    * constructor
@@ -40,9 +37,8 @@ public class LightLocalizer {
   /**
    * Performs localization using the robot's light sensors. 
    * Moves to the corner of the starting tile when done.
-   * @param SC The starting corner (0, 1, 2, or 3).
    */
-public void moveToOrigin(int SC) {
+public void moveToOrigin() {
     int lineCount = 0;
     double[] theta = new double[4];
     double thetaY;
@@ -91,21 +87,6 @@ public void moveToOrigin(int SC) {
     odo.update(0, 0, (dthetaY - 15));
     Navigation.travelTo(0, 0);
     Navigation.turnTo(0);
-
-    switch (SC) {
-      case 0:
-        odo.setXYT(TILE_SIZE, TILE_SIZE, 0);
-        break;
-      case 1:
-        odo.setXYT(FIELD_WIDTH - TILE_SIZE, TILE_SIZE, 270);
-        break;
-      case 2:
-        odo.setXYT(FIELD_WIDTH - TILE_SIZE, FIELD_HEIGHT - TILE_SIZE, 180);
-        break;
-      case 3:
-        odo.setXYT(TILE_SIZE, FIELD_HEIGHT - TILE_SIZE, 90);
-        break;
-    }
   }
 
 
