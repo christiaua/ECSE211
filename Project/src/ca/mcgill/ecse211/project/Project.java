@@ -260,6 +260,7 @@ public class Project {
 					Coordinate point = waypoints.pop();
 					Navigation.travelTo(point.x, point.y);
 				}
+				Navigation.travelTo(STARTX, STARTY);
 
 				switch (SC) {
 				case 0:
