@@ -26,6 +26,38 @@ public class RingSearch {
 		lowerMotor.setSpeed(MOTOR_SPEED);
 	}
 
+	public int findRing() {
+	  int position = -1;
+	  poller.enableColourDetection(false);
+	  upperMotor.setSpeed(MOTOR_SPEED);
+      lowerMotor.setSpeed(MOTOR_SPEED);
+      lowerMotor.rotateTo(-90, false);
+	  upperMotor.rotateTo(130, false);
+	  //Navigation.moveForward(D, false);
+	  poller.enableColourDetection(true);
+	  upperMotor.rotateTo(90, false);
+	  try {
+        Thread.sleep(1000);
+      } catch (Exception e) {
+      }
+		if (!(poller.getColour() == ColourType.NONE)) {
+		  position = 1;
+			return position;
+		}
+		upperMotor.rotateTo(50, false);
+		try {
+          Thread.sleep(1000);
+        } catch (Exception e) {
+        }
+		if (!(poller.getColour() == ColourType.NONE)) {
+		  position = 0;
+			return position;
+		}
+		//Navigation.moveForward(-D, false);
+		System.out.println(position);
+		return position;
+	}
+
 	public static void floatMotors() {
 		upperMotor.forward();
 		upperMotor.flt();
@@ -93,6 +125,7 @@ public class RingSearch {
 		lowerMotor.rotate(-70, true);
 		upperMotor.rotate(70, immediateReturn);
 	}
+	
 
 	public void disableTunnel(boolean immediateReturn) {
 		upperMotor.setSpeed(MOTOR_SPEED);
