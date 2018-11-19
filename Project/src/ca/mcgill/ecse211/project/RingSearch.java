@@ -1,5 +1,7 @@
 package ca.mcgill.ecse211.project;
 
+import java.util.HashMap;
+
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.poller.Poller;
 import ca.mcgill.ecse211.poller.PollerException;
@@ -10,11 +12,6 @@ import lejos.hardware.motor.EV3MediumRegulatedMotor;
 public class RingSearch {
 	private static Poller poller;
 
-	private static int TGx = 5;
-	private static int TGy = 7;
-
-	private static final double OFFSET = 0.5;
-	private static final double TILE_SIZE = 30.48;
 	private static final int MOTOR_SPEED = 50;
 	private static final int DROP_SPEED = 300;
 	private static final double D = 10;
@@ -25,24 +22,8 @@ public class RingSearch {
 
 	public RingSearch(int tGx, int tGy) throws PollerException, OdometerExceptions {
 		RingSearch.poller = Poller.getPoller();
-		RingSearch.TGx = tGx;
-		RingSearch.TGy = tGy;
 		upperMotor.setSpeed(MOTOR_SPEED);
 		lowerMotor.setSpeed(MOTOR_SPEED);
-	}
-
-	public int findRing() {
-		int position = 3;
-		if (!(poller.getColour() == ColourType.NONE)) {
-			position = 1;
-		}
-		upperMotor.rotate(20, false);
-
-		if (!(poller.getColour() == ColourType.NONE)) {
-			position = 0;
-		}
-		upperMotor.rotate(-5, false);
-		return position;
 	}
 
 	public static void floatMotors() {
@@ -60,10 +41,28 @@ public class RingSearch {
 		upperMotor.rotate(70,true);
 		lowerMotor.rotate(-70, true);
 	}
-
-	public static void grabUpperRing() {
+	
+	public static void findRing(Coordinate coord, HashMap<ColourType, Coordinate> ringMap) {
 		Navigation.moveForward(D / 2, false);
 		Navigation.stop();
+		
+		//if is lower ring, just grab it
+		if (!(poller.getColour() == ColourType.NONE)) {
+			grabLowerRing();
+		}
+		else {
+			//else, check if its upper and store the information
+			upperMotor.rotate(20, false);
+			if (!(poller.getColour() == ColourType.NONE)) {
+				ringMap.put(poller.getColour(), coord);
+			}
+			upperMotor.rotate(-20, false);
+			Navigation.moveForward(-(D/2), false);
+		}
+	}
+
+	public static void grabUpperRing() {
+		Navigation.moveForward(D, false);
 		upperMotor.rotate(-20, true);
 		Navigation.moveForward(-(D + D / 2), false);
 		Navigation.stop();
@@ -71,9 +70,8 @@ public class RingSearch {
 	}
 
 	public static void grabLowerRing() {
-		Navigation.moveForward(D / 2, false);
 		upperMotor.rotate(-75, false);
-		Navigation.moveForward(8, false);
+		Navigation.moveForward(D, false);
 		Navigation.stop();
 		lowerMotor.rotate(30, true);
 		Navigation.moveForward(-(D + D / 2), false);

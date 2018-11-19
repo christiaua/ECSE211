@@ -128,24 +128,30 @@ public class RingDetector {
 			dG = (float) Math.sqrt((data[0] - G_RGB_MEAN[0]) * (data[0] - G_RGB_MEAN[0])
 					+ (data[1] - G_RGB_MEAN[1]) * (data[1] - G_RGB_MEAN[1])
 					+ (data[2] - G_RGB_MEAN[2]) * (data[2] - G_RGB_MEAN[2]));
+			
+			float minValue = 0.1f;
+			minValue = Math.min(minValue, dY);
+			minValue = Math.min(minValue, dB);
+			minValue = Math.min(minValue, dO);
+			minValue = Math.min(minValue, dG);
 
 			//if is yellow
-			if (dY < 0.020744 + 0.010672 * 2) {
+			if (dY == minValue) {
 				ringColour = ColourType.YELLOW;
 				soundAlert(2);
 			} 
 			//if is blue
-			else if (dB < 0.1) {
+			else if (dB == minValue) {
 				ringColour = ColourType.BLUE;
 				soundAlert(0);
 			} 
 			//if is orange
-			else if (dO < 0.075) {
+			else if (dO == minValue) {
 				ringColour = ColourType.ORANGE;
 				soundAlert(3);
 			} 
 			//if is green
-			else if (dG < 0.023811 + 0.013883 * 2) {
+			else if (dG == minValue) {
 				ringColour = ColourType.GREEN;
 				soundAlert(1);
 			} 

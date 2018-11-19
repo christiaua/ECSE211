@@ -131,6 +131,17 @@ public class Navigation {
 	}
 	
 	/**
+	 * This method moves the robot with the input path
+	 * @param path
+	 */
+	public static void travelByPath(LinkedList<Coordinate> path) {
+		while(!path.isEmpty()) {
+			Coordinate location = path.remove();
+			Navigation.travelTo(location.x, location.y);
+		}
+	}
+	
+	/**
 	 * This method makes the robot move back full speed to drop the ring
 	 */
 	public static void dropRing() {
