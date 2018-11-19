@@ -42,23 +42,24 @@ public class RingSearch {
 		lowerMotor.rotate(-70, true);
 	}
 	
-	public static void findRing(Coordinate coord, HashMap<ColourType, Coordinate> ringMap) {
+	public static void findRing(Coordinate coord, HashMap<ColourType, Coordinate> ringMap, int num) {
 		Navigation.moveForward(D / 2, false);
 		Navigation.stop();
-		
-		//if is lower ring, just grab it
-		if (!(poller.getColour() == ColourType.NONE)) {
-			grabLowerRing();
-		}
-		else {
-			//else, check if its upper and store the information
-			upperMotor.rotate(20, false);
-			if (!(poller.getColour() == ColourType.NONE)) {
-				ringMap.put(poller.getColour(), coord);
-			}
-			upperMotor.rotate(-20, false);
-			Navigation.moveForward(-(D/2), false);
-		}
+//		
+//		//if is lower ring, just grab it
+//		if (!(poller.getColour() == ColourType.NONE)) {
+//			grabLowerRing();
+//		}
+//		else {
+//			//else, check if its upper and store the information
+//			upperMotor.rotate(20, false);
+//			if (!(poller.getColour() == ColourType.NONE)) {
+//				ringMap.put(poller.getColour(), coord);
+//			}
+//			upperMotor.rotate(-20, false);
+//			Navigation.moveForward(-(D/2), false);
+//		}
+		grabLowerRing(num);
 	}
 
 	public static void grabUpperRing() {
@@ -69,15 +70,21 @@ public class RingSearch {
 		upperMotor.rotate(20, true);
 	}
 
-	public static void grabLowerRing() {
+	public static void grabLowerRing(int num) {
+		if(num > 1) {
+			Navigation.moveForward(-(D / 2), false);
+			return;
+		}
 		upperMotor.rotate(-75, false);
-		Navigation.moveForward(D, false);
+		Navigation.moveForward(8, false);
 		Navigation.stop();
 		lowerMotor.rotate(30, true);
-		Navigation.moveForward(-(D + D / 2), false);
+		Navigation.moveForward(-(8 + D / 2), false);
 		Navigation.stop();
 		upperMotor.rotate(75, true);
-		lowerMotor.rotate(-30, true);
+		if(num == 0) {
+			lowerMotor.rotate(-30, true);
+		}	
 	}
 
 	public void enableTunnel(boolean immediateReturn) {

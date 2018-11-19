@@ -18,7 +18,7 @@ public class LightLocalizer {
   private static Poller poller;
   private static double x;
   private static double y;
-  private static final double D = 10;
+  private static final double D = 7;
   private static double dthetaY;
 
   /**
