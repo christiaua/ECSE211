@@ -1,6 +1,7 @@
 package ca.mcgill.ecse211.project;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Stack;
@@ -10,6 +11,7 @@ import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.poller.Poller;
 import ca.mcgill.ecse211.poller.PollerException;
+import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
@@ -40,14 +42,14 @@ public class Project {
 	// No prefix: starting zone
 	private static int URx = 8;
 	private static int URy = 3;
-	private static int LLx = 3;
-	private static int LLy = 3;
+	private static int LLx = 0;
+	private static int LLy = 0;
 
 	// I: island
 	private static int IURx = 8;
 	private static int IURy = 8;
 	private static int ILLx = 0;
-	private static int ILLy = 5;
+	private static int ILLy = 2;
 
 	// Starting corner
 	private static int SC = 1;
@@ -108,7 +110,6 @@ public class Project {
 
 			if (buttonChoice == Button.ID_LEFT) {
 				// Test the track and wheels
-
 			  ringSearch = new RingSearch(TGx, TGy);
 			  ringSearch.findRing();
 
@@ -172,38 +173,36 @@ public class Project {
 				if (TURx - TLLx > 1) {
 					tunnel = Tunnel.HORIZONTAL;
 				}
-				//checkfor valid inputs
-				if(tunnel == Tunnel.VERTICAL) {
-					if(TURx <= ILLx || TURx > IURx || TURy < ILLy || TURy >= IURy) {
+				// checkfor valid inputs
+				if (tunnel == Tunnel.VERTICAL) {
+					if (TURx <= ILLx || TURx > IURx || TURy < ILLy || TURy >= IURy) {
 						System.err.println("Error: Tunnel not connecting to island");
 						System.exit(0);
 					}
-					if(TLLx >= URx || TLLx < LLx || TLLy > URy || TLLy <= LLy) {
+					if (TLLx >= URx || TLLx < LLx || TLLy > URy || TLLy <= LLy) {
+						System.err.println("Error: Tunnel not connecting to starting zone");
+						System.exit(0);
+					}
+				} else {
+					if (TURx < ILLx || TURx >= IURx || TURy > IURy || TURy <= ILLy) {
+						System.err.println("Error: Tunnel not connecting to island");
+						System.exit(0);
+					}
+					if (TLLx > URx || TLLx <= LLx || TLLy >= URy || TLLy < LLy) {
 						System.err.println("Error: Tunnel not connecting to starting zone");
 						System.exit(0);
 					}
 				}
-				else {
-					if(TURx < ILLx || TURx >= IURx || TURy > IURy || TURy <= ILLy) {
-						System.err.println("Error: Tunnel not connecting to island");
-						System.exit(0);
-					}
-					if(TLLx > URx || TLLx <= LLx || TLLy >= URy || TLLy < LLy) {
-						System.err.println("Error: Tunnel not connecting to starting zone");
-						System.exit(0);
-					}
-				}
-			
-				
-				// usLocalizer = new UltrasonicLocalizer();
-				// lightLocalizer = new LightLocalizer();
+
+				usLocalizer = new UltrasonicLocalizer();
+				lightLocalizer = new LightLocalizer();
 				ringSearch = new RingSearch(TGx, TGy);
 				Stack<Coordinate> waypoints = new Stack<Coordinate>();
 
 				// beta demo algorithm
 				poller.enableCorrection(false);
-				// usLocalizer.fallingEdge();
-				// lightLocalizer.moveToOrigin();
+				//usLocalizer.fallingEdge();
+				//lightLocalizer.moveToOrigin();
 				switch (SC) {
 				case 0:
 					odometer.setXYT(TILE_SIZE, TILE_SIZE, 0);
@@ -233,57 +232,60 @@ public class Project {
 
 				// determine which points of the ring set locations can be accessed
 				ArrayList<Coordinate> RingCoordinates = new ArrayList<Coordinate>();
-				// for horizontal tunnels, visit down, right, up, left
-				if (tunnel == Tunnel.HORIZONTAL) {
-					int[] changeX = { 0, 1, 0, -1 };
-					int[] changeY = { -1, 0, 1, 0 };
-					for (int i = 0; i < 4; i++) {
-						Coordinate change = new Coordinate(TGx + changeX[i], TGy + changeY[i]);
-						if (isInBoundaries(change, true)) {
-							RingCoordinates.add(change);
-						}
-					}
-				}
-				// vertical tunnels, visit left, down, right, up
-				else {
-					int[] changeX = { -1, 0, 1, 0 };
-					int[] changeY = { 0, -1, 0, 1 };
-					for (int i = 0; i < 4; i++) {
-						Coordinate change = new Coordinate(TGx + changeX[i], TGy + changeY[i]);
-						if (isInBoundaries(change, true)) {
-							RingCoordinates.add(change);
-						}
+				// visit left, down, right, up
+				int[] changeX = { -1, 0, 1, 0 };
+				int[] changeY = { 0, -1, 0, 1 };
+				for (int i = 0; i < 4; i++) {
+					Coordinate change = new Coordinate(TGx + changeX[i], TGy + changeY[i]);
+					if (isInBoundaries(change, true)) {
+						RingCoordinates.add(change);
 					}
 				}
 
 				ringSearch.enableTunnel(true);
 
-				LinkedList<Coordinate> pathToTunnel = new LinkedList<Coordinate>();
-				if (tunnel == Tunnel.HORIZONTAL) {
-					pathToTunnel = findPath(STARTX, STARTY, TLLx - 0.5, TLLy + 0.5, false);
-					Navigation.travelByPath(waypoints, pathToTunnel);
-				} else {
-					// vertical tunnel
-					pathToTunnel = findPath(STARTX, STARTY, TLLx + 0.5, TLLy - 0.5, false);
-					Navigation.travelByPath(waypoints, pathToTunnel);
-				}
-
-				Navigation.traverseTunnel(waypoints, TLLx, TLLy, TURx, TURy, tunnel);
-
-				LinkedList<Coordinate> pathToRing = findPath(waypoints.peek().x, waypoints.peek().y,
-						RingCoordinates.get(0).x, RingCoordinates.get(0).y, true);
-
-				Navigation.travelByPath(waypoints, pathToRing);
-
+//				LinkedList<Coordinate> pathToTunnel = new LinkedList<Coordinate>();
+//				if (tunnel == Tunnel.HORIZONTAL) {
+//					pathToTunnel = findPath(STARTX, STARTY, TLLx - 0.5, TLLy + 0.5, false);
+//					Navigation.travelByPath(waypoints, pathToTunnel);
+//				} else {
+//					// vertical tunnel
+//					pathToTunnel = findPath(STARTX, STARTY, TLLx + 0.5, TLLy - 0.5, false);
+//					Navigation.travelByPath(waypoints, pathToTunnel);
+//				}
+//
+//				Navigation.traverseTunnel(waypoints, TLLx, TLLy, TURx, TURy, tunnel);
+//
+//				LinkedList<Coordinate> pathToRing = findPath(waypoints.peek().x, waypoints.peek().y,
+//						RingCoordinates.get(0).x, RingCoordinates.get(0).y, true);
+//
+//				Navigation.travelByPath(waypoints, pathToRing);
+				
+				odometer.setTheta(0);
+				odometer.setX(RingCoordinates.get(0).x * TILE_SIZE);
+				odometer.setY(RingCoordinates.get(0).y * TILE_SIZE);
 				Navigation.face(TGx, TGy);
-
-				RingSearch.grabLowerRing();
-
-				while (!waypoints.isEmpty()) {
-					Coordinate point = waypoints.pop();
-					Navigation.travelTo(point.x, point.y);
+				
+				HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
+				RingSearch.findRing(RingCoordinates.get(0), ringMap, 0);
+						
+				for(int i = 1; i < RingCoordinates.size(); i++) {
+					LinkedList<Coordinate> nextRing = findPath(RingCoordinates.get(i-1).x, RingCoordinates.get(i-1).y,
+							RingCoordinates.get(i).x, RingCoordinates.get(i).y, true);
+					Navigation.travelByPath(nextRing);
+					Navigation.face(TGx, TGy);
+					RingSearch.findRing(RingCoordinates.get(i), ringMap, i);
 				}
-				Navigation.travelTo(STARTX, STARTY);
+
+//				LinkedList<Coordinate> tunnelBack = findPath(RingCoordinates.get(RingCoordinates.size()-1).x, RingCoordinates.get(RingCoordinates.size()-1).y,
+//						waypoints.peek().x, waypoints.peek().y, true);
+//				Navigation.travelByPath(tunnelBack);
+//
+//				while (!waypoints.isEmpty()) {
+//					Coordinate point = waypoints.pop();
+//					Navigation.travelTo(point.x, point.y);
+//				}
+//				Navigation.travelTo(STARTX, STARTY);
 
 				switch (SC) {
 				case 0:
@@ -342,11 +344,11 @@ public class Project {
 					break;
 				}
 			}
-			//add to path if moved in x
+			// add to path if moved in x
 			if (!(lastx == currentx && lasty == currenty)) {
 				path.add(new Coordinate(currentx, currenty));
 			}
-			//break if at destination
+			// break if at destination
 			if (currentx == endx && currenty == endy)
 				break;
 			while (endy < currenty) {
@@ -365,12 +367,12 @@ public class Project {
 					break;
 				}
 			}
-			//add to path if moved in y
+			// add to path if moved in y
 			if (!(lastx == currentx && lasty == currenty)) {
 				path.add(new Coordinate(currentx, currenty));
 			}
-			
-			//if there is an obstacle in the way
+
+			// if there is an obstacle in the way
 			if (lastx == currentx && lasty == currenty) {
 				// same x, y not there
 				if (currenty < endy) {
@@ -385,7 +387,7 @@ public class Project {
 					} else if (isInBoundaries(new Coordinate(currentx - 1, currenty), island)
 							&& isInBoundaries(new Coordinate(currentx - 1, currenty + 1), island)
 							&& isInBoundaries(new Coordinate(currentx - 1, currenty + 2), island)) {
-						//go left and up
+						// go left and up
 						currentx -= 1;
 						path.add(new Coordinate(currentx, currenty));
 						currenty += 1;
@@ -394,8 +396,7 @@ public class Project {
 						System.err.println("Error: Path not found");
 						break;
 					}
-				}
-				else if (currenty > endy) {
+				} else if (currenty > endy) {
 					// go right and down
 					if (isInBoundaries(new Coordinate(currentx + 1, currenty), island)
 							&& isInBoundaries(new Coordinate(currentx + 1, currenty - 1), island)
@@ -407,7 +408,7 @@ public class Project {
 					} else if (isInBoundaries(new Coordinate(currentx - 1, currenty), island)
 							&& isInBoundaries(new Coordinate(currentx - 1, currenty - 1), island)
 							&& isInBoundaries(new Coordinate(currentx - 1, currenty - 2), island)) {
-						//go left and down
+						// go left and down
 						currentx -= 1;
 						path.add(new Coordinate(currentx, currenty));
 						currenty -= 1;
@@ -440,8 +441,7 @@ public class Project {
 						System.err.println("Error: Path not found");
 						break;
 					}
-				}
-				else if (currentx > endx) {
+				} else if (currentx > endx) {
 					// go up and left
 					if (isInBoundaries(new Coordinate(currentx, currenty + 1), island)
 							&& isInBoundaries(new Coordinate(currentx - 1, currenty + 1), island)
@@ -484,31 +484,29 @@ public class Project {
 		// robot cannot go on a tunnel
 		if (coord.x == TURx && coord.y == TURy)
 			return false;
-		if (coord.x == TLLx && coord.y == TLLy)
+    if (coord.x == TLLx && coord.y == TLLy)
 			return false;
 		if (tunnel == Tunnel.HORIZONTAL) {
 			if (coord.x == TURx && coord.y == TURy - 1)
 				return false;
-			if (coord.x == TLLx && coord.y == TLLy + 1)
+      if (coord.x == TLLx && coord.y == TLLy + 1)
 				return false;
 		} else {
 			if (coord.x == TURx - 1 && coord.y == TURy)
 				return false;
-			if (coord.x == TLLx + 1 && coord.y == TLLy)
+      if (coord.x == TLLx + 1 && coord.y == TLLy)
 				return false;
 		}
 		// robot cannot be on ring sets
-		if (coord.x == TGx && coord.y == TGy)
+		if (coord.x >= TGx-0.5 && coord.x <= TGx+0.5 && coord.y >= TGy-0.5 && coord.y <= TGy+0.5)
 			return false;
-		if (coord.x >= TRx - 0.5 && coord.x <= TRx + 0.5 && coord.y >= TRy - 0.5 && coord.y <= TRy + 0.5)
+		if (coord.x >= TRx-0.5 && coord.x <= TRx+0.5 && coord.y >= TRy-0.5 && coord.y <= TRy+0.5)
 			return false;
 
-		if (island) {
-			if (coord.x > IURx || coord.x < ILLx)
-				return false;
-			if (coord.y > IURx || coord.y < ILLy)
-				return false;
-		}
+      if(island){
+        if(coord.x > IURx || coord.x < ILLx) return false;
+        if(coord.y > IURx || coord.y < ILLy) return false;
+      }
 		return true;
 	}
 }
