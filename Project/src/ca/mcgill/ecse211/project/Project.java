@@ -65,6 +65,7 @@ public class Project {
 	private static UltrasonicLocalizer usLocalizer;
 	private static LightLocalizer lightLocalizer;
 	private static RingSearch ringSearch;
+	private static Navigation navigation;
 
 	// Constants
 	private static final int TEAM_NUMBER = 7;
@@ -89,6 +90,8 @@ public class Project {
 				buttonChoice = Button.waitForAnyPress(); // Record choice (left or right press)
 			} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 
+			navigation = new Navigation();
+			
 			odometer = Odometer.getOdometer();
 			Thread odoThread = new Thread(odometer);
 			odoThread.start();
@@ -106,13 +109,8 @@ public class Project {
 			if (buttonChoice == Button.ID_LEFT) {
 				// Test the track and wheels
 
-				Navigation.turnTo(10);
-				odometer.setTheta(0);
-				Navigation.moveForward(40, false);
-				// Navigation.travelTo(0,4);
-				Navigation.turnTo(0);
-				
-				System.exit(0);
+			  ringSearch = new RingSearch(TGx, TGy);
+			  ringSearch.findRing();
 
 			} else if (buttonChoice == Button.ID_RIGHT) {
 				// Receive data over Wifi

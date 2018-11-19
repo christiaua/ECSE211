@@ -64,6 +64,7 @@ public class Poller implements Runnable {
   private float currentRedReading1, currentRedReading2;
 
   private boolean correctionEnabled = true;
+  private boolean colourDetectionEnabled = true;
 
   /**
    * Constructor
@@ -78,12 +79,21 @@ public class Poller implements Runnable {
   }
 
   /**
+   * Toggles colour detection
+   * 
+   * @param isEnabled Turns colour detection on if true, off if false
+   */
+  public void enableCorrection(boolean isEnabled) {
+    correctionEnabled = isEnabled;
+  }
+  
+  /**
    * Sets the correction
    * 
    * @param isEnabled
    */
-  public void enableCorrection(boolean isEnabled) {
-    correctionEnabled = isEnabled;
+  public void enableColourDetection(boolean isEnabled) {
+    colourDetectionEnabled = isEnabled;
   }
 
   /**
@@ -134,8 +144,10 @@ public class Poller implements Runnable {
       lastRedReading2 = currentRedReading2;
       currentRedReading2 = redData2[0];
 
-      rgbSample.fetchSample(rgbData, 0);
-      ringDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2]);
+      if(colourDetectionEnabled){
+        rgbSample.fetchSample(rgbData, 0);
+        ringDetector.processRGBData(rgbData[0], rgbData[1], rgbData[2]);
+      }
 
       us.fetchSample(usData, 0); // acquire data
       unfilteredDistance = (usData[0] * 100.0); // extract from buffer, cast to int
