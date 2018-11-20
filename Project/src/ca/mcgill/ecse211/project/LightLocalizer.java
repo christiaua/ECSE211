@@ -62,7 +62,7 @@ public void moveToOrigin() {
       }
     }
 
-    Navigation.moveForward(-14, false);
+    Navigation.moveForward(-10, false);
 
     // perform a 360
     Navigation.rotate(360, true);
