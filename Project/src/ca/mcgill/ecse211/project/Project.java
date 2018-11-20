@@ -93,7 +93,7 @@ public class Project {
 			} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
 
 			navigation = new Navigation();
-			
+
 			odometer = Odometer.getOdometer();
 			Thread odoThread = new Thread(odometer);
 			odoThread.start();
@@ -110,15 +110,15 @@ public class Project {
 
 			if (buttonChoice == Button.ID_LEFT) {
 				// Test the track and wheels
-			  HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
-			  ringSearch = new RingSearch(TGx, TGy);
-			  ringSearch.enableTunnel(false);
-			  RingSearch.findRing(new Coordinate(0,0), ringMap);
-//			  LinkedList<Coordinate> nextRing = findPath(-1, 1,
-//                0,0, true);
-//              Navigation.travelByPath(nextRing);
-//              Navigation.face(0, 1);
-//              ringSearch.findRing(new Coordinate(0,0), ringMap);
+				HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
+				ringSearch = new RingSearch(TGx, TGy);
+				ringSearch.enableTunnel(false);
+				RingSearch.findRing(new Coordinate(0, 0), ringMap);
+				// LinkedList<Coordinate> nextRing = findPath(-1, 1,
+				// 0,0, true);
+				// Navigation.travelByPath(nextRing);
+				// Navigation.face(0, 1);
+				// ringSearch.findRing(new Coordinate(0,0), ringMap);
 
 			} else if (buttonChoice == Button.ID_RIGHT) {
 				// Receive data over Wifi
@@ -210,8 +210,8 @@ public class Project {
 
 				// beta demo algorithm
 				poller.enableCorrection(false);
-				//usLocalizer.fallingEdge();
-				//lightLocalizer.moveToOrigin();
+				// usLocalizer.fallingEdge();
+				// lightLocalizer.moveToOrigin();
 				switch (SC) {
 				case 0:
 					odometer.setXYT(TILE_SIZE, TILE_SIZE, 0);
@@ -253,7 +253,7 @@ public class Project {
 
 				ringSearch.enableTunnel(true);
 
-				//nagivate to tunnel
+				// nagivate to tunnel
 				LinkedList<Coordinate> pathToTunnel = new LinkedList<Coordinate>();
 				if (tunnel == Tunnel.HORIZONTAL) {
 					pathToTunnel = findPath(STARTX, STARTY, TLLx - 0.5, TLLy + 0.5, false);
@@ -264,67 +264,54 @@ public class Project {
 					Navigation.travelByPath(waypoints, pathToTunnel);
 				}
 
-				//traverse tunnel
+				// traverse tunnel
 				Navigation.traverseTunnel(waypoints, TLLx, TLLy, TURx, TURy, tunnel);
 
-				//go to ring
+				// go to ring
 				LinkedList<Coordinate> pathToRing = findPath(waypoints.peek().x, waypoints.peek().y,
 						RingCoordinates.get(0).x, RingCoordinates.get(0).y, true);
 				Navigation.travelByPath(waypoints, pathToRing);
-				
-								
+
+				int hasRing = 0;
 				HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
-				//grab first ring
+				// grab first ring
 				Navigation.face(TGx, TGy);
-				RingSearch.findRing(RingCoordinates.get(0), ringMap);
-				
-				//get the other rings
+				try {
+			        Thread.sleep(1000);
+			      } catch (Exception e) {
+			      }
+				hasRing = Math.max(hasRing, RingSearch.findRing(RingCoordinates.get(0), ringMap));
+
+				// get the other rings
 				int index = 1;
-				for(index = 1; index < RingCoordinates.size(); index++) {
-					//if got bottom ring and found top ring, break
-					if(RingSearch.hasBottomRing() && !ringMap.isEmpty()) {
-						break;
-					}
-					LinkedList<Coordinate> nextRing = findPath(RingCoordinates.get(index-1).x, RingCoordinates.get(index-1).y,
-							RingCoordinates.get(index).x, RingCoordinates.get(index).y, true);
+				for (index = 1; index < RingCoordinates.size(); index++) {
+					LinkedList<Coordinate> nextRing = findPath(RingCoordinates.get(index - 1).x,
+							RingCoordinates.get(index - 1).y, RingCoordinates.get(index).x,
+							RingCoordinates.get(index).y, true);
 					Navigation.travelByPath(nextRing);
 					Navigation.face(TGx, TGy);
-					RingSearch.findRing(RingCoordinates.get(index), ringMap);
-				}
-				
-				//get top ring worth most if dont have top ring yet
-				if(RingSearch.hasBottomRing() && !RingSearch.hasTopRing()) {
-					ColourType[] priority = {ColourType.ORANGE, ColourType.YELLOW, ColourType.GREEN, ColourType.BLUE};
-					int priorityIndex = 0;
-					for(priorityIndex = 0; priorityIndex < priority.length; priorityIndex++) {
-						if(ringMap.containsKey(priority[priorityIndex])) {
-							LinkedList<Coordinate> topRing = findPath(RingCoordinates.get(index).x, RingCoordinates.get(index).y,
-									ringMap.get(priority[priorityIndex]).x, ringMap.get(priority[priorityIndex]).y, true);
-							Navigation.travelByPath(topRing);
-							Navigation.face(TGx, TGy);
-							RingSearch.findRing(RingCoordinates.get(index), ringMap);
-							break;
-						}
+					try {
+				        Thread.sleep(1000);
+				      } catch (Exception e) {
+				      }
+					hasRing = Math.max(hasRing, RingSearch.findRing(RingCoordinates.get(index), ringMap));
+					if (hasRing == 2) {
+						break;
 					}
-					LinkedList<Coordinate> backtoRingSet = findPath(RingCoordinates.get(priorityIndex).x, RingCoordinates.get(priorityIndex).y,
-							waypoints.peek().x, waypoints.peek().y, true);
-					Navigation.travelByPath(backtoRingSet);
-				}
-				else {
-					//if already has a top ring, go back to ringSet start
-					LinkedList<Coordinate> backtoRingSet = findPath(RingCoordinates.get(index).x, RingCoordinates.get(index).y,
-							waypoints.peek().x, waypoints.peek().y, true);
-					Navigation.travelByPath(backtoRingSet);
 				}
 
-				//go back to starting corner
+				LinkedList<Coordinate> backtoRingSet = findPath(RingCoordinates.get(index - 1).x,
+						RingCoordinates.get(index - 1).y, waypoints.peek().x, waypoints.peek().y, true);
+				Navigation.travelByPath(backtoRingSet);
+
+				// go back to starting corner
 				while (!waypoints.isEmpty()) {
 					Coordinate point = waypoints.pop();
 					Navigation.travelTo(point.x, point.y);
 				}
 				Navigation.travelTo(STARTX, STARTY);
 
-				//drop ring
+				// drop ring
 				switch (SC) {
 				case 0:
 					Navigation.turnTo(180 + 45);
@@ -522,29 +509,31 @@ public class Project {
 		// robot cannot go on a tunnel
 		if (coord.x == TURx && coord.y == TURy)
 			return false;
-    if (coord.x == TLLx && coord.y == TLLy)
+		if (coord.x == TLLx && coord.y == TLLy)
 			return false;
 		if (tunnel == Tunnel.HORIZONTAL) {
 			if (coord.x == TURx && coord.y == TURy - 1)
 				return false;
-      if (coord.x == TLLx && coord.y == TLLy + 1)
+			if (coord.x == TLLx && coord.y == TLLy + 1)
 				return false;
 		} else {
 			if (coord.x == TURx - 1 && coord.y == TURy)
 				return false;
-      if (coord.x == TLLx + 1 && coord.y == TLLy)
+			if (coord.x == TLLx + 1 && coord.y == TLLy)
 				return false;
 		}
 		// robot cannot be on ring sets
-		if (coord.x >= TGx-0.5 && coord.x <= TGx+0.5 && coord.y >= TGy-0.5 && coord.y <= TGy+0.5)
+		if (coord.x >= TGx - 0.5 && coord.x <= TGx + 0.5 && coord.y >= TGy - 0.5 && coord.y <= TGy + 0.5)
 			return false;
-		if (coord.x >= TRx-0.5 && coord.x <= TRx+0.5 && coord.y >= TRy-0.5 && coord.y <= TRy+0.5)
+		if (coord.x >= TRx - 0.5 && coord.x <= TRx + 0.5 && coord.y >= TRy - 0.5 && coord.y <= TRy + 0.5)
 			return false;
 
-      if(island){
-        if(coord.x > IURx || coord.x < ILLx) return false;
-        if(coord.y > IURx || coord.y < ILLy) return false;
-      }
+		if (island) {
+			if (coord.x > IURx || coord.x < ILLx)
+				return false;
+			if (coord.y > IURx || coord.y < ILLy)
+				return false;
+		}
 		return true;
 	}
 }

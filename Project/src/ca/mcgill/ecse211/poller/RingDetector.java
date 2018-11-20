@@ -43,8 +43,7 @@ public class RingDetector {
                                                       // any
   // position parameters
   private static Condition doneReseting = lock.newCondition(); // Let other threads know that a
-                                                               // reset
-  // operation is over.
+                                                               // reset operation is over.
 
   /**
    * Get the only instance of the ringDetector
