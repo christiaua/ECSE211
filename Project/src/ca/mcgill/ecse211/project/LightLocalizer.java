@@ -18,7 +18,7 @@ public class LightLocalizer {
   private static Poller poller;
   private static double x;
   private static double y;
-  private static final double D = 7;
+  private static final double D = 5;
   private static double dthetaY;
 
   /**
@@ -84,7 +84,7 @@ public void moveToOrigin() {
     odo.setX(x);
     odo.setY(y);
     dthetaY = -90 - theta[3] + thetaY / 2;
-    odo.update(0, 0, (dthetaY - 15));
+    odo.update(0, 0, (dthetaY - 13));
     Navigation.travelTo(0, 0);
     Navigation.turnTo(0);
   }
