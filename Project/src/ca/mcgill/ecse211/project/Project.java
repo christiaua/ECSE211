@@ -113,7 +113,7 @@ public class Project {
 			  HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
 			  ringSearch = new RingSearch(TGx, TGy);
 			  ringSearch.enableTunnel(false);
-			  ringSearch.findRing(new Coordinate(0,0), ringMap);
+			  RingSearch.findRing(new Coordinate(0,0), ringMap);
 //			  LinkedList<Coordinate> nextRing = findPath(-1, 1,
 //                0,0, true);
 //              Navigation.travelByPath(nextRing);
@@ -137,6 +137,7 @@ public class Project {
 				// IURy = ((Long) data.get("Island_UR_y")).intValue();
 				// if (greenTeam == TEAM_NUMBER) {
 				// // Target ring tree location
+				// SC = ((Long) data.get("GreenCorner")).intValue();
 				// TGx = ((Long) data.get("TG_x")).intValue();
 				// TGy = ((Long) data.get("TG_y")).intValue();
 				// // Other team ring
@@ -154,6 +155,7 @@ public class Project {
 				// URy = ((Long) data.get("Green_UR_y")).intValue();
 				// } else if (redTeam == TEAM_NUMBER) {
 				// // Target ring tree location
+				// SC = ((Long) data.get("RedCorner")).intValue();
 				// TRx = ((Long) data.get("TG_x")).intValue();
 				// TRy = ((Long) data.get("TG_y")).intValue();
 				// // Other team ring
@@ -251,49 +253,78 @@ public class Project {
 
 				ringSearch.enableTunnel(true);
 
-//				LinkedList<Coordinate> pathToTunnel = new LinkedList<Coordinate>();
-//				if (tunnel == Tunnel.HORIZONTAL) {
-//					pathToTunnel = findPath(STARTX, STARTY, TLLx - 0.5, TLLy + 0.5, false);
-//					Navigation.travelByPath(waypoints, pathToTunnel);
-//				} else {
-//					// vertical tunnel
-//					pathToTunnel = findPath(STARTX, STARTY, TLLx + 0.5, TLLy - 0.5, false);
-//					Navigation.travelByPath(waypoints, pathToTunnel);
-//				}
-//
-//				Navigation.traverseTunnel(waypoints, TLLx, TLLy, TURx, TURy, tunnel);
-//
-//				LinkedList<Coordinate> pathToRing = findPath(waypoints.peek().x, waypoints.peek().y,
-//						RingCoordinates.get(0).x, RingCoordinates.get(0).y, true);
-//
-//				Navigation.travelByPath(waypoints, pathToRing);
-				
-				odometer.setTheta(0);
-				odometer.setX(RingCoordinates.get(0).x * TILE_SIZE);
-				odometer.setY(RingCoordinates.get(0).y * TILE_SIZE);
-				Navigation.face(TGx, TGy);
-				
-				HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
-				RingSearch.findRing(RingCoordinates.get(0), ringMap);
-						
-				for(int i = 1; i < RingCoordinates.size(); i++) {
-					LinkedList<Coordinate> nextRing = findPath(RingCoordinates.get(i-1).x, RingCoordinates.get(i-1).y,
-							RingCoordinates.get(i).x, RingCoordinates.get(i).y, true);
-					Navigation.travelByPath(nextRing);
-					Navigation.face(TGx, TGy);
-					RingSearch.findRing(RingCoordinates.get(i), ringMap);
+				//nagivate to tunnel
+				LinkedList<Coordinate> pathToTunnel = new LinkedList<Coordinate>();
+				if (tunnel == Tunnel.HORIZONTAL) {
+					pathToTunnel = findPath(STARTX, STARTY, TLLx - 0.5, TLLy + 0.5, false);
+					Navigation.travelByPath(waypoints, pathToTunnel);
+				} else {
+					// vertical tunnel
+					pathToTunnel = findPath(STARTX, STARTY, TLLx + 0.5, TLLy - 0.5, false);
+					Navigation.travelByPath(waypoints, pathToTunnel);
 				}
 
-//				LinkedList<Coordinate> tunnelBack = findPath(RingCoordinates.get(RingCoordinates.size()-1).x, RingCoordinates.get(RingCoordinates.size()-1).y,
-//						waypoints.peek().x, waypoints.peek().y, true);
-//				Navigation.travelByPath(tunnelBack);
-//
-//				while (!waypoints.isEmpty()) {
-//					Coordinate point = waypoints.pop();
-//					Navigation.travelTo(point.x, point.y);
-//				}
-//				Navigation.travelTo(STARTX, STARTY);
+				//traverse tunnel
+				Navigation.traverseTunnel(waypoints, TLLx, TLLy, TURx, TURy, tunnel);
 
+				//go to ring
+				LinkedList<Coordinate> pathToRing = findPath(waypoints.peek().x, waypoints.peek().y,
+						RingCoordinates.get(0).x, RingCoordinates.get(0).y, true);
+				Navigation.travelByPath(waypoints, pathToRing);
+				
+								
+				HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
+				//grab first ring
+				Navigation.face(TGx, TGy);
+				RingSearch.findRing(RingCoordinates.get(0), ringMap);
+				
+				//get the other rings
+				int index = 1;
+				for(index = 1; index < RingCoordinates.size(); index++) {
+					//if got bottom ring and found top ring, break
+					if(RingSearch.hasBottomRing() && !ringMap.isEmpty()) {
+						break;
+					}
+					LinkedList<Coordinate> nextRing = findPath(RingCoordinates.get(index-1).x, RingCoordinates.get(index-1).y,
+							RingCoordinates.get(index).x, RingCoordinates.get(index).y, true);
+					Navigation.travelByPath(nextRing);
+					Navigation.face(TGx, TGy);
+					RingSearch.findRing(RingCoordinates.get(index), ringMap);
+				}
+				
+				//get top ring worth most if dont have top ring yet
+				if(RingSearch.hasBottomRing() && !RingSearch.hasTopRing()) {
+					ColourType[] priority = {ColourType.ORANGE, ColourType.YELLOW, ColourType.GREEN, ColourType.BLUE};
+					int priorityIndex = 0;
+					for(priorityIndex = 0; priorityIndex < priority.length; priorityIndex++) {
+						if(ringMap.containsKey(priority[priorityIndex])) {
+							LinkedList<Coordinate> topRing = findPath(RingCoordinates.get(index).x, RingCoordinates.get(index).y,
+									ringMap.get(priority[priorityIndex]).x, ringMap.get(priority[priorityIndex]).y, true);
+							Navigation.travelByPath(topRing);
+							Navigation.face(TGx, TGy);
+							RingSearch.findRing(RingCoordinates.get(index), ringMap);
+							break;
+						}
+					}
+					LinkedList<Coordinate> backtoRingSet = findPath(RingCoordinates.get(priorityIndex).x, RingCoordinates.get(priorityIndex).y,
+							waypoints.peek().x, waypoints.peek().y, true);
+					Navigation.travelByPath(backtoRingSet);
+				}
+				else {
+					//if already has a top ring, go back to ringSet start
+					LinkedList<Coordinate> backtoRingSet = findPath(RingCoordinates.get(index).x, RingCoordinates.get(index).y,
+							waypoints.peek().x, waypoints.peek().y, true);
+					Navigation.travelByPath(backtoRingSet);
+				}
+
+				//go back to starting corner
+				while (!waypoints.isEmpty()) {
+					Coordinate point = waypoints.pop();
+					Navigation.travelTo(point.x, point.y);
+				}
+				Navigation.travelTo(STARTX, STARTY);
+
+				//drop ring
 				switch (SC) {
 				case 0:
 					Navigation.turnTo(180 + 45);
