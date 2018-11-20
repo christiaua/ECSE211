@@ -64,7 +64,7 @@ public class Poller implements Runnable {
   private float currentRedReading1, currentRedReading2;
 
   private boolean correctionEnabled = true;
-  private boolean colourDetectionEnabled = true;
+  private boolean colourDetectionEnabled = false;
 
   /**
    * Constructor

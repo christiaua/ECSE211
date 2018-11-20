@@ -110,8 +110,15 @@ public class Project {
 
 			if (buttonChoice == Button.ID_LEFT) {
 				// Test the track and wheels
+			  HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
 			  ringSearch = new RingSearch(TGx, TGy);
-			  ringSearch.findRing();
+			  ringSearch.enableTunnel(false);
+			  ringSearch.findRing(new Coordinate(0,0), ringMap);
+//			  LinkedList<Coordinate> nextRing = findPath(-1, 1,
+//                0,0, true);
+//              Navigation.travelByPath(nextRing);
+//              Navigation.face(0, 1);
+//              ringSearch.findRing(new Coordinate(0,0), ringMap);
 
 			} else if (buttonChoice == Button.ID_RIGHT) {
 				// Receive data over Wifi
@@ -267,14 +274,14 @@ public class Project {
 				Navigation.face(TGx, TGy);
 				
 				HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
-				RingSearch.findRing(RingCoordinates.get(0), ringMap, 0);
+				RingSearch.findRing(RingCoordinates.get(0), ringMap);
 						
 				for(int i = 1; i < RingCoordinates.size(); i++) {
 					LinkedList<Coordinate> nextRing = findPath(RingCoordinates.get(i-1).x, RingCoordinates.get(i-1).y,
 							RingCoordinates.get(i).x, RingCoordinates.get(i).y, true);
 					Navigation.travelByPath(nextRing);
 					Navigation.face(TGx, TGy);
-					RingSearch.findRing(RingCoordinates.get(i), ringMap, i);
+					RingSearch.findRing(RingCoordinates.get(i), ringMap);
 				}
 
 //				LinkedList<Coordinate> tunnelBack = findPath(RingCoordinates.get(RingCoordinates.size()-1).x, RingCoordinates.get(RingCoordinates.size()-1).y,
