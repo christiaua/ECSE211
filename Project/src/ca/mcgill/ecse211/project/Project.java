@@ -299,6 +299,10 @@ public class Project {
 						break;
 					}
 				}
+				try {
+			        Thread.sleep(1000);
+			      } catch (Exception e) {
+			      }
 
 				LinkedList<Coordinate> backtoRingSet = findPath(RingCoordinates.get(index - 1).x,
 						RingCoordinates.get(index - 1).y, waypoints.peek().x, waypoints.peek().y, true);
