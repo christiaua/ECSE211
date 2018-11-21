@@ -62,7 +62,7 @@ public void moveToOrigin() {
       }
     }
 
-    Navigation.moveForward(-10, false);
+    Navigation.moveForward(-12.5, false);
 
     // perform a 360
     do {

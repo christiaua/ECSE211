@@ -16,7 +16,7 @@ import ca.mcgill.ecse211.project.Project;
 public class OdometryCorrection {
 	private static final double DIST_BETWEEN_SENSORS = 7.9;
 	private static final double D = 10.5;
-	private static final double WHEEL_RAD = 2.2;
+	private static final double WHEEL_RAD = 2.075;
 	private Odometer odometer;
 	private static final double TILE_SIZE = 30.48;
 
@@ -92,10 +92,6 @@ public class OdometryCorrection {
 				odometer.setX(Math.ceil(odometer.getXYT()[0] / TILE_SIZE) * TILE_SIZE - D);
 			}
 		}
-		try {
-	        Thread.sleep(100);
-	      } catch (Exception e) {
-	      }
 	}
 
 }

@@ -24,7 +24,7 @@ public class Navigation {
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 
-	private static final double WHEEL_RAD = 2.2;
+	private static final double WHEEL_RAD = 2.075;
 	private static final double TRACK = 14.225;
 	private static final double TILE_SIZE = 30.48;
 
