@@ -15,8 +15,10 @@ import ca.mcgill.ecse211.project.Project;
  */
 public class OdometryCorrection {
 	private static final double DIST_BETWEEN_SENSORS = 7.9;
+	private static final double D = 10.5;
 	private static final double WHEEL_RAD = 2.075;
 	private Odometer odometer;
+	private static final double TILE_SIZE = 30.48;
 
 	/**
 	 * This is the default class constructor. An existing instance of the odometer
@@ -78,7 +80,17 @@ public class OdometryCorrection {
 					odometer.setTheta(270 - angleCorrection);
 				}
 			}
-
+		}
+		if(angleCorrection < 5) {
+			if ((currentAngle < 45 && currentAngle > 0) || (currentAngle < 360 && currentAngle > 315)) {
+				odometer.setY((int)(odometer.getXYT()[1] / TILE_SIZE) * TILE_SIZE + D);
+			} else if (currentAngle < 135 && currentAngle > 45) {
+				odometer.setX((int)(odometer.getXYT()[0] / TILE_SIZE) * TILE_SIZE + D);
+			} else if (currentAngle < 225 && currentAngle > 135) {
+				odometer.setY(Math.ceil(odometer.getXYT()[1] / TILE_SIZE) * TILE_SIZE - D);
+			} else if (currentAngle < 315 && currentAngle > 225) {
+				odometer.setX(Math.ceil(odometer.getXYT()[0] / TILE_SIZE) * TILE_SIZE - D);
+			}
 		}
 	}
 

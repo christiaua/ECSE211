@@ -26,6 +26,9 @@ public class RingSearch {
 	private static boolean hasBottomRing = false;
 	private static boolean hasTopRing = false;
 	
+	private static int TGx;
+	private static int TGy;
+	
 	  // singleton class control
 	  private volatile static int numberOfIntances = 0;
 	  private static final int MAX_INSTANCES = 1;
@@ -52,6 +55,8 @@ public class RingSearch {
 			lowerMotor.setSpeed(MOTOR_SPEED);
 	        numberOfIntances += 1;
 	        ringSearch = this;
+	        TGx = tGx;
+	        TGy = tGy;
 	    }
 	}
 
@@ -73,31 +78,26 @@ public class RingSearch {
 		poller.enableColourDetection(true);
 		ringDetector.clearFoundRings();
 
-		upperMotor.rotateTo(80, false);
-
-		if (RingDetector.foundRing()) {
-			if(!hasBottomRing) {
-				upperMotor.rotateTo(70);
-				grabLowerRing(0);
-				hasRing = 1;
-			}
-		} else {
-			ringDetector.clearFoundRings();
-
-			upperMotor.rotateTo(50, false);
-
-			if (RingDetector.foundRing()) {
-				if(hasBottomRing) {
-					upperMotor.rotateTo(70, false);
-					grabUpperRing();
-					hasRing = 2;
-				}
-				else {
-					ringMap.put(RingDetector.getFoundRing(), coord);
-				}
-			}
-			upperMotor.rotateTo(70);
-		}
+		upperMotor.rotateTo(50, false);
+		try {
+	        Thread.sleep(100);
+	      } catch (Exception e) {
+	      }
+		upperMotor.rotateTo(75);
+		try {
+	        Thread.sleep(100);
+	      } catch (Exception e) {
+	      }
+		grabLowerRing();
+		try {
+	        Thread.sleep(100);
+	      } catch (Exception e) {
+	      }
+		grabUpperRing();
+		try {
+	        Thread.sleep(100);
+	      } catch (Exception e) {
+	      }
 		Navigation.moveForward(-DISTANCE_DETECT, false);
 		poller.enableColourDetection(false);
 		return hasRing;
@@ -121,6 +121,11 @@ public class RingSearch {
 
 	public static void grabUpperRing() {
 		hasTopRing = true;
+		Navigation.face(TGx, TGy);
+		try {
+	        Thread.sleep(100);
+	      } catch (Exception e) {
+	      }
 		Navigation.moveForward(DISTANCE_GRAB, false);
 		upperMotor.rotate(-10, true);
 		Navigation.moveForward(-DISTANCE_GRAB, false);
@@ -128,21 +133,21 @@ public class RingSearch {
 		upperMotor.rotate(10, true);
 	}
 
-	public static void grabLowerRing(int num) {
+	public static void grabLowerRing() {
 		hasBottomRing = true;
-		if (num > 1) {
-			return;
-		}
+		Navigation.face(TGx, TGy);
+		try {
+	        Thread.sleep(100);
+	      } catch (Exception e) {
+	      }
 		upperMotor.rotate(-75, false);
 		Navigation.moveForward(DISTANCE_GRAB, false);
 		Navigation.stop();
 		lowerMotor.rotate(30, true);
 		Navigation.moveForward(-DISTANCE_GRAB, false);
 		Navigation.stop();
-		upperMotor.rotate(75, true);
-		if (num == 0) {
-			lowerMotor.rotate(-30, true);
-		}
+		lowerMotor.rotate(-30, true);
+		upperMotor.rotate(75, false);
 	}
 
 	public void enableTunnel(boolean immediateReturn) {

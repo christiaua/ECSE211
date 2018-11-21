@@ -210,8 +210,8 @@ public class Project {
 
 				// beta demo algorithm
 				poller.enableCorrection(false);
-				// usLocalizer.fallingEdge();
-				// lightLocalizer.moveToOrigin();
+				usLocalizer.fallingEdge();
+				lightLocalizer.moveToOrigin();
 				switch (SC) {
 				case 0:
 					odometer.setXYT(TILE_SIZE, TILE_SIZE, 0);
@@ -276,37 +276,12 @@ public class Project {
 				HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
 				// grab first ring
 				Navigation.face(TGx, TGy);
+				Navigation.stop();
 				try {
 			        Thread.sleep(1000);
 			      } catch (Exception e) {
 			      }
 				hasRing = Math.max(hasRing, RingSearch.findRing(RingCoordinates.get(0), ringMap));
-
-				// get the other rings
-				int index = 1;
-				for (index = 1; index < RingCoordinates.size(); index++) {
-					LinkedList<Coordinate> nextRing = findPath(RingCoordinates.get(index - 1).x,
-							RingCoordinates.get(index - 1).y, RingCoordinates.get(index).x,
-							RingCoordinates.get(index).y, true);
-					Navigation.travelByPath(nextRing);
-					Navigation.face(TGx, TGy);
-					try {
-				        Thread.sleep(1000);
-				      } catch (Exception e) {
-				      }
-					hasRing = Math.max(hasRing, RingSearch.findRing(RingCoordinates.get(index), ringMap));
-					if (hasRing == 2) {
-						break;
-					}
-				}
-				try {
-			        Thread.sleep(1000);
-			      } catch (Exception e) {
-			      }
-
-				LinkedList<Coordinate> backtoRingSet = findPath(RingCoordinates.get(index - 1).x,
-						RingCoordinates.get(index - 1).y, waypoints.peek().x, waypoints.peek().y, true);
-				Navigation.travelByPath(backtoRingSet);
 
 				// go back to starting corner
 				while (!waypoints.isEmpty()) {

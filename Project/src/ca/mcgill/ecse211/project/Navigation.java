@@ -30,7 +30,7 @@ public class Navigation {
 
 	public static final int DROP_SPEED = 1000;
 	public static final int FORWARD_SPEED = 200;
-	public static final int ROTATE_SPEED = 160;
+	public static final int ROTATE_SPEED = 140;
 
 	private static Odometer odo = null;
 	private static double[] currentDest = { 0, 0 };
@@ -127,6 +127,10 @@ public class Navigation {
 			Coordinate location = path.remove();
 			Navigation.travelTo(location.x, location.y);
 			s.push(location);
+			try {
+		        Thread.sleep(10);
+		      } catch (Exception e) {
+		      }
 		}
 	}
 	
@@ -138,6 +142,10 @@ public class Navigation {
 		while(!path.isEmpty()) {
 			Coordinate location = path.remove();
 			Navigation.travelTo(location.x, location.y);
+			try {
+		        Thread.sleep(10);
+		      } catch (Exception e) {
+		      }
 		}
 	}
 	

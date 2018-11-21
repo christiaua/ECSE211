@@ -18,7 +18,7 @@ public class LightLocalizer {
   private static Poller poller;
   private static double x;
   private static double y;
-  private static final double D = 5;
+  private static final double D = 11;
   private static double dthetaY;
 
   /**
@@ -65,15 +65,18 @@ public void moveToOrigin() {
     Navigation.moveForward(-10, false);
 
     // perform a 360
-    Navigation.rotate(360, true);
+    do {
+    	lineCount = 0;
+        Navigation.rotate(360, true);
+        while (Navigation.isNavigating()) {
+          if (poller.getLightSensorData(Side.LEFT, true) < 0.33) {
+            Sound.beep();
+            theta[lineCount] = odo.getXYT()[2];
+            lineCount++;
+          }
+        }
+    }while (lineCount != 4);
 
-    while (Navigation.isNavigating()) {
-      if (poller.getLightSensorData(Side.LEFT, true) < 0.33) {
-        Sound.beep();
-        theta[lineCount] = odo.getXYT()[2];
-        lineCount++;
-      }
-    }
 
     thetaY = angleDiff(theta[1], theta[3]);
     thetaX = angleDiff(theta[0], theta[2]);
