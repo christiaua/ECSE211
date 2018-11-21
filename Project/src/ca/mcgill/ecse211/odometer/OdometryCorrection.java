@@ -1,6 +1,3 @@
-/*
- * OdometryCorrection.java
- */
 package ca.mcgill.ecse211.odometer;
 
 import ca.mcgill.ecse211.project.Project;
@@ -33,7 +30,8 @@ public class OdometryCorrection {
 	/**
 	 * Corrects the angle of the robot given the tacho count of the motors on the
 	 * detection of a line by the left light sensor, and the detection of a line by
-	 * the right sensor.
+	 * the right sensor. 
+	 * It corrects the x and y position based on the direction the robot is heading towards
 	 * 
 	 * @param tacho_at_left_detection
 	 *            The tacho count of the motors on the detection of a line by the

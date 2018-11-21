@@ -12,7 +12,8 @@ import ca.mcgill.ecse211.odometer.*;
 import ca.mcgill.ecse211.project.Project.Tunnel;
 
 /**
- * This class controls the robot motors
+ * This class controls the robot wheel motors. It contains all the methods to
+ * make the robot move.
  * 
  * @author Edward Huang
  * @author Hugo Parent-Pothier
@@ -99,12 +100,16 @@ public class Navigation {
 
 	/**
 	 * This method makes the robot traverse the tunnel
-	 * @param s
+	 * 
+	 * @param stack
+	 *            The stack where the path is saved to.
 	 * @param TLLx
+	 *            The coordinates of the tunnel
 	 * @param TLLy
 	 * @param TURx
 	 * @param TURy
 	 * @param tunnel
+	 *            The direction of the tunnel
 	 */
 	public static void traverseTunnel(Stack<Coordinate> s, int TLLx, int TLLy, int TURx, int TURy, Tunnel tunnel) {
 		if (tunnel == Tunnel.VERTICAL) {
@@ -116,39 +121,44 @@ public class Navigation {
 			s.push(new Coordinate(TURx + 0.5, TURy - 0.5));
 		}
 	}
-	
+
 	/**
-	 * This method moves the robot with the input path and adds the path to the stack
-	 * @param s
+	 * This method moves the robot with the input path and adds the path to the
+	 * stack
+	 * 
+	 * @param stack
+	 *            The stack where the path is saved to.
 	 * @param path
+	 *            The the path the robot will take
 	 */
 	public static void travelByPath(Stack<Coordinate> s, LinkedList<Coordinate> path) {
-		while(!path.isEmpty()) {
+		while (!path.isEmpty()) {
 			Coordinate location = path.remove();
 			Navigation.travelTo(location.x, location.y);
 			s.push(location);
 			try {
-		        Thread.sleep(100);
-		      } catch (Exception e) {
-		      }
+				Thread.sleep(100);
+			} catch (Exception e) {
+			}
 		}
 	}
-	
+
 	/**
-	 * This method moves the robot with the input path
+	 * This method moves the robot with the input path, but does not save the path
+	 * 
 	 * @param path
 	 */
 	public static void travelByPath(LinkedList<Coordinate> path) {
-		while(!path.isEmpty()) {
+		while (!path.isEmpty()) {
 			Coordinate location = path.remove();
 			Navigation.travelTo(location.x, location.y);
 			try {
-		        Thread.sleep(100);
-		      } catch (Exception e) {
-		      }
+				Thread.sleep(100);
+			} catch (Exception e) {
+			}
 		}
 	}
-	
+
 	/**
 	 * This method makes the robot move back full speed to drop the ring
 	 */
@@ -158,11 +168,14 @@ public class Navigation {
 		leftMotor.rotate(-convertDistance(WHEEL_RAD, 10), true);
 		rightMotor.rotate(-convertDistance(WHEEL_RAD, 10), false);
 	}
-	
+
 	/**
 	 * turns the robot to face a coordinate
+	 * 
 	 * @param x
+	 *            The x the robot should be facing
 	 * @param y
+	 *            The y the robot should be facing
 	 */
 	public static void face(double x, double y) {
 		double angleToTurnTo = calculateAngle(x, y, odo);

@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Sophie Deng
  */
 public class USSensorData {
-	//sampling distance
+	// sampling distance
 	private final int SAMPLE_SIZE = 5;
 	private double[] lastDistances = new double[SAMPLE_SIZE];
 	private volatile static double distance;
@@ -21,17 +21,17 @@ public class USSensorData {
 	private volatile static int counter = 0;
 
 	// Class control variables
-	private volatile static int numberOfIntances = 0; 
-	private static final int MAX_INSTANCES = 1; 
+	private volatile static int numberOfIntances = 0;
+	private static final int MAX_INSTANCES = 1;
 	private static USSensorData senData = null;
 
 	// Thread control tools
 	private static Lock lock = new ReentrantLock(true); // Fair lock for concurrent writing
-	private volatile boolean isUpdating = false; 
-	private Condition doneUpdating = lock.newCondition(); 
+	private volatile boolean isUpdating = false;
+	private Condition doneUpdating = lock.newCondition();
 
 	/**
-	 * Constructor
+	 * Constructor, sets all data to 0
 	 */
 	private USSensorData() {
 		distance = 0;
@@ -39,9 +39,12 @@ public class USSensorData {
 	}
 
 	/**
-	 * Gets the one instance of the class or creates a new instance if one doesn't exist already.
+	 * Gets the one instance of the class or creates a new instance if one doesn't
+	 * exist already.
+	 * 
 	 * @return USSensorData instance.
 	 * @throws PollerException
+	 *             If more than one instance of this class exists
 	 */
 	public synchronized static USSensorData getSensorData() throws PollerException {
 		if (senData != null) { // Return existing object
@@ -56,17 +59,17 @@ public class USSensorData {
 		}
 	}
 
-
 	/**
 	 * Get the distance read by the ultrasonic sensor after it has been filtered.
+	 * 
 	 * @return distance The filtered distance.
 	 */
 	public double getDistance() {
 		double d = 0;
 		lock.lock();
 		try {
-			while (isUpdating) { 
-				doneUpdating.await(); 
+			while (isUpdating) {
+				doneUpdating.await();
 			}
 			d = distance;
 		} catch (InterruptedException e) {
@@ -76,17 +79,19 @@ public class USSensorData {
 		}
 		return d;
 	}
-	
+
 	/**
 	 * Get the previous ultrasonic sensor reading after it has been filtered.
-	 * @return distance The previous ultrasonic sensor reading after it has been filtered.
+	 * 
+	 * @return distance The previous ultrasonic sensor reading after it has been
+	 *         filtered.
 	 */
 	public double getLastDistance() {
 		double d = 0;
 		lock.lock();
 		try {
-			while (isUpdating) { 
-				doneUpdating.await(); 
+			while (isUpdating) {
+				doneUpdating.await();
 			}
 			d = lastDistance;
 		} catch (InterruptedException e) {
@@ -97,11 +102,12 @@ public class USSensorData {
 		return d;
 	}
 
-
 	/**
 	 * Filters ultrasonic sensor data by taking the median of previous readings.
 	 * Updates the current and previous filtered ultrasonic sensor readings.
-	 * @param newDistance The unfiltered ultrasonic sensor reading.
+	 * 
+	 * @param newDistance
+	 *            The unfiltered ultrasonic sensor reading.
 	 */
 	public void updateDistance(double newDistance) {
 		lock.lock();
@@ -115,8 +121,8 @@ public class USSensorData {
 			}
 			counter++;
 			counter = counter % SAMPLE_SIZE;
-			isUpdating = false; 
-			doneUpdating.signalAll(); 
+			isUpdating = false;
+			doneUpdating.signalAll();
 		} finally {
 			lock.unlock();
 		}

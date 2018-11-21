@@ -8,7 +8,7 @@ import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 import lejos.hardware.Sound;
 
 /**
- * This class processes the colour sensor data
+ * This class processes the colour sensor data and beeps for the ring detected
  * 
  * @author Edward Huang
  * @author Hugo Parent-Pothier
@@ -50,6 +50,7 @@ public class RingDetector {
 	 * 
 	 * @return the ringdetector
 	 * @throws PollerException
+	 *             If more than one instance of the ringDetector exists
 	 */
 	public synchronized static RingDetector getRingDetector() throws PollerException {
 		if (ringDet != null) { // Return existing object
@@ -60,7 +61,7 @@ public class RingDetector {
 			numberOfIntances += 1;
 			return ringDet;
 		} else {
-			throw new PollerException("Only one intance of the Odometer can be created.");
+			throw new PollerException("Only one intance of the RingDetector can be created.");
 		}
 	}
 
@@ -94,6 +95,11 @@ public class RingDetector {
 		return found;
 	}
 
+	/**
+	 * This method gets the colour of the ring found
+	 * 
+	 * @return the colourType of the ring
+	 */
 	public static ColourType getFoundRing() {
 		if (foundRings[0]) {
 			return ColourType.BLUE;
@@ -108,6 +114,10 @@ public class RingDetector {
 		}
 	}
 
+	/**
+	 * This method clears the rings found. It allows the ringDetector to beep for
+	 * rings previously found.
+	 */
 	public void clearFoundRings() {
 		for (int i = 0; i < foundRings.length; i++) {
 			RingDetector.foundRings[i] = false;

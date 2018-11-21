@@ -7,7 +7,8 @@ import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 import lejos.hardware.lcd.TextLCD;
 
 /**
- * This class is used to display the content of the odometer variables (x, y, Theta)
+ * This class is used to display the content of the odometer variables (x, y,
+ * Theta) as well as the values read in the poller
  * 
  * @author Sophie Deng
  */
@@ -18,18 +19,19 @@ public class Display implements Runnable {
 	private double[] position;
 	private final long DISPLAY_PERIOD = 25;
 	private long timeout = Long.MAX_VALUE;
-	
+
 	private Poller poller;
 	private ColourType colourType = ColourType.NONE;
-	
+
 	private double distance = 0;
 
 	/**
 	 * This is the class constructor
 	 * 
-	 * @param odoData
-	 * @throws OdometerExceptions 
-	 * @throws PollerException 
+	 * @param lcd
+	 *            The TextLCD made in the main
+	 * @throws OdometerExceptions
+	 * @throws PollerException
 	 */
 	public Display(TextLCD lcd) throws OdometerExceptions, PollerException {
 		odo = Odometer.getOdometer();
@@ -39,11 +41,13 @@ public class Display implements Runnable {
 	}
 
 	/**
-	 * This is the overloaded class constructor
 	 * 
-	 * @param odoData
-	 * @throws OdometerExceptions 
-	 * @throws PollerException 
+	 * @param lcd
+	 *            TextLCD made in the main
+	 * @param timeout
+	 *            The timeout time for how often the display updates
+	 * @throws OdometerExceptions
+	 * @throws PollerException
 	 */
 	public Display(TextLCD lcd, long timeout) throws OdometerExceptions, PollerException {
 		this.timeout = timeout;
@@ -53,7 +57,7 @@ public class Display implements Runnable {
 	}
 
 	/**
-	 * Starts the display thread.
+	 * Starts the display thread. It displays X, Y, T, distance and colour
 	 */
 	public void run() {
 
@@ -75,7 +79,7 @@ public class Display implements Runnable {
 			lcd.drawString("X: " + numberFormat.format(position[0]), 0, 0);
 			lcd.drawString("Y: " + numberFormat.format(position[1]), 0, 1);
 			lcd.drawString("T: " + numberFormat.format(position[2]), 0, 2);
-			
+
 			lcd.drawString("D: " + numberFormat.format(distance), 0, 4);
 			lcd.drawString("R: " + colourType, 0, 5);
 

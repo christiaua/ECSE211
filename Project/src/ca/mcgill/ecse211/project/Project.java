@@ -73,6 +73,15 @@ public class Project {
 	private static final int TEAM_NUMBER = 7;
 	private static final String SERVER_IP = "192.168.2.2";
 
+	/**
+	 * The main method. It makes the robot do the localizaion and moves it to the
+	 * tunnel entrance. It crosses the tunnel and goes to the ring tree. It grabs
+	 * the first ring and comes back with the same path.
+	 * 
+	 * @param args
+	 * @throws OdometerExceptions
+	 * @throws PollerException
+	 */
 	@SuppressWarnings("rawtypes")
 	public static void main(String[] args) throws OdometerExceptions, PollerException {
 
@@ -278,9 +287,9 @@ public class Project {
 				Navigation.face(TGx, TGy);
 				Navigation.stop();
 				try {
-			        Thread.sleep(1000);
-			      } catch (Exception e) {
-			      }
+					Thread.sleep(1000);
+				} catch (Exception e) {
+				}
 				hasRing = Math.max(hasRing, RingSearch.findRing(RingCoordinates.get(0), ringMap));
 
 				// go back to starting corner
@@ -315,13 +324,20 @@ public class Project {
 	}
 
 	/**
-	 * finds the path to a location, assumes path exists
+	 * This method finds the path to a location, it will always move in x first,
+	 * then in y. It checks if the coordinate is within the boundaries.
 	 * 
 	 * @param startx
+	 *            The starting x position
 	 * @param starty
+	 *            The starting y position
 	 * @param endx
+	 *            The ending x position
 	 * @param endy
-	 * @return
+	 *            The ending y position
+	 * @param island
+	 *            True if the robot is navigating on the island
+	 * @return the path the robot will take
 	 */
 	private static LinkedList<Coordinate> findPath(double startx, double starty, double endx, double endy,
 			boolean island) {
@@ -474,9 +490,13 @@ public class Project {
 	}
 
 	/**
-	 * Checks if the coordinate is accessible
+	 * Checks if the coordinate is accessible. If the robot is on the island, it
+	 * checks for the boundaries of the island.
 	 * 
 	 * @param coordinate
+	 *            The coordinate to check if it is within the boundaries
+	 * @param island
+	 *            If the robot is on the island or not
 	 * @return true if the robot can go to that point
 	 */
 	private static boolean isInBoundaries(Coordinate coord, boolean island) {
