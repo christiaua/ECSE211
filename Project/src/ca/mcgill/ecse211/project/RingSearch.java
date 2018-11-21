@@ -84,6 +84,7 @@ public class RingSearch {
 	      } catch (Exception e) {
 	      }
 		upperMotor.rotateTo(75);
+		poller.enableColourDetection(false);
 		try {
 	        Thread.sleep(100);
 	      } catch (Exception e) {
@@ -99,7 +100,6 @@ public class RingSearch {
 	      } catch (Exception e) {
 	      }
 		Navigation.moveForward(-DISTANCE_DETECT, false);
-		poller.enableColourDetection(false);
 		return hasRing;
 	}
 
@@ -127,10 +127,10 @@ public class RingSearch {
 	      } catch (Exception e) {
 	      }
 		Navigation.moveForward(DISTANCE_GRAB, false);
-		upperMotor.rotate(-10, true);
+		upperMotor.rotate(-15, true);
 		Navigation.moveForward(-DISTANCE_GRAB, false);
 		Navigation.stop();
-		upperMotor.rotate(10, true);
+		upperMotor.rotate(15, true);
 	}
 
 	public static void grabLowerRing() {

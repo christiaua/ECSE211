@@ -24,7 +24,7 @@ public class Navigation {
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 
-	private static final double WHEEL_RAD = 2.075;
+	private static final double WHEEL_RAD = 2.2;
 	private static final double TRACK = 14.225;
 	private static final double TILE_SIZE = 30.48;
 
@@ -128,7 +128,7 @@ public class Navigation {
 			Navigation.travelTo(location.x, location.y);
 			s.push(location);
 			try {
-		        Thread.sleep(10);
+		        Thread.sleep(100);
 		      } catch (Exception e) {
 		      }
 		}
@@ -143,7 +143,7 @@ public class Navigation {
 			Coordinate location = path.remove();
 			Navigation.travelTo(location.x, location.y);
 			try {
-		        Thread.sleep(10);
+		        Thread.sleep(100);
 		      } catch (Exception e) {
 		      }
 		}
