@@ -19,10 +19,10 @@ import lejos.hardware.lcd.TextLCD;
 
 public class Project {
 	public static enum Tunnel {
-		HORIZONTAL, VERTICAL
+		HORIZONTALLEFT, VERTICALUP, HORIZONTALRIGHT, VERTICALDOWN
 	};
 
-	private static Tunnel tunnel = Tunnel.VERTICAL;
+	private static Tunnel tunnel = Tunnel.VERTICALUP;
 
 	// CUSTOM VARIABLES
 	// T: tunnel
@@ -188,27 +188,18 @@ public class Project {
 				// } catch (Exception e) {
 				// System.err.println("Error: " + e.getMessage());
 				// }
-				if (TURx - TLLx > 1) {
-					tunnel = Tunnel.HORIZONTAL;
-				}
-				// checkfor valid inputs
-				if (tunnel == Tunnel.VERTICAL) {
-					if (TURx <= ILLx || TURx > IURx || TURy < ILLy || TURy >= IURy) {
-						System.err.println("Error: Tunnel not connecting to island");
-						System.exit(0);
+				if (TURx - TLLx > 1 || ILLx >= URx || LLx >= TURx) {
+					if (SC == 2 || SC == 1) {
+						tunnel = Tunnel.HORIZONTALLEFT;
+					} else {
+						tunnel = Tunnel.HORIZONTALRIGHT;
 					}
-					if (TLLx >= URx || TLLx < LLx || TLLy > URy || TLLy <= LLy) {
-						System.err.println("Error: Tunnel not connecting to starting zone");
-						System.exit(0);
-					}
+
 				} else {
-					if (TURx < ILLx || TURx >= IURx || TURy > IURy || TURy <= ILLy) {
-						System.err.println("Error: Tunnel not connecting to island");
-						System.exit(0);
-					}
-					if (TLLx > URx || TLLx <= LLx || TLLy >= URy || TLLy < LLy) {
-						System.err.println("Error: Tunnel not connecting to starting zone");
-						System.exit(0);
+					if (SC == 2 || SC == 3) {
+						tunnel = Tunnel.VERTICALDOWN;
+					} else {
+						tunnel = Tunnel.VERTICALUP;
 					}
 				}
 
@@ -264,8 +255,14 @@ public class Project {
 
 				// nagivate to tunnel
 				LinkedList<Coordinate> pathToTunnel = new LinkedList<Coordinate>();
-				if (tunnel == Tunnel.HORIZONTAL) {
+				if (tunnel == Tunnel.HORIZONTALRIGHT) {
 					pathToTunnel = findPath(STARTX, STARTY, TLLx - 0.5, TLLy + 0.5, false);
+					Navigation.travelByPath(waypoints, pathToTunnel);
+				} else if (tunnel == Tunnel.HORIZONTALLEFT) {
+					pathToTunnel = findPath(STARTX, STARTY, TURx + 0.5, TURy - 0.5, false);
+					Navigation.travelByPath(waypoints, pathToTunnel);
+				} else if (tunnel == Tunnel.VERTICALDOWN) {
+					pathToTunnel = findPath(STARTX, STARTY, TURx - 0.5, TURy + 0.5, false);
 					Navigation.travelByPath(waypoints, pathToTunnel);
 				} else {
 					// vertical tunnel
@@ -506,21 +503,9 @@ public class Project {
 		if (coord.y >= FIELDY || coord.y <= 0)
 			return false;
 		// robot cannot go on a tunnel
-		if (coord.x == TURx && coord.y == TURy)
+		if ((coord.x <= TURx && coord.x >= TLLx) && (coord.y <= TURy && coord.y >= TLLx))
 			return false;
-		if (coord.x == TLLx && coord.y == TLLy)
-			return false;
-		if (tunnel == Tunnel.HORIZONTAL) {
-			if (coord.x == TURx && coord.y == TURy - 1)
-				return false;
-			if (coord.x == TLLx && coord.y == TLLy + 1)
-				return false;
-		} else {
-			if (coord.x == TURx - 1 && coord.y == TURy)
-				return false;
-			if (coord.x == TLLx + 1 && coord.y == TLLy)
-				return false;
-		}
+
 		// robot cannot be on ring sets
 		if (coord.x >= TGx - 0.5 && coord.x <= TGx + 0.5 && coord.y >= TGy - 0.5 && coord.y <= TGy + 0.5)
 			return false;

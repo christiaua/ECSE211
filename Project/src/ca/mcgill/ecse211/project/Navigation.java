@@ -112,13 +112,19 @@ public class Navigation {
 	 *            The direction of the tunnel
 	 */
 	public static void traverseTunnel(Stack<Coordinate> s, int TLLx, int TLLy, int TURx, int TURy, Tunnel tunnel) {
-		if (tunnel == Tunnel.VERTICAL) {
+		if (tunnel == Tunnel.VERTICALDOWN) {
+			travelTo(TLLx + 0.5, TLLy - 0.5);
+			s.push(new Coordinate(TLLx + 0.5, TLLy - 0.5));
+		} else if (tunnel == Tunnel.HORIZONTALRIGHT) {
+			travelTo(TURx + 0.5, TURy - 0.5);
+			s.push(new Coordinate(TURx + 0.5, TURy - 0.5));
+		} else if (tunnel == Tunnel.HORIZONTALLEFT) {
+			travelTo(TLLx - 0.5, TLLy + 0.5);
+			s.push(new Coordinate(TLLx - 0.5, TLLy + 0.5));
+		} else {
 			// vertical tunnel
 			travelTo(TLLx + 0.5, TURy + 0.5);
 			s.push(new Coordinate(TLLx + 0.5, TURy + 0.5));
-		} else {
-			travelTo(TURx + 0.5, TURy - 0.5);
-			s.push(new Coordinate(TURx + 0.5, TURy - 0.5));
 		}
 	}
 
