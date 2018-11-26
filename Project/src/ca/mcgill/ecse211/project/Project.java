@@ -11,6 +11,7 @@ import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.poller.Poller;
 import ca.mcgill.ecse211.poller.PollerException;
+import ca.mcgill.ecse211.poller.RingDetector;
 import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
@@ -307,6 +308,24 @@ public class Project {
 				try {
 					Thread.sleep(1000);
 				} catch (Exception e) {
+				}
+				
+				// grab second ring if no ring on the first face
+				if(!RingDetector.foundRing()) {
+					LinkedList<Coordinate> pathToSecondRing = findPath(waypoints.peek().x, waypoints.peek().y,
+							RingCoordinates.get(1).x, RingCoordinates.get(1).y, true);
+					Navigation.travelByPath(waypoints, pathToSecondRing);
+					Navigation.face(TGx, TGy);
+					Navigation.stop();
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+					}
+					RingSearch.findRing();
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+					}
 				}
 				
 				// go back to starting corner
