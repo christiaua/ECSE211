@@ -81,14 +81,8 @@ public class RingSearch {
 	/**
 	 * Makes the sensor go up and down to detect the ring
 	 * 
-	 * @param coord
-	 *            The current location of the robot
-	 * @param ringMap
-	 *            A map to save the ring location
-	 * @return
 	 */
-	public static int findRing(Coordinate coord, HashMap<ColourType, Coordinate> ringMap) {
-		int hasRing = 0;
+	public static void findRing() {
 		upperMotor.setSpeed(MOTOR_SPEED);
 		lowerMotor.setSpeed(MOTOR_SPEED);
 
@@ -121,7 +115,6 @@ public class RingSearch {
 		} catch (Exception e) {
 		}
 		Navigation.moveForward(-DISTANCE_DETECT, false);
-		return hasRing;
 	}
 
 	/**

@@ -131,63 +131,68 @@ public class Project {
 
 			} else if (buttonChoice == Button.ID_RIGHT) {
 				// Receive data over Wifi
-				// WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
-				// try {
-				// Map data = conn.getData();
-				// System.console().writer().println("Map:\n" + data);
-				//
-				// // Team specifics
-				// int greenTeam = ((Long) data.get("GreenTeam")).intValue();
-				// int redTeam = ((Long) data.get("RedTeam")).intValue();
-				// // Island zone
-				// ILLx = ((Long) data.get("Island_LL_x")).intValue();
-				// ILLy = ((Long) data.get("Island_LL_y")).intValue();
-				// IURx = ((Long) data.get("Island_UR_x")).intValue();
-				// IURy = ((Long) data.get("Island_UR_y")).intValue();
-				// if (greenTeam == TEAM_NUMBER) {
-				// // Target ring tree location
-				// SC = ((Long) data.get("GreenCorner")).intValue();
-				// TGx = ((Long) data.get("TG_x")).intValue();
-				// TGy = ((Long) data.get("TG_y")).intValue();
-				// // Other team ring
-				// TRx = ((Long) data.get("TR_x")).intValue();
-				// TRy = ((Long) data.get("TR_y")).intValue();
-				// // Tunnel location
-				// TLLx = ((Long) data.get("TNG_LL_x")).intValue();
-				// TLLy = ((Long) data.get("TNG_LL_y")).intValue();
-				// TURx = ((Long) data.get("TNG_UR_x")).intValue();
-				// TURy = ((Long) data.get("TNG_UR_y")).intValue();
-				// // Starting zone
-				// LLx = ((Long) data.get("Green_LL_x")).intValue();
-				// LLy = ((Long) data.get("Green_LL_y")).intValue();
-				// URx = ((Long) data.get("Green_UR_x")).intValue();
-				// URy = ((Long) data.get("Green_UR_y")).intValue();
-				// } else if (redTeam == TEAM_NUMBER) {
-				// // Target ring tree location
-				// SC = ((Long) data.get("RedCorner")).intValue();
-				// TRx = ((Long) data.get("TG_x")).intValue();
-				// TRy = ((Long) data.get("TG_y")).intValue();
-				// // Other team ring
-				// TGx = ((Long) data.get("TR_x")).intValue();
-				// TGy = ((Long) data.get("TR_y")).intValue();
-				// // Tunnel location
-				// TLLx = ((Long) data.get("TNR_LL_x")).intValue();
-				// TLLy = ((Long) data.get("TNR_LL_y")).intValue();
-				// TURx = ((Long) data.get("TNR_UR_x")).intValue();
-				// TURy = ((Long) data.get("TNR_UR_y")).intValue();
-				// // Starting zone
-				// LLx = ((Long) data.get("Red_LL_x")).intValue();
-				// LLy = ((Long) data.get("Red_LL_y")).intValue();
-				// URx = ((Long) data.get("Red_UR_x")).intValue();
-				// URy = ((Long) data.get("Red_UR_y")).intValue();
-				// } else {
-				// System.err.println("Error: team not received");
-				// System.exit(0);
-				// }
-				//
-				// } catch (Exception e) {
-				// System.err.println("Error: " + e.getMessage());
-				// }
+				WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
+				try {
+					Map data = conn.getData();
+					System.console().writer().println("Map:\n" + data);
+
+					// Team specifics
+					int greenTeam = ((Long) data.get("GreenTeam")).intValue();
+					int redTeam = ((Long) data.get("RedTeam")).intValue();
+					// Island zone
+					ILLx = ((Long) data.get("Island_LL_x")).intValue();
+					ILLy = ((Long) data.get("Island_LL_y")).intValue();
+					IURx = ((Long) data.get("Island_UR_x")).intValue();
+					IURy = ((Long) data.get("Island_UR_y")).intValue();
+
+					if (greenTeam == TEAM_NUMBER) {
+						// Target ring tree location
+						SC = ((Long) data.get("GreenCorner")).intValue();
+						TGx = ((Long) data.get("TG_x")).intValue();
+						TGy = ((Long) data.get("TG_y")).intValue();
+						// Other team ring
+						TRx = ((Long) data.get("TR_x")).intValue();
+						TRy = ((Long) data.get("TR_y")).intValue();
+						// Tunnel location
+						TLLx = ((Long) data.get("TNG_LL_x")).intValue();
+						TLLy = ((Long) data.get("TNG_LL_y")).intValue();
+						TURx = ((Long) data.get("TNG_UR_x")).intValue();
+						TURy = ((Long) data.get("TNG_UR_y")).intValue();
+						// Starting zone
+						LLx = ((Long) data.get("Green_LL_x")).intValue();
+						LLy = ((Long) data.get("Green_LL_y")).intValue();
+						URx = ((Long) data.get("Green_UR_x")).intValue();
+						URy = ((Long) data.get("Green_UR_y")).intValue();
+
+					} else if (redTeam == TEAM_NUMBER) {
+						// Target ring tree location
+						SC = ((Long) data.get("RedCorner")).intValue();
+						TRx = ((Long) data.get("TG_x")).intValue();
+						TRy = ((Long) data.get("TG_y")).intValue();
+						// Other team ring
+						TGx = ((Long) data.get("TR_x")).intValue();
+						TGy = ((Long) data.get("TR_y")).intValue();
+						// Tunnel location
+						TLLx = ((Long) data.get("TNR_LL_x")).intValue();
+						TLLy = ((Long) data.get("TNR_LL_y")).intValue();
+						TURx = ((Long) data.get("TNR_UR_x")).intValue();
+						TURy = ((Long) data.get("TNR_UR_y")).intValue();
+						// Starting zone
+						LLx = ((Long) data.get("Red_LL_x")).intValue();
+						LLy = ((Long) data.get("Red_LL_y")).intValue();
+						URx = ((Long) data.get("Red_UR_x")).intValue();
+						URy = ((Long) data.get("Red_UR_y")).intValue();
+					} else {
+						System.err.println("Error: team not received");
+						Sound.buzz();
+						System.exit(0);
+					}
+
+				} catch (Exception e) {
+					System.err.println("Error: " + e.getMessage());
+				}
+
+				// Check for the type of tunnel it must traverse
 				if (TURx - TLLx > 1 || ILLx >= URx || LLx >= TURx) {
 					if (SC == 2 || SC == 1) {
 						tunnel = Tunnel.HORIZONTALLEFT;
@@ -203,15 +208,16 @@ public class Project {
 					}
 				}
 
+				// localization
 				usLocalizer = new UltrasonicLocalizer();
 				lightLocalizer = new LightLocalizer();
 				ringSearch = new RingSearch(TGx, TGy);
 				Stack<Coordinate> waypoints = new Stack<Coordinate>();
-
-				// beta demo algorithm
 				poller.enableCorrection(false);
 				usLocalizer.fallingEdge();
 				lightLocalizer.moveToOrigin();
+
+				// set starting corners
 				switch (SC) {
 				case 0:
 					odometer.setXYT(TILE_SIZE, TILE_SIZE, 0);
@@ -278,8 +284,6 @@ public class Project {
 						RingCoordinates.get(0).x, RingCoordinates.get(0).y, true);
 				Navigation.travelByPath(waypoints, pathToRing);
 
-				int hasRing = 0;
-				HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
 				// grab first ring
 				Navigation.face(TGx, TGy);
 				Navigation.stop();
@@ -287,7 +291,7 @@ public class Project {
 					Thread.sleep(1000);
 				} catch (Exception e) {
 				}
-				hasRing = Math.max(hasRing, RingSearch.findRing(RingCoordinates.get(0), ringMap));
+				RingSearch.findRing();
 
 				// go back to starting corner
 				while (!waypoints.isEmpty()) {

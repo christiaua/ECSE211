@@ -3,8 +3,6 @@ package ca.mcgill.ecse211.poller;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import ca.mcgill.ecse211.odometer.*;
-import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 import lejos.hardware.Sound;
 
 /**
