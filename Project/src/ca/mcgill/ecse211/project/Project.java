@@ -36,33 +36,33 @@ public class Project {
 
 	// CUSTOM VARIABLES
 	// T: tunnel
-	private static int TLLx = 5;
-	private static int TLLy = 2;
-	private static int TURx = 6;
-	private static int TURy = 4;
+	public static int TLLx = 5;
+	public static int TLLy = 2;
+	public static int TURx = 6;
+	public static int TURy = 4;
 
 	// Ring tree
-	private static int TGx = 7;
-	private static int TGy = 6;
+	public static int TGx = 7;
+	public static int TGy = 6;
 
 	// Other Ring tree
-	private static int TRx = 2;
-	private static int TRy = 2;
+	public static int TRx = 2;
+	public static int TRy = 2;
 
 	// No prefix: starting zone
-	private static int URx = 8;
-	private static int URy = 3;
-	private static int LLx = 0;
-	private static int LLy = 0;
+	public static int URx = 8;
+	public static int URy = 3;
+	public static int LLx = 0;
+	public static int LLy = 0;
 
 	// I: island
-	private static int IURx = 8;
-	private static int IURy = 8;
-	private static int ILLx = 0;
-	private static int ILLy = 2;
+	public static int IURx = 8;
+	public static int IURy = 8;
+	public static int ILLx = 0;
+	public static int ILLy = 2;
 
 	// Starting corner
-	private static int SC = 1;
+	public static int SC = 1;
 	private static final double TILE_SIZE = 30.48;
 	private static final int FIELDX = 8;
 	private static final int FIELDY = 8;
@@ -262,14 +262,19 @@ public class Project {
 
 				// determine which points of the ring set locations can be accessed
 				ArrayList<Coordinate> RingCoordinates = new ArrayList<Coordinate>();
-				// visit left, down, right, up
+				// visit left, up, right, down
 				int[] changeX = { -1, 0, 1, 0 };
-				int[] changeY = { 0, -1, 0, 1 };
+				int[] changeY = { 0, 1, 0, -1 };
 				for (int i = 0; i < 4; i++) {
 					Coordinate change = new Coordinate(TGx + changeX[i], TGy + changeY[i]);
 					if (isInBoundaries(change, true)) {
 						RingCoordinates.add(change);
 					}
+				}
+				//if is empty, do nothing
+				if(RingCoordinates.isEmpty()) {
+					Sound.beepSequence();
+					System.exit(0);
 				}
 
 				ringSearch.enableTunnel(true);
@@ -551,7 +556,7 @@ public class Project {
 		if (coord.y >= FIELDY || coord.y <= 0)
 			return false;
 		// robot cannot go on a tunnel
-		if ((coord.x <= TURx && coord.x >= TLLx) && (coord.y <= TURy && coord.y >= TLLx))
+		if ((coord.x <= TURx && coord.x >= TLLx) && (coord.y <= TURy && coord.y >= TLLy))
 			return false;
 
 		// robot cannot be on ring sets
@@ -563,7 +568,7 @@ public class Project {
 		if (island) {
 			if (coord.x > IURx || coord.x < ILLx)
 				return false;
-			if (coord.y > IURx || coord.y < ILLy)
+			if (coord.y > IURy || coord.y < ILLy)
 				return false;
 		}
 		return true;
