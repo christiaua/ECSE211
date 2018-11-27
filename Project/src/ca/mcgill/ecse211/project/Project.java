@@ -25,6 +25,9 @@ import lejos.hardware.lcd.TextLCD;
  *
  */
 public class Project {
+    /**
+     * The orientation of the tunnel.
+     */
 	public static enum Tunnel {
 		HORIZONTALLEFT, VERTICALUP, HORIZONTALRIGHT, VERTICALDOWN
 	};
