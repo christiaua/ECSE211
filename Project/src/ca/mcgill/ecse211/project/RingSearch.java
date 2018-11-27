@@ -98,7 +98,7 @@ public class RingSearch {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		upperMotor.rotateTo(75);
+		upperMotor.rotateTo(70);
 		poller.enableColourDetection(false);
 		try {
 			Thread.sleep(100);

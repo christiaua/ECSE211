@@ -32,37 +32,37 @@ public class Project {
 		HORIZONTALLEFT, VERTICALUP, HORIZONTALRIGHT, VERTICALDOWN
 	};
 
-	private static Tunnel tunnel = Tunnel.VERTICALUP;
+	public static Tunnel tunnel = Tunnel.VERTICALUP;
 
 	// CUSTOM VARIABLES
 	// T: tunnel
-	public static int TLLx = 5;
-	public static int TLLy = 2;
-	public static int TURx = 6;
-	public static int TURy = 4;
+	public static int TLLx = 3;
+	public static int TLLy = 3;
+	public static int TURx = 4;
+	public static int TURy = 5;
 
 	// Ring tree
-	public static int TGx = 7;
-	public static int TGy = 6;
+	public static int TGx = 1;
+	public static int TGy = 1;
 
 	// Other Ring tree
-	public static int TRx = 2;
-	public static int TRy = 2;
+	public static int TRx = 0;
+	public static int TRy = 0;
 
 	// No prefix: starting zone
 	public static int URx = 8;
-	public static int URy = 3;
+	public static int URy = 8;
 	public static int LLx = 0;
-	public static int LLy = 0;
+	public static int LLy = 5;
 
 	// I: island
 	public static int IURx = 8;
-	public static int IURy = 8;
+	public static int IURy = 3;
 	public static int ILLx = 0;
-	public static int ILLy = 2;
+	public static int ILLy = 0;
 
 	// Starting corner
-	public static int SC = 1;
+	public static int SC = 2;
 	private static final double TILE_SIZE = 30.48;
 	private static final int FIELDX = 8;
 	private static final int FIELDY = 8;
@@ -81,7 +81,7 @@ public class Project {
 
 	// Constants
 	private static final int TEAM_NUMBER = 7;
-	private static final String SERVER_IP = "192.168.2.2";
+	private static final String SERVER_IP = "192.168.2.33";
 
 	/**
 	 * The main method. It makes the robot do the localizaion and moves it to the

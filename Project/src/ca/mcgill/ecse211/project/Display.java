@@ -82,7 +82,8 @@ public class Display implements Runnable {
 			lcd.drawString("SC: " + numberFormat.format(Project.SC), 0, 3);
 			lcd.drawString("RingSet: (" + Project.TGx + ", " + Project.TGy + ")", 0, 4);
 			lcd.drawString("Tunnel: (" + Project.TLLx + ", " + Project.TLLy + ") (" + Project.TURx + ", " + Project.TURy + ") ", 0, 5);
-
+			lcd.drawString("Placement: " + Project.tunnel, 0, 6);
+			
 			// this ensures that the data is updated only once every period
 			updateEnd = System.currentTimeMillis();
 			if (updateEnd - updateStart < DISPLAY_PERIOD) {
