@@ -29,8 +29,8 @@ public class Navigation {
   private static final double TILE_SIZE = 30.48;
 
   private static final int DROP_SPEED = 1000;
-  private static final int FORWARD_SPEED = 200;
-  private static final int ROTATE_SPEED = 140;
+  private static final int FORWARD_SPEED = 230;
+  private static final int ROTATE_SPEED = 150;
 
   private static Odometer odo = null;
   private static double[] currentDest = {0, 0};

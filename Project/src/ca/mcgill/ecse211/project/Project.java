@@ -81,7 +81,7 @@ public class Project {
 
 	// Constants
 	private static final int TEAM_NUMBER = 7;
-	private static final String SERVER_IP = "192.168.2.33";
+	private static final String SERVER_IP = "192.168.2.32";
 
 	/**
 	 * The main method. It makes the robot do the localizaion and moves it to the
@@ -141,10 +141,9 @@ public class Project {
 
 			} else if (buttonChoice == Button.ID_RIGHT) {
 				// Receive data over Wifi
-				WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, true);
+				WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, false);
 				try {
 					Map data = conn.getData();
-					System.console().writer().println("Map:\n" + data);
 
 					// Team specifics
 					int greenTeam = ((Long) data.get("GreenTeam")).intValue();
