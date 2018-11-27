@@ -35,7 +35,10 @@ public class Navigation {
 
 	private static Odometer odo = null;
 	private static double[] currentDest = { 0, 0 };
-
+	
+	/**
+	 * Location of the wheel relative to the center of the robot.
+	 */
 	public enum Side {
 		LEFT, RIGHT
 	}

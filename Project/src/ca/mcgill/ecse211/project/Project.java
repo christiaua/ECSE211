@@ -17,6 +17,12 @@ import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
 
+/**
+ * This class contains the main method which retrieves rings.
+ * @author Sophie Deng
+ * @author Edward Huang
+ *
+ */
 public class Project {
 	public static enum Tunnel {
 		HORIZONTALLEFT, VERTICALUP, HORIZONTALRIGHT, VERTICALDOWN
@@ -122,7 +128,7 @@ public class Project {
 				HashMap<ColourType, Coordinate> ringMap = new HashMap<ColourType, Coordinate>();
 				ringSearch = new RingSearch(TGx, TGy);
 				ringSearch.enableTunnel(false);
-				RingSearch.findRing(new Coordinate(0, 0), ringMap);
+				RingSearch.findRing();
 				// LinkedList<Coordinate> nextRing = findPath(-1, 1,
 				// 0,0, true);
 				// Navigation.travelByPath(nextRing);
