@@ -77,7 +77,7 @@ public class OdometryCorrection {
 				}
 			}
 		}
-		if(angleCorrection < 5) {
+		if(angleCorrection < 20) {
 			if ((currentAngle < 45 && currentAngle > 0) || (currentAngle < 360 && currentAngle > 315)) {
 				odometer.setY((int)(odometer.getXYT()[1] / TILE_SIZE) * TILE_SIZE + D);
 			} else if (currentAngle < 135 && currentAngle > 45) {
