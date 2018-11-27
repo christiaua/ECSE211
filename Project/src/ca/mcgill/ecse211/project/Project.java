@@ -11,6 +11,7 @@ import ca.mcgill.ecse211.odometer.Odometer;
 import ca.mcgill.ecse211.odometer.OdometerExceptions;
 import ca.mcgill.ecse211.poller.Poller;
 import ca.mcgill.ecse211.poller.PollerException;
+import ca.mcgill.ecse211.poller.RingDetector;
 import ca.mcgill.ecse211.poller.RingDetector.ColourType;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
@@ -222,6 +223,9 @@ public class Project {
 				poller.enableCorrection(false);
 				usLocalizer.fallingEdge();
 				lightLocalizer.moveToOrigin();
+				
+				Sound.twoBeeps();
+				Sound.beep();
 
 				// set starting corners
 				switch (SC) {
@@ -246,10 +250,12 @@ public class Project {
 					STARTY = FIELDY - 1;
 					break;
 				}
+				
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e) {
+				}
 				poller.enableCorrection(true);
-
-				Sound.twoBeeps();
-				Sound.beep();
 
 				// determine which points of the ring set locations can be accessed
 				ArrayList<Coordinate> RingCoordinates = new ArrayList<Coordinate>();
@@ -289,7 +295,14 @@ public class Project {
 				LinkedList<Coordinate> pathToRing = findPath(waypoints.peek().x, waypoints.peek().y,
 						RingCoordinates.get(0).x, RingCoordinates.get(0).y, true);
 				Navigation.travelByPath(waypoints, pathToRing);
-
+				Sound.twoBeeps();
+				Sound.beep();
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e) {
+				}
+				
+				
 				// grab first ring
 				Navigation.face(TGx, TGy);
 				Navigation.stop();
@@ -298,7 +311,29 @@ public class Project {
 				} catch (Exception e) {
 				}
 				RingSearch.findRing();
-
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e) {
+				}
+				
+				// grab second ring if no ring on the first face
+				if(!RingDetector.foundRing()) {
+					LinkedList<Coordinate> pathToSecondRing = findPath(waypoints.peek().x, waypoints.peek().y,
+							RingCoordinates.get(1).x, RingCoordinates.get(1).y, true);
+					Navigation.travelByPath(waypoints, pathToSecondRing);
+					Navigation.face(TGx, TGy);
+					Navigation.stop();
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+					}
+					RingSearch.findRing();
+					try {
+						Thread.sleep(1000);
+					} catch (Exception e) {
+					}
+				}
+				
 				// go back to starting corner
 				while (!waypoints.isEmpty()) {
 					Coordinate point = waypoints.pop();
