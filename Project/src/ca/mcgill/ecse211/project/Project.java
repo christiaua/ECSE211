@@ -203,7 +203,7 @@ public class Project {
 				}
 
 				// Check for the type of tunnel it must traverse
-				if (TURx - TLLx > 1 || ILLx >= URx || LLx >= TURx) {
+				if (TURx - TLLx > 1 || ILLx >= URx || LLx >= IURx) {
 					if (SC == 2 || SC == 1) {
 						tunnel = Tunnel.HORIZONTALLEFT;
 					} else {
