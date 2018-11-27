@@ -97,7 +97,7 @@ public class LightLocalizer {
 	 *            First angle in degrees.
 	 * @param a2
 	 *            Second angle in degrees.
-	 * @return
+	 * @return The minimum angle
 	 */
 	public static double angleDiff(double a1, double a2) {
 		double diff = a1 - a2;

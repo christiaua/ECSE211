@@ -23,7 +23,9 @@ public class RingDetector {
 	// prevents the robot from beeping continuously
 	private static boolean[] foundRings = { false, false, false, false };
 
-	// colour type
+	/**
+	 * The colour of a ring.
+	 */
 	public static enum ColourType {
 		BLUE, ORANGE, YELLOW, GREEN, NONE
 	};

@@ -28,9 +28,9 @@ public class Odometer extends OdometerData implements Runnable {
 
 	// class variables to be used to calculate distance
 
-	public static int lastTachoL; // Tacho/rotation speed of left motor at last sample
-	public static int lastTachoR; // tacho of right motor at last sample
-	public double PIE = Math.PI;
+	private static int lastTachoL; // Tacho/rotation speed of left motor at last sample
+	private static int lastTachoR; // tacho of right motor at last sample
+	private double PIE = Math.PI;
 
 	/**
 	 * This is the default constructor of this class. It initiates all motors and

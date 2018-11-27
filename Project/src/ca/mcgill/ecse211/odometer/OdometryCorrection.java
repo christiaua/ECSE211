@@ -49,7 +49,6 @@ public class OdometryCorrection {
 		if (tacho_at_left_detection < tacho_at_right_detection) {
 			// positive
 			if (angleCorrection < 20) {
-				Project.lcd.drawString(angleCorrection + "    ", 0, 3);
 				// Assume angle is within 45 degree precision
 				// odometer.update(0,0, angleCorrection);
 				if ((currentAngle < 45 && currentAngle > 0) || (currentAngle < 360 && currentAngle > 315)) {
@@ -65,7 +64,6 @@ public class OdometryCorrection {
 		} else {
 			// negative
 			if (angleCorrection < 20) {
-				Project.lcd.drawString(angleCorrection + "    ", 0, 3);
 				// Assume angle is within 45 degree precision
 				// odometer.update(0,0, angleCorrection);
 				if ((currentAngle < 45 && currentAngle > 0) || (currentAngle < 360 && currentAngle > 315)) {

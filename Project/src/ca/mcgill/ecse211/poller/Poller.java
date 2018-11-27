@@ -95,7 +95,7 @@ public class Poller implements Runnable {
 	 * Toggles colour detection
 	 * 
 	 * @param isEnabled
-	 *            Turns colour detection on it true, off is false
+	 *            Turns colour detection on if true, off if false
 	 */
 	public void enableColourDetection(boolean isEnabled) {
 		colourDetectionEnabled = isEnabled;
@@ -198,7 +198,7 @@ public class Poller implements Runnable {
 	/**
 	 * Get the filtered ultrasonic sensor reading.
 	 * 
-	 * @return distance The filtered ultrasonic sensor reading.
+	 * @return The filtered ultrasonic sensor reading.
 	 */
 	public double getDistance() {
 		return sensorData.getDistance();
@@ -216,7 +216,7 @@ public class Poller implements Runnable {
 	/**
 	 * Get the colour of the detected ring from the ringDetector class.
 	 * 
-	 * @return colour The colour of the detected ring.
+	 * @return The colour of the detected ring.
 	 */
 	public ColourType getColour() {
 		return ringDetector.getColourType();

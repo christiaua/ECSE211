@@ -70,7 +70,7 @@ public class Project {
 	private static final double FIELD_HEIGHT = FIELDY * TILE_SIZE;
 	private static int STARTX, STARTY;
 
-	public static final TextLCD lcd = LocalEV3.get().getTextLCD();
+	private static final TextLCD lcd = LocalEV3.get().getTextLCD();
 	private static Display display;
 	private static Odometer odometer;
 	private static Poller poller;
