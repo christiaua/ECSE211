@@ -13,8 +13,8 @@ import lejos.hardware.Sound;
 public class UltrasonicLocalizer {
 	
 	private Odometer odo;
-	public static final double D = 25;
-	public static final double THRESHOLD = 1;
+	private static final double D = 25;
+	private static final double THRESHOLD = 1;
 	private Poller poller;
 	private static int angleCorrection = 0;
 	
