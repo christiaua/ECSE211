@@ -30,7 +30,7 @@ public class Navigation {
 
   private static final int DROP_SPEED = 1000;
   private static final int FORWARD_SPEED = 230;
-  private static final int ROTATE_SPEED = 150;
+  private static final int ROTATE_SPEED = 200;
 
   private static Odometer odo = null;
   private static double[] currentDest = {0, 0};

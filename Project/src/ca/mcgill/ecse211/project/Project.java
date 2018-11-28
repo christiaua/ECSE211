@@ -64,8 +64,8 @@ public class Project {
 	// Starting corner
 	public static int SC = 2;
 	private static final double TILE_SIZE = 30.48;
-	private static final int FIELDX = 8;
-	private static final int FIELDY = 8;
+	private static final int FIELDX = 15;
+	private static final int FIELDY = 9;
 	private static final double FIELD_WIDTH = FIELDX * TILE_SIZE;
 	private static final double FIELD_HEIGHT = FIELDY * TILE_SIZE;
 	private static int STARTX, STARTY;
@@ -81,7 +81,7 @@ public class Project {
 
 	// Constants
 	private static final int TEAM_NUMBER = 7;
-	private static final String SERVER_IP = "192.168.2.32";
+	private static final String SERVER_IP = "192.168.2.2";
 
 	/**
 	 * The main method. It makes the robot do the localizaion and moves it to the
